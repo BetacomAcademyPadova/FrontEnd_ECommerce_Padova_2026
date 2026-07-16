@@ -1,0 +1,108 @@
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+mat-card {
+  width: 100%;
+  max-width: 1200px; 
+}
+
+mat-dialog-content {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+}
+mat-dialog-content.dialog-container {
+  display: block;     
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;        
+  max-width: none;   
+  margin: 0;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.button-group {
+  grid-column: span 3; /* 👈 pulsante centrato su tutta la riga */
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.msg-error {
+  grid-column: 1 / -1; /* 👈 estende da prima all'ultima colonna */
+  color: red;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.btn-danger:hover {
+  background-color: #b71c1c;
+  color: white;
+}
+
+.dialog-container {
+  position: relative;
+  padding-top: 40px;  /* spazio per la X sopra la card */
+}
+
+/* Bottone X in alto a destra, sopra a tutto */
+.dialog-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #555;
+  z-index: 10;       /* 👈 importante per stare sopra alla mat-card */
+}
+
+.dialog-close-btn:hover {
+  color: #000;
+}
+
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  text-align: center;
+  width: 100%;
+}
+
+.header-center mat-card-title,
+.header-center mat-card-subtitle {
+  width: 100%;
+  text-align: center;
+}
+mat-card-header {
+  margin-bottom: 20px;   
+}
+
+/* Rende il dialog "auto-height" senza scroll */
+::ng-deep .mat-mdc-dialog-surface {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Rimuove lo scroll interno */
+mat-dialog-content {
+  max-height: none !important;
+  overflow: visible !important;
+}

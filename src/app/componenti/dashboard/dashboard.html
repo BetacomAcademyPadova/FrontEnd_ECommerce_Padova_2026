@@ -1,0 +1,53 @@
+<mat-toolbar>
+  @if (auth.grant().isLogged){
+    <button matIconButton [matMenuTriggerFor]="menu" class="example-icon"
+        aria-label="Example icon-button with menu icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="changePWD()">
+            <mat-icon>password</mat-icon>
+            <span>Cambio password</span>
+        </button>
+        <button mat-menu-item (click)="profile()">
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
+        </button>
+    </mat-menu>
+    }
+    <span>ECommerce Padova</span>
+    <span class="example-spacer"></span>
+       <button matIconButton class="example-icon" aria-label="Example icon-button with share icon" 
+       (click)="login()">
+        <mat-icon>login</mat-icon>
+    </button>
+<
+    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>
+
+<mat-drawer-container class="example-container">
+    <mat-drawer mode="side" [opened]="auth.grant().isMenu">
+        <mat-list role="list">
+            <mat-list-item role="listitem" routerLink="home" [routerLinkActive]="'active'">
+                Home</mat-list-item>
+
+            @if (auth.grant().isVenditore){
+                <mat-list-item role="listitem" routerLink="utente" [routerLinkActive]="'active'">
+                    Inserisci Prodotto</mat-list-item>
+                <mat-list-item role="listitem" routerLink="veicoli" [routerLinkActive]="'active'">
+                    Controlla Ordini</mat-list-item>
+            }
+
+            @if (auth.grant().isAdmin){
+                <mat-list-item role="listitem" routerLink="utente" [routerLinkActive]="'active'">
+                    Gestione Utenti</mat-list-item>
+                <mat-list-item role="listitem" routerLink="veicoli" [routerLinkActive]="'active'">
+                    Gestione veicoli</mat-list-item>
+            }
+        </mat-list></mat-drawer>
+    <mat-drawer-content>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>
