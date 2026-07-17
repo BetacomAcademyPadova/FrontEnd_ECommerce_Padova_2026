@@ -11,9 +11,10 @@ export const routes: Routes = [
     { path: 'dash', component: Dashboard, children: [
             { path:'', redirectTo:'home', pathMatch:'full'},
             { path: 'home', component: Home },
-            { path: 'carello', component: Carello , canActivate:[autentificateGuard]},
-            { path: 'utente', component: GestioneUtente , canActivate:[autentificateGuard, adminGuard]},
+            { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
+            { path: 'prodotti', component: Home }, 
+            { path: 'profilo', component: Home },  
+            { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
         ]
     },
-
 ];

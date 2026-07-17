@@ -11,15 +11,20 @@ import { Login } from '../../dialogs/login/login';
 import {MatMenuModule} from '@angular/material/menu';
 import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
+import { MatBadgeModule } from '@angular/material/badge';
+
 @Component({
   selector: 'app-dashboard',
-  imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, RouterLinkActive, MatIconModule,
-    MatButtonModule, MatToolbarModule, MatMenuModule
+  imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, //RouterLinkActive, 
+    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+
+  //VARIABILE PER TESTARE ICONA CARRELLO
+  quantitaCarrello: number = 3;
 
   constructor(
     public auth: AuthServices,

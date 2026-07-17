@@ -56,3 +56,30 @@
   align-items: center !important;
   border-radius: 50% !important; 
 }
+
+/*PER LA BARRA DI NAVIGAZIONE PRODOTTI - CARRELLO - IMPOSTAZIONI*/
+.sub-nav-bar {
+    background-color: #F4EFEA; 
+    height: 70px;            
+    display: flex;
+    justify-content: center;   
+    gap: 40px;                 
+    border-bottom: 1px solid #E0E0E0;
+    color: #5D4037;            
+}
+
+.sub-nav-bar button {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;       
+    font-weight: 700;          
+    display: flex;
+    align-items: center;
+    gap: 12px;         
+    height: 100%;             
+}
+
+.sub-nav-bar mat-icon {
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+}
