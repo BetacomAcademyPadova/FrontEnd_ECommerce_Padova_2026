@@ -1,0 +1,18 @@
+/* Supponendo che il tuo contenitore abbia una classe tipo .content-container */
+.content-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 1300px; 
+  margin: 40px auto; 
+  box-shadow: 0 10px 20px rgba(93, 64, 55, 0.15);
+  text-align: center;
+}
+
+.testo-benvenuto {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;        
+  color: #3E2723;         
+  font-weight: 700;
+  line-height: 1.2;
+}

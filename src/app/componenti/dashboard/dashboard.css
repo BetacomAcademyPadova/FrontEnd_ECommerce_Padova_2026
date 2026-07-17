@@ -1,13 +1,58 @@
 .example-container {
-  min-height: 600px;
+  min-height: calc(100vh - 80px); 
   height: auto;
-  margin: 10px;
-  border: 1px solid #555;
-  background: #eee;
+  margin: 0; 
+  background: transparent; 
 }
+
 .active{
     background-color: blanchedalmond;
 }
+
 .example-spacer {
   flex: 1 1 auto;
+}
+
+.titolo-ecommerce {
+  font-family: "Playfair Display", serif; 
+  font-size: 2.5rem; 
+  font-weight: 700; 
+  font-style: italic; 
+  color: #5D4037; 
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
+}
+
+.icona-titolo {
+  font-size: 36px !important; 
+  height: 36px !important;
+  width: 36px !important;
+  margin-right: 15px; 
+  color: #8D6E63; 
+}
+
+.header-sfondo{
+  background-color: #FAF8F5; 
+  height: 80px; 
+  padding: 0 24px; 
+  border-bottom: 1px solid #E0E0E0; 
+}
+
+.nav-button mat-icon {
+  font-size: 32px !important; 
+  height: 32px !important;
+  width: 32px !important;
+}
+
+.nav-button {
+  margin-left: 8px;
+  color: #5D4037 !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 50% !important; 
 }

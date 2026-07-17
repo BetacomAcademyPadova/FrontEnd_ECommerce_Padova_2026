@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="header-sfondo mat-elevation-z4">
   @if (auth.grant().isLogged){
     <button matIconButton [matMenuTriggerFor]="menu" class="example-icon"
         aria-label="Example icon-button with menu icon">
@@ -15,14 +15,15 @@
         </button>
     </mat-menu>
     }
-    <span>ECommerce Padova</span>
+    <span class="titolo-ecommerce">
+        <mat-icon class="icona-titolo">shopping_bag</mat-icon>
+        E-COMMERCE PADOVA
+    </span>
     <span class="example-spacer"></span>
-       <button matIconButton class="example-icon" aria-label="Example icon-button with share icon" 
-       (click)="login()">
+    <button mat-icon-button class="nav-button" (click)="login()">
         <mat-icon>login</mat-icon>
     </button>
-<
-    <button matIconButton class="example-icon" aria-label="Example icon-button with share icon" (click)="logout()">
+    <button mat-icon-button class="nav-button" (click)="logout()">
         <mat-icon>logout</mat-icon>
     </button>
 </mat-toolbar>
