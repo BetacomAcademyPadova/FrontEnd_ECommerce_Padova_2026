@@ -8,6 +8,7 @@ import { Carello } from './componenti/carello/carello';
 import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodotti';
 import { Prodotti } from './componenti/prodotti/prodotti';
 import { Profilo } from './componenti/profilo/profilo';
+import { Login } from './dialogs/login/login';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
