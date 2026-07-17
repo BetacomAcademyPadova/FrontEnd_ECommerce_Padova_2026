@@ -1,35 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
-import { UtenteServices } from '../../services/utente-services';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { RouterOutlet } from "@angular/router";
+import { AuthServices } from '../../auth/auth-services';
 
 @Component({
   selector: "app-profilo",
-  imports: [FormsModule],
+  imports: [FormsModule, MatSidenavModule, RouterOutlet],
   templateUrl: "./profilo.html",
   styleUrl: "./profilo.css",
 })
 export class Profilo 
 {
-  private utenteService = inject(UtenteServices);
-
-  nuovoUtente = { 
-    userName: '', 
-    password: '', 
-    nome: '', 
-    cognome: '', 
-    email: '',
-    telefono: '' 
-  };
-
-  crea() {
-    this.utenteService.create(this.nuovoUtente).subscribe({
-      next: () => {
-        console.log("Utente creato con successo!");
-        this.nuovoUtente = { userName: '', password: '', nome: '', cognome: '', email: '', telefono: '' };
-      },
-      error: (err) => {
-        console.error("Errore:", err);
-      }
-    });
-  }
+  protected readonly auth = inject(AuthServices);
 }
