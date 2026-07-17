@@ -1,35 +1,50 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
+.dialog-container {
+    padding: 20px;
+    font-family: 'Playfair Display', serif; /* Coerenza con il titolo principale */
 }
-form {
+
+.login-title {
+    color: #5D4037;
+    font-weight: 700;
+    font-size: 2rem;    
+    text-align: center;   
+    width: 100%;        
+    margin: 0 0 20px 0;   
+    padding: 10px 0;      
+}
+
+.login-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 15px; /* Spazio uniforme tra i campi */
+    width: 350px; /* Larghezza fissa per un look ordinato */
+}
+
+.full-width {
+    width: 100%;
 }
 
 .button-group {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dialog-container {
-  position: relative;
-  padding-top: 40px; 
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
+.error-msg {
+    color: #b71c1c;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.forgot-pwd {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #795548;
+}
 
 .dialog-close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  color: #555;
-  z-index: 10;   
-}
-
-.dialog-close-btn:hover {
-  color: #000;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
