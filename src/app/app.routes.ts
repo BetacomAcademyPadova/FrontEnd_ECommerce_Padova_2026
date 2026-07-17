@@ -5,7 +5,9 @@ import { GestioneUtente } from './componenti/gestione-utente/gestione-utente';
 import { autentificateGuard } from './auth/autentificate-guard';
 import { adminGuard } from './auth/admin-guard';
 import { Carello } from './componenti/carello/carello';
-import { Login } from './dialogs/login/login';
+import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodotti';
+import { Prodotti } from './componenti/prodotti/prodotti';
+import { Profilo } from './componenti/profilo/profilo';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -14,8 +16,8 @@ export const routes: Routes = [
             { path: 'home', component: Home },
             { path: 'login', component: Login},
             { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
-            { path: 'prodotti', component: Home }, 
-            { path: 'profilo', component: Home },  
+            { path: 'prodotti', component: Prodotti }, 
+            { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
         ]
     },

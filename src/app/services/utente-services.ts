@@ -10,23 +10,19 @@ export class UtenteServices {
     private http = inject(HttpClient);
 
 
-    list(userName?: string, nome?: string, cognome?: string, role?: string) {
-        let params = new HttpParams();
-        if (nome) params = params.set('nome', nome);
-        if (cognome) params = params.set('cognome', cognome);
-        if (role) params = params.set('role', role);
-
-
-        this.http.get(this.url + "getAll", { params })
+    list() 
+    {
+        this.http.get<any[]>(this.url + "getAll")
             .subscribe({
-                next: ((r: any) => this.accounts.set(r)),
-            })
+                next: (r) => this.accounts.set(r),
+            });
     }
 
     create(body: {}) {
         return this.http.post(this.url + "create", body)
             .pipe(tap(() => this.list()));
     }
+    
     update(body: {}) {
         return this.http.patch(this.url + "update", body)
             .pipe(tap(() => this.list()));
