@@ -4,7 +4,7 @@ import { tap } from 'rxjs';
 
 @Service()
 export class UtenteServices {
-    url = "http://localhost:9090/rest/Utente/"
+    url = "http://localhost:9090/rest/User/"
     accounts = signal<any[]>([]);
 
     private http = inject(HttpClient);

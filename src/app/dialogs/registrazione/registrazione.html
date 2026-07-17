@@ -28,36 +28,14 @@
                     <input matInput type="email" name="email" formControlName="email">
                 </mat-form-field>
 
-                <mat-radio-group aria-label="Sesso" name="sesso" formControlName="sesso" class="radio-group">
-                    <mat-radio-button value="M">Maschio</mat-radio-button>
-                    <mat-radio-button value="F">Femmina</mat-radio-button>
-                </mat-radio-group>
-
                 <mat-form-field appearance="fill">
                     <mat-label>Telefono</mat-label>
                     <input matInput type="text" name="telefono" formControlName="telefono">
                 </mat-form-field>
 
                 <mat-form-field appearance="fill">
-                    <mat-label>Via</mat-label>
-                    <input matInput type="text" name="via" formControlName="via">
-                </mat-form-field>
-
-                <mat-form-field appearance="fill">
-                    <mat-label>Comune</mat-label>
-                    <input matInput type="text" name="comune" formControlName="comune" required>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill">
-                    <mat-label>Cap</mat-label>
-                    <input matInput type="text" formControlName="cap" maxlength="5" pattern="[0-9]*" inputmode="numeric"
-                        required>
-                </mat-form-field>
-
-
-                <mat-form-field appearance="fill">
                     <mat-label>UserName</mat-label>
-                    <input matInput type="text" name="userName" formControlName="userName" required>
+                    <input matInput type="text" name="username" formControlName="username" required>
                 </mat-form-field>
 
                 @if (mod == 'C'){
