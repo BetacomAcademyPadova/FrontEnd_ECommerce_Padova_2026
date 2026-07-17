@@ -67,6 +67,7 @@ export class Dashboard {
         })
       })
   }
+  
   logout() {
     console.log("logout");
     this.auth.resetAll();

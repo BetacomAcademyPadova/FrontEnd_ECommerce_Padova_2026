@@ -1,0 +1,10 @@
+<div class="gestione-container">
+  <h2>Crea Nuovo Utente</h2>
+  <input type="text" [(ngModel)]="nuovoUtente.userName" placeholder="Username">
+  <input type="password" [(ngModel)]="nuovoUtente.password" placeholder="Password">
+  <input type="text" [(ngModel)]="nuovoUtente.nome" placeholder="Nome">
+  <input type="text" [(ngModel)]="nuovoUtente.cognome" placeholder="Cognome">
+  <input type="email" [(ngModel)]="nuovoUtente.email" placeholder="Email">
+  <input type="text" [(ngModel)]="nuovoUtente.telefono" placeholder="Telefono">
+  <button (click)="crea()">Registra Utente</button>
+</div>

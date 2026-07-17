@@ -6,4 +6,5 @@ import { Component } from '@angular/core';
   templateUrl: './gestione-utente.html',
   styleUrl: './gestione-utente.css',
 })
-export class GestioneUtente {}
+export class GestioneUtente 
+{}
