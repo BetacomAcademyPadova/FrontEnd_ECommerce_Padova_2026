@@ -25,12 +25,8 @@ export class Registrazione implements OnInit{
     nome: new FormControl(null, Validators.required),
     cognome: new FormControl(null, Validators.required),
     email: new FormControl(null, Validators.required),
-    sesso: new FormControl('M', Validators.required),
     telefono: new FormControl(null, Validators.required),
-    via: new FormControl(null, Validators.required),
-    comune: new FormControl(null, Validators.required),
-    cap: new FormControl(null, Validators.required),
-    userName: new FormControl(null),
+    username: new FormControl(null),
     password: new FormControl(null),
     passwordControl: new FormControl(null)
   })
@@ -53,12 +49,8 @@ if (data) {
         nome: this.account().nome,
         cognome: this.account().cognome,
         email: this.account().email,
-        sesso: this.account().sesso ? 'M' : 'F',
         telefono: this.account().telefono,
-        via: this.account().via,
-        comune: this.account().comune,
-        cap: this.account().cap,
-        userName: this.account().userName
+        username: this.account().username
       })
     }
   }
@@ -68,7 +60,7 @@ if (data) {
   }
  onSubmitUpdate() {
     this.msg.set('');
-    const updateBody: any = { userName: this.account().userName };
+    const updateBody: any = { username: this.account().username };
 
     if (this.updateForm.controls['nome'].dirty)
       updateBody.nome = this.updateForm.value.nome;
@@ -79,20 +71,8 @@ if (data) {
     if (this.updateForm.controls['email'].dirty)
       updateBody.email = this.updateForm.value.email;
 
-    if (this.updateForm.controls['sesso'].dirty)
-      updateBody.sesso = this.updateForm.value.sesso == 'M' ? true : false;
-
     if (this.updateForm.controls['telefono'].dirty)
       updateBody.telefono = this.updateForm.value.telefono;
-
-    if (this.updateForm.controls['via'].dirty)
-      updateBody.via = this.updateForm.value.via;
-
-    if (this.updateForm.controls['comune'].dirty)
-      updateBody.commune = this.updateForm.value.comune;
-
-    if (this.updateForm.controls['cap'].dirty)
-      updateBody.cap = this.updateForm.value.cap;
 
     console.log(updateBody);
 
@@ -121,14 +101,9 @@ onSubmitCreate() {
       nome: this.updateForm.value.nome,
       cognome: this.updateForm.value.cognome,
       email: this.updateForm.value.email,
-      sesso: this.updateForm.value.sesso == 'M' ? true : false,
       telefono: this.updateForm.value.telefono,
-      via: this.updateForm.value.via,
-      commune: this.updateForm.value.comune,
-      cap: this.updateForm.value.cap,
-      userName: this.updateForm.value.userName,
-      pwd: this.updateForm.value.password,
-      role: 'USER'
+      username: this.updateForm.value.username,
+      password: this.updateForm.value.password
     }).subscribe({
       next: ((resp: any) => {
         console.log(resp);

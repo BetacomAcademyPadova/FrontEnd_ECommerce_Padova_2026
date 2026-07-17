@@ -14,6 +14,7 @@ export const routes: Routes = [
     { path: 'dash', component: Dashboard, children: [
             { path:'', redirectTo:'home', pathMatch:'full'},
             { path: 'home', component: Home },
+            { path: 'login', component: Login},
             { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  

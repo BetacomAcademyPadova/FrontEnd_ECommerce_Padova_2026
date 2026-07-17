@@ -23,7 +23,7 @@ import { Registrazione } from '../registrazione/registrazione';
 export class Login {
   msg = signal('');
   readonly dialog = inject(MatDialog);
-  userName = "";
+  nU = "";
 
   constructor(
     private account: AutentificazioneServices,
@@ -35,8 +35,8 @@ export class Login {
 
 onSubmit(signin: NgForm) {
     this.account.login({
-      userName: signin.form.value.userName,
-      pwd: signin.form.value.password
+      username: signin.form.value.nU,
+      password: signin.form.value.pwd
     }).subscribe({
       next: (resp: any) => {
         this.msg.set("");
