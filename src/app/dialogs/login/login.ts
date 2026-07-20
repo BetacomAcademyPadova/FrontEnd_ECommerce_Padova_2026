@@ -42,9 +42,9 @@ onSubmit(signin: NgForm) {
         this.msg.set("");
         console.log(resp)
         this.auth.setAutentificated(resp.id);
-        if (resp.role == 'Admin') this.auth.setAdmin();
-        if (resp.role == 'User') this.auth.setUser();
-        if (resp.role == 'Venditore') this.auth.setVenditore();
+        if (resp.ruolo == 'Admin') this.auth.setAdmin();
+        if (resp.ruolo == 'User') this.auth.setUser();
+        if (resp.ruolo == 'Venditore') this.auth.setVenditore();
 
         console.log('[LoginDialog] dopo login, isAutentificated =', this.auth.isAutentificated());
 
