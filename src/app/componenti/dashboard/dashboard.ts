@@ -8,7 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthServices } from '../../auth/auth-services';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { Login } from '../../dialogs/login/login';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { MatBadgeModule } from '@angular/material/badge';

@@ -41,14 +41,16 @@
         <mat-icon [matBadge]="quantitaCarrello" matBadgeColor="warn" [matBadgeHidden]="quantitaCarrello === 0" aria-hidden="false">shopping_cart</mat-icon>
         <span>CARRELLO</span>
     </button>
+    @if(auth.grant().isLogged && auth.grant().isAdmin){
+        <button mat-button routerLink="utente">
+            <mat-icon>person</mat-icon>
+            <span>GESTIONE UTENTI</span>
+        </button>
+    }
 </mat-toolbar>
 
 <mat-drawer-container class="example-container">
-    <mat-drawer mode="side" [opened]="auth.grant().isMenu">
-        <mat-list role="list">
-
-        </mat-list>
-    </mat-drawer>
+    
     <mat-drawer-content>
         <router-outlet></router-outlet>
     </mat-drawer-content>

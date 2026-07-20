@@ -8,7 +8,6 @@ export class AuthServices {
         isAdmin: false,
         isLogged: false,
         isVenditore: false,
-        isMenu:false,
         userId: null as string | null,
     })
 
@@ -23,7 +22,6 @@ export class AuthServices {
                 isAdmin,
                 isLogged,
                 isVenditore,
-                isMenu:false,
                 userId
             })
         }
@@ -32,12 +30,11 @@ export class AuthServices {
     setAutentificated(userId: any) {
         if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem("isLogged", "1")
-            localStorage.setItem("userId", userId);
+            localStorage.setItem("userId", userId);            
             this.grant.set({
                 isAdmin: false,
                 isLogged: true,
                 isVenditore: false,
-                isMenu : false,
                 userId
             })
         }
@@ -86,7 +83,6 @@ export class AuthServices {
             this.grant.set({
                 isAdmin: false,
                 isLogged: false,
-                isMenu : false,
                 isVenditore: false,
                 userId : null
             })
