@@ -20,10 +20,10 @@
         E-COMMERCE PADOVA
     </span>
     <span class="example-spacer"></span>
-    <button mat-icon-button class="nav-button" (click)="login()">
+    <button mat-icon-button class="nav-button" (click)="login()" matTooltip="Login">
         <mat-icon>login</mat-icon>
     </button>
-    <button mat-icon-button class="nav-button" (click)="logout()">
+    <button mat-icon-button class="nav-button" (click)="logout()" matTooltip="Logout">
         <mat-icon>logout</mat-icon>
     </button>
 </mat-toolbar>
@@ -40,10 +40,6 @@
     <button mat-button routerLink="carello">
         <mat-icon [matBadge]="quantitaCarrello" matBadgeColor="warn" [matBadgeHidden]="quantitaCarrello === 0" aria-hidden="false">shopping_cart</mat-icon>
         <span>CARRELLO</span>
-    </button>
-    <button mat-button routerLink="profilo">
-        <mat-icon>person</mat-icon>
-        <span>PROFILO</span>
     </button>
 </mat-toolbar>
 

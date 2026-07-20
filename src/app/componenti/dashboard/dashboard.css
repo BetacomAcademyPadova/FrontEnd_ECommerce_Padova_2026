@@ -1,8 +1,9 @@
 .example-container {
-  min-height: calc(100vh - 80px); 
-  height: auto;
-  margin: 0; 
-  background: transparent; 
+  min-height: calc(100vh - 150px); 
+    height: auto;
+    margin: 0; 
+    background: transparent; 
+    padding-top: 150px; 
 }
 
 .active{
@@ -38,6 +39,11 @@
   height: 80px; 
   padding: 0 24px; 
   border-bottom: 1px solid #E0E0E0; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1001;
 }
 
 .nav-button mat-icon {
@@ -65,7 +71,12 @@
     justify-content: center;   
     gap: 40px;                 
     border-bottom: 1px solid #E0E0E0;
-    color: #5D4037;            
+    color: #5D4037;   
+    position: fixed;
+    top: 80px; 
+    left: 0;
+    width: 100%;
+    z-index: 1000;     
 }
 
 .sub-nav-bar button {
