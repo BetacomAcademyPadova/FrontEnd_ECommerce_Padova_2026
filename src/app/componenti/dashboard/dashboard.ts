@@ -12,11 +12,12 @@ import {MatMenuModule} from '@angular/material/menu';
 import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-dashboard',
   imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, //RouterLinkActive, 
-    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule
+    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule, MatTooltipModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
