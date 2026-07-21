@@ -72,7 +72,7 @@ export class GestioneUtente implements OnInit
       return matchId && matchNome && matchCognome && matchRuolo;
     });
   }
-
+  
   onSelected(row: any) {
     console.log("Riga selezionata:", row);
     let dialogRef = this.util.openDialog(SceltaUpdateUtente, row, {
