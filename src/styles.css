@@ -4,3 +4,13 @@ html, body {
   margin: 0;
   background-color: #F4EFEA; 
 }
+
+@media screen and (max-width: 1400px) {
+  body {
+    zoom: 0.78; 
+  }
+
+  .cdk-overlay-container {
+    zoom: 1.28; /*(1 / 0.78 = 1.28)*/
+  }
+}
