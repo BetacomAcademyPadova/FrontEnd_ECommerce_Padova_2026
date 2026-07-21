@@ -4,13 +4,13 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatOption } from '@angular/material/select';
-import { UtenteServices } from '../../services/utente-services';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { SceltaUpdateUtente } from '../../dialogs/scelta-update-utente/scelta-update-utente';
 import { ComponentType } from '@angular/cdk/overlay';
 import { MatListModule } from "@angular/material/list";
+import { UtenteServices } from '../../services/user-services';
 
 @Component({
   selector: 'app-gestione-utente',
