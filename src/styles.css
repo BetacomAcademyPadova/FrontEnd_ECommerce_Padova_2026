@@ -4,3 +4,11 @@ html, body {
   margin: 0;
   background-color: #F4EFEA; 
 }
+:root {
+  --brand-bg: #F4EFEA;
+  --brand-surface: #FAF8F5;
+  --brand-dark: #5D4037;
+  --brand-mid: #8D6E63;
+  --brand-line: #E0E0E0;
+  --brand-serif: "Playfair Display", serif;
+}

@@ -1,0 +1,38 @@
+<div class="checkout-wrapper">
+    <mat-card class="checkout-card">
+  <h2 class="checkout-title">Pagamento</h2>
+  <p class="checkout-sub">Completa il tuo ordine in modo sicuro</p>
+
+  @if (caricamento()) {
+    <div class="checkout-loading">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>Caricamento del modulo di pagamento...</span>
+    </div>
+  }
+
+  <div #paymentElement class="strope-slot"></div>
+
+  @if (messaggio()) {
+      <div class="checkout-error">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ messaggio() }}</span>
+      </div>
+    }
+
+    <button mat-flat-button
+            class="btn-paga"
+            [disabled]="caricamento() || elaborazione()"
+            (click)="paga()">
+      @if (elaborazione()) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <span>Paga ora</span>
+      }
+    </button>
+
+    <p class="checkout-secure">
+      <mat-icon>lock</mat-icon>
+      Pagamento protetto da Stripe
+    </p>
+  </mat-card>
+</div>
