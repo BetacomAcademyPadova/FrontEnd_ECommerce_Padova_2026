@@ -1,0 +1,13 @@
+<div class="container dialog-container">
+    <button mat-icon-button (click)="chiudi()" class="dialog-close-btn">
+        <mat-icon>close</mat-icon>
+    </button>
+    <h2 mat-dialog-title>COSA VUOLE FARE CON QUESTO UTENTE?</h2>
+    <mat-dialog-content class="center-content">
+        <mat-button-toggle-group name="updateType" [(ngModel)]="updateUt" aria-label="Tipo Update"
+                 (change)="onUpdateUtenteChange()">
+            <mat-button-toggle value="update">Update</mat-button-toggle>
+            <mat-button-toggle value="update">Delete</mat-button-toggle>
+        </mat-button-toggle-group>
+    </mat-dialog-content>
+</div>
