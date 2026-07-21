@@ -24,7 +24,9 @@ export class SceltaUpdateUtente
     this.dialogRef.close();
   }
 
-  onUpdateUtenteChange(){
-    this.dialogRef.close(this.updateUt);
+  confermaScelta() {
+    if (this.updateUt) {
+      this.dialogRef.close(this.updateUt);
+    }
   }
 }
