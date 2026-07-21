@@ -42,6 +42,10 @@ onSubmit(signin: NgForm) {
       next: (resp: UserDTO) => {
         this.msg.set("");
         console.log(resp)
+        this.auth.setAutentificated(resp.id);
+        if (resp.ruolo == 'Admin') this.auth.setAdmin();
+        if (resp.ruolo == 'User') this.auth.setUser();
+        if (resp.ruolo == 'Venditore') this.auth.setVenditore();
 
         this.auth.setAutentificated(resp);
         console.log('[LoginDialog] dopo login, isAutentificated =', this.auth.isAutentificated());

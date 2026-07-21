@@ -8,17 +8,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthServices } from '../../auth/auth-services';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { Login } from '../../dialogs/login/login';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { MatBadgeModule } from '@angular/material/badge';
-import { UtenteServices } from '../../services/user-services';
-import { ChangePassword } from '../../dialogs/change-password/change-password';
-import { AutentificazioneServices } from '../../security/autentificazione-services';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, RouterLinkActive, 
-    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule
+  imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, //RouterLinkActive, 
+    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule, MatTooltipModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',

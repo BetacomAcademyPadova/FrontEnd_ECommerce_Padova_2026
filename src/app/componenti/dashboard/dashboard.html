@@ -20,10 +20,10 @@
         E-COMMERCE PADOVA
     </span>
     <span class="example-spacer"></span>
-    <button mat-icon-button class="nav-button" (click)="login()">
+    <button mat-icon-button class="nav-button" (click)="login()" matTooltip="Login">
         <mat-icon>login</mat-icon>
     </button>
-    <button mat-icon-button class="nav-button" (click)="logout()">
+    <button mat-icon-button class="nav-button" (click)="logout()" matTooltip="Logout">
         <mat-icon>logout</mat-icon>
     </button>
 </mat-toolbar>
@@ -41,26 +41,16 @@
         <mat-icon [matBadge]="quantitaCarrello" matBadgeColor="warn" [matBadgeHidden]="quantitaCarrello === 0" aria-hidden="false">shopping_cart</mat-icon>
         <span>CARRELLO</span>
     </button>
-    <button mat-button routerLink="profilo">
-        <mat-icon>person</mat-icon>
-        <span>PROFILO</span>
-    </button>
+    @if(auth.grant().isLogged && auth.grant().isAdmin){
+        <button mat-button routerLink="utente">
+            <mat-icon>person</mat-icon>
+            <span>UTENTI</span>
+        </button>
+    }
 </mat-toolbar>
 
 <mat-drawer-container class="example-container">
-    <mat-drawer mode="side" [opened]="auth.grant().isAdmin" class="side-menu">
-        <mat-list role="list">
-            <mat-list-item role="listitem" routerLink="home" [routerLinkActive]="'active'">
-                Home</mat-list-item>
-
-                @if (auth.grant().isAdmin){
-            <mat-list-item role="listitem" routerLink="utente" [routerLinkActive]="'active'">
-                Gestione utente</mat-list-item>
-            <mat-list-item role="listitem" routerLink="veicoli" [routerLinkActive]="'active'">
-                Gestione veicoli</mat-list-item>
-
-            }
-        </mat-list></mat-drawer>
+    
     <mat-drawer-content>
         <router-outlet></router-outlet>
     </mat-drawer-content>
