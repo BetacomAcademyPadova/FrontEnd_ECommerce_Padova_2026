@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterOutlet, RouterLinkActive, Router } from "@angular/router";
@@ -31,7 +31,8 @@ export class Dashboard {
     public auth: AuthServices,
     private rounting: Router,
     private util: UtilitiesServices,
-    private utenteServices:UtenteServices
+    private utenteServices: UtenteServices,
+    private autentificazioneServices: AutentificazioneServices
   ) {}
 
   login() {
@@ -45,10 +46,17 @@ export class Dashboard {
   }
 
   changePWD(){
+    this.util.openDialog(ChangePassword,
+      {},
+      {
+        width: '400px',
+        disableClose: false,
+      }
+    )
   }
 
  profile() {
-    this.utenteServices.findByUserName(this.auth.grant().userId)
+    this.utenteServices.findByUserName()
       .subscribe({
         next: ((r: any) => {
           this.util.openDialog(Registrazione,
@@ -68,10 +76,15 @@ export class Dashboard {
         })
       })
   }
-  
   logout() {
     console.log("logout");
     this.auth.resetAll();
-    this.rounting.navigate(['/dash'])
+    this.autentificazioneServices.logout()
+      .subscribe({
+        next: () => {
+          this.rounting.navigate(['/dash'])
+        }
+      })
+
   }
 }

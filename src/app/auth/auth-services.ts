@@ -1,10 +1,10 @@
-import { isPlatformBrowser } from '@angular/common';
-import { inject, PLATFORM_ID, Service, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
+import { UserDTO } from '../componenti/models/user-dto/user-dto';
 
 @Service()
 export class AuthServices {
-    private platformId = inject((PLATFORM_ID));
     grant = signal({
+        token: null,
         isAdmin: false,
         isLogged: false,
         isVenditore: false,
@@ -40,37 +40,19 @@ export class AuthServices {
         }
     }
 
-    setAdmin() {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem("isAdmin", "1")
-            this.grant.update(grant => ({
-                ...grant,     // copia tutte le proprieta di grant
-                isAdmin: true,
-                isMenu: true
-            }));
-        }
-    }
-    
-    setVenditore() {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem("isAdmin", "0")
-            this.grant.update(grant => ({
-                ...grant,     // copia tutte le proprieta di grant
-                isVenditore: true,
-                isAdmin: false
-            }));
-        }
-
     }
 
-    setUser() {
-        if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem("isAdmin", "0")
-            this.grant.update(grant => ({
-                ...grant,     // copia tutte le proprieta di grant
-                isAdmin: false
-            }));
-        }
+    setAutentificated(user: UserDTO) {
+        let admin = user.ruolo === 'Admin' ? true : false;
+        let venditore = user.ruolo === 'Venditore' ? true : false;
+
+        this.grant.update(grant => ({
+            ...grant,
+            isLogged: true,
+            isAdmin: admin,
+            isVenditore: venditore,
+            userId: user.userId,
+        }));
 
     }
 
@@ -89,24 +71,12 @@ export class AuthServices {
         }
     }
 
+    isAutentificated(): boolean {
+        return this.grant().isLogged;
+    }
 
-    isAutentificated() {
-        if (isPlatformBrowser(this.platformId)) {
-            return localStorage.getItem("isLogged") === '1'
-        }
-        return false;
-    }
     isRoleAdmin() {
-        if (isPlatformBrowser(this.platformId)) {
-            return localStorage.getItem("isAdmin") === '1'
-        }
-        return false;
-    }
-    isRoleVenditore() {
-        if (isPlatformBrowser(this.platformId)) {
-            return localStorage.getItem("isVenditore") === '1'
-        }
-        return false;
+        return this.grant().isAdmin;
     }
 
 }
