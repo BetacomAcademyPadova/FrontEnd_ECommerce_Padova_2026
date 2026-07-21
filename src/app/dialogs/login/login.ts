@@ -28,13 +28,13 @@ export class Login {
 
   constructor(
     private account: AutentificazioneServices,
-    private auth:AuthServices,
-    private routing:Router,
-    private util:UtilitiesServices,
+    private auth: AuthServices,
+    private routing: Router,
+    private util: UtilitiesServices,
     private dialogRef: MatDialogRef<Login>
-  ) {}
+  ) { }
 
-onSubmit(signin: NgForm) {
+  onSubmit(signin: NgForm) {
     this.account.login({
       username: signin.form.value.username,
       password: signin.form.value.password
@@ -42,13 +42,12 @@ onSubmit(signin: NgForm) {
       next: (resp: UserDTO) => {
         this.msg.set("");
         console.log(resp)
-        this.auth.setAutentificated(resp.id);
-        if (resp.ruolo == 'Admin') this.auth.setAdmin();
-        if (resp.ruolo == 'User') this.auth.setUser();
-        if (resp.ruolo == 'Venditore') this.auth.setVenditore();
 
         this.auth.setAutentificated(resp);
+
         console.log('[LoginDialog] dopo login, isAutentificated =', this.auth.isAutentificated());
+
+
         this.dialogRef.close(true);
         this.routing.navigate(['/dash']);
       },
@@ -58,16 +57,14 @@ onSubmit(signin: NgForm) {
         this.username = signin.form.value.username;
       }
     });
-  
- 
   }
 
-  registrazione(){
-   this.util.openDialog(Registrazione,
+  registrazione() {
+    this.util.openDialog(Registrazione,
       {
         account: null,
         mode: "C"
-      }, 
+      },
       {
         width: '90vw',
         maxWidth: '1200px',
@@ -77,5 +74,5 @@ onSubmit(signin: NgForm) {
 
   }
 
-  onResendChange(e: MatCheckboxChange) {}
+  onResendChange(e: MatCheckboxChange) { }
 }

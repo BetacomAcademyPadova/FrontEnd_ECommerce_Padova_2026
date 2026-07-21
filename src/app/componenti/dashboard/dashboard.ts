@@ -9,10 +9,12 @@ import { AuthServices } from '../../auth/auth-services';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { Login } from '../../dialogs/login/login';
 import { MatMenuModule } from '@angular/material/menu';
-import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UtenteServices } from '../../services/user-services';
+import { AutentificazioneServices } from '../../security/autentificazione-services';
+import { ChangePassword } from '../../dialogs/change-password/change-password';
 
 @Component({
   selector: 'app-dashboard',
