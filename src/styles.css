@@ -4,11 +4,13 @@ html, body {
   margin: 0;
   background-color: #F4EFEA; 
 }
-:root {
-  --brand-bg: #F4EFEA;
-  --brand-surface: #FAF8F5;
-  --brand-dark: #5D4037;
-  --brand-mid: #8D6E63;
-  --brand-line: #E0E0E0;
-  --brand-serif: "Playfair Display", serif;
+
+@media screen and (max-width: 1400px) {
+  body {
+    zoom: 0.78; 
+  }
+
+  .cdk-overlay-container {
+    zoom: 1.28; /*(1 / 0.78 = 1.28)*/
+  }
 }
