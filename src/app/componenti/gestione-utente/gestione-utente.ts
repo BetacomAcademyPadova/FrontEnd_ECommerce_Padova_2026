@@ -1,31 +1,18 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-<<<<<<< HEAD
+import { Component, inject, OnInit, signal } from "@angular/core";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatOptionModule } from '@angular/material/core';
-=======
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelect, MatOption } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
->>>>>>> 1877a9513fcded714e838b9654b3a7541410d824
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from "@angular/material/card";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
-<<<<<<< HEAD
-import { MatSelectModule } from '@angular/material/select';
-import { SceltaUpdateUtente } from '../../dialogs/scelta-update-utente/scelta-update-utente';
-import { UtenteServices } from '../../services/utente-services';
-import { UtilitiesServices } from '../../services/utilities-services';
-=======
-import { UtenteServices } from '../../services/user-services';
->>>>>>> 1877a9513fcded714e838b9654b3a7541410d824
+import { UtilitiesServices } from "../../services/utilities-services";
+import { SceltaUpdateUtente } from "../../dialogs/scelta-update-utente/scelta-update-utente";
+import { UtenteServices } from "../../services/utente-services";
 
 @Component({
   selector: 'app-gestione-utente',
   imports: [MatCardModule, MatInputModule,
-    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatSelectModule,
+    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatListModule,
     MatOptionModule, FormsModule],
   templateUrl: './gestione-utente.html',
   styleUrl: './gestione-utente.css',
