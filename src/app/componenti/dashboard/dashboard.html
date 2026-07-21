@@ -48,11 +48,19 @@
 </mat-toolbar>
 
 <mat-drawer-container class="example-container">
-    <mat-drawer mode="side" [opened]="auth.grant().isMenu">
+    <mat-drawer mode="side" [opened]="auth.grant().isAdmin" class="side-menu">
         <mat-list role="list">
+            <mat-list-item role="listitem" routerLink="home" [routerLinkActive]="'active'">
+                Home</mat-list-item>
 
-        </mat-list>
-    </mat-drawer>
+                @if (auth.grant().isAdmin){
+            <mat-list-item role="listitem" routerLink="utente" [routerLinkActive]="'active'">
+                Gestione utente</mat-list-item>
+            <mat-list-item role="listitem" routerLink="veicoli" [routerLinkActive]="'active'">
+                Gestione veicoli</mat-list-item>
+
+            }
+        </mat-list></mat-drawer>
     <mat-drawer-content>
         <router-outlet></router-outlet>
     </mat-drawer-content>
