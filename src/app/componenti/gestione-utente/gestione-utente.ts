@@ -5,16 +5,14 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from "@angular/material/list";
-import { MatSelectModule } from '@angular/material/select';
 import { SceltaUpdateUtente } from '../../dialogs/scelta-update-utente/scelta-update-utente';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { UtenteServices } from '../../services/utente-services';
 
-
 @Component({
   selector: 'app-gestione-utente',
   imports: [MatCardModule, MatInputModule,
-    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatSelectModule,
+    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatListModule,
     MatOptionModule, FormsModule],
   templateUrl: './gestione-utente.html',
   styleUrl: './gestione-utente.css',
