@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterOutlet, RouterLinkActive, Router } from "@angular/router";
@@ -9,10 +9,12 @@ import { AuthServices } from '../../auth/auth-services';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { Login } from '../../dialogs/login/login';
 import { MatMenuModule } from '@angular/material/menu';
-import { UtenteServices } from '../../services/utente-services';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UtenteServices } from '../../services/user-services';
+import { AutentificazioneServices } from '../../security/autentificazione-services';
+import { ChangePassword } from '../../dialogs/change-password/change-password';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,7 +33,8 @@ export class Dashboard {
     public auth: AuthServices,
     private rounting: Router,
     private util: UtilitiesServices,
-    private utenteServices:UtenteServices
+    private utenteServices: UtenteServices,
+    private autentificazioneServices: AutentificazioneServices
   ) {}
 
   login() {
@@ -45,10 +48,17 @@ export class Dashboard {
   }
 
   changePWD(){
+    this.util.openDialog(ChangePassword,
+      {},
+      {
+        width: '400px',
+        disableClose: false,
+      }
+    )
   }
 
  profile() {
-    this.utenteServices.findByUserName(this.auth.grant().userId)
+    this.utenteServices.findByUserName()
       .subscribe({
         next: ((r: any) => {
           this.util.openDialog(Registrazione,
@@ -68,10 +78,15 @@ export class Dashboard {
         })
       })
   }
-  
   logout() {
     console.log("logout");
     this.auth.resetAll();
-    this.rounting.navigate(['/dash'])
+    this.autentificazioneServices.logout()
+      .subscribe({
+        next: () => {
+          this.rounting.navigate(['/dash'])
+        }
+      })
+
   }
 }

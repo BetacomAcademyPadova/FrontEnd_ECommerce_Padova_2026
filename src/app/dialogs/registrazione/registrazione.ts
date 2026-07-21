@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, signal } from '@angular/core';
-import { MatDialog, MatDialogContent, MatDialogRef , MatDialogClose, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialogContent, MatDialogRef , MatDialogClose, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UtenteServices } from '../../services/utente-services';
+import { UtenteServices } from '../../services/user-services';
 
 @Component({
   selector: 'app-registrazione',
@@ -60,7 +60,8 @@ if (data) {
   }
  onSubmitUpdate() {
     this.msg.set('');
-    const updateBody: any = { username: this.account().username };
+    //const updateBody: any = { username: this.account().username };
+    const updateBody: any = {};
 
     if (this.updateForm.controls['nome'].dirty)
       updateBody.nome = this.updateForm.value.nome;

@@ -1,0 +1,27 @@
+<div class="result-wrapper">
+  <mat-card class="result-card" [class]="tema()">
+
+    @if (stato() === 'loading') {
+      <mat-spinner diameter="56" class="result-spinner"></mat-spinner>
+    } @else {
+      <mat-icon class="result-icon">{{ icona() }}</mat-icon>
+    }
+
+    <h2 class="result-title">Esito pagamento</h2>
+    <p class="result-msg">{{ messaggio() }}</p>
+
+    @if (stato() !== 'loading') {
+      <div class="result-actions">
+        @if (stato() === 'requires_payment_method') {
+          <button mat-flat-button class="btn-primario" routerLink="/dash/checkout">
+            Riprova
+          </button>
+        }
+        <button mat-stroked-button class="btn-secondario" routerLink="/dash/home">
+          Torna alla home
+        </button>
+      </div>
+    }
+
+  </mat-card>
+</div>
