@@ -1,13 +1,18 @@
-<div class="container dialog-container">
-    <button mat-icon-button (click)="chiudi()" class="dialog-close-btn">
+<div class="container dialog-container" style="padding: 20px; text-align: center;">
+    <button mat-icon-button (click)="chiudi()" class="dialog-close-btn" style="position: absolute; top: 10px; right: 10px;">
         <mat-icon>close</mat-icon>
     </button>
-    <h2 mat-dialog-title>COSA VUOLE FARE CON QUESTO UTENTE?</h2>
-    <mat-dialog-content class="center-content">
-        <mat-button-toggle-group name="updateType" [(ngModel)]="updateUt" aria-label="Tipo Update"
-                 (change)="onUpdateUtenteChange()">
-            <mat-button-toggle value="update">Update</mat-button-toggle>
-            <mat-button-toggle value="update">Delete</mat-button-toggle>
+    
+    <h2 mat-dialog-title style="margin-bottom: 20px;">COSA VUOLE FARE CON QUESTO UTENTE?</h2>
+    
+    <mat-dialog-content class="center-content" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+        <mat-button-toggle-group name="updateType" [(ngModel)]="updateUt" aria-label="Tipo Update">
+            <mat-button-toggle value="update">UPDATE</mat-button-toggle>
+            <mat-button-toggle value="delete">DELETE</mat-button-toggle>
         </mat-button-toggle-group>
+
+        <button mat-raised-button color="primary" [disabled]="!updateUt" (click)="confermaScelta()" style="margin-top: 15px; width: 100%;">
+            CONFERMA
+        </button>
     </mat-dialog-content>
 </div>

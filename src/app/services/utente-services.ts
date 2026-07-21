@@ -24,7 +24,7 @@ export class UtenteServices {
     }
     
     update(body: {}) {
-        return this.http.patch(this.url + "update", body)
+        return this.http.put(this.url + "update", body)
             .pipe(tap(() => this.list()));
     }
 
@@ -38,8 +38,8 @@ export class UtenteServices {
         return this.http.put(urlCompleto, {});
     }
 
-    deleteUser(id: string){
-        const params = new HttpParams().set("userName", id);
-        return this.http.put(this.url + "getById", { params });
+    deleteUser(id: number) {
+        return this.http.delete(this.url + "delete/" + id)
+            .pipe(tap(() => this.list()));
     }
 }

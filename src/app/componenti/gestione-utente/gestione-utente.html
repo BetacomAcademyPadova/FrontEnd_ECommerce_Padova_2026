@@ -1,33 +1,108 @@
-<div class="container">
-    <mat-card class="example-card" appearance="outlined">
-        <mat-card-header class="header-row">
-            <mat-card-title>ELENCO UTENTI</mat-card-title>
-        </mat-card-header>    
-        <mat-divider style="margin-top: 20px;"></mat-divider>
-        <mat-card-content>
-            <table class="table table-stripped ">
-                <thead>
-                    <tr>
-                        <th>NOME</th>
-                        <th>COGNOME</th>
-                        <th>EMAIL</th>
-                        <th>TELEFONO</th>
-                        <th>RUOLO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for (ut of utenti(); track ut.id) 
-                {
-                    <tr (click)="onSelected(ut)" class="clickable-row">
-                        <td>{{ut.nome}}</td>
-                        <td>{{ut.cognome}}</td>
-                        <td>{{ut.email}}</td>
-                        <td>{{ut.telefono}}</td>
-                        <td>{{ut.ruolo}}</td>
-                    </tr>
-                }   
-                </tbody>
-            </table>  
-        </mat-card-content>
-    </mat-card>
-</div>
+@if (isModifica()) 
+{
+    <div class="container">
+        <mat-card class="example-card" appearance="outlined">
+            <mat-card-header class="header-row">
+                <mat-card-title>MODIFICA UTENTE</mat-card-title>
+            </mat-card-header>    
+            <mat-divider style="margin-top: 20px;"></mat-divider>
+            <mat-card-content [formGroup]="updateForm" class="form-content-custom">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nome</mat-label>
+                    <input matInput formControlName="nome">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Cognome</mat-label>
+                    <input matInput formControlName="cognome">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Telefono</mat-label>
+                    <input matInput formControlName="telefono">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Ruolo</mat-label>
+                    <mat-select formControlName="ruolo">
+                        <mat-option value="Admin">Admin</mat-option>
+                        <mat-option value="User">User</mat-option>
+                        <mat-option value="Venditore">Venditore</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="button-container">
+                    <button class="btn-custom btn-annulla" type="button" (click)="annullaModifica()">
+                        ANNULLA
+                    </button>
+                    <button class="btn-custom btn-salva" type="submit" (click)="salvaModifiche()">
+                        SALVA
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+} 
+@else 
+{
+    <div class="container">
+        <mat-card class="example-card" appearance="outlined">
+            <mat-card-header class="header-row" style="justify-content: center; padding-top: 10px;">
+                <mat-card-title>
+                    ELENCO UTENTI
+                </mat-card-title>
+            </mat-card-header>   
+            <mat-divider style="margin-top: 20px;"></mat-divider>
+            <mat-card-content>
+                <div class="search-container">
+                    <mat-form-field appearance="outline" class="search-field">
+                        <mat-label>Cerca per ID</mat-label>
+                        <input matInput [(ngModel)]="filtroId" placeholder="Digita l'ID...">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="search-field">
+                        <mat-label>Cerca per nome</mat-label>
+                        <input matInput [(ngModel)]="filtroNome" placeholder="Digita il nome...">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="search-field">
+                        <mat-label>Cerca per cognome</mat-label>
+                        <input matInput [(ngModel)]="filtroCognome" placeholder="Digita il cognome...">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="search-field">
+                        <mat-label>Filtra per ruolo</mat-label>
+                        <mat-select [(ngModel)]="filtroRuolo" panelClass="custom-select-panel">
+                            <mat-option value="">Tutti</mat-option>
+                            <mat-option value="Admin">Admin</mat-option>
+                            <mat-option value="User">User</mat-option>
+                            <mat-option value="Venditore">Venditore</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <table class="table table-stripped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOME</th>
+                            <th>COGNOME</th>
+                            <th>EMAIL</th>
+                            <th>TELEFONO</th>
+                            <th>RUOLO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for (ut of utentiFiltrati; track ut.userId) 
+                    {
+                        <tr (click)="onSelected(ut)" class="clickable-row">
+                            <td>{{ut.userId}}</td>
+                            <td>{{ut.nome}}</td>
+                            <td>{{ut.cognome}}</td>
+                            <td>{{ut.email}}</td>
+                            <td>{{ut.telefono}}</td>
+                            <td>{{ut.ruolo}}</td>
+                        </tr>
+                    }   
+                    </tbody>
+                </table>  
+            </mat-card-content>
+        </mat-card>
+    </div>
+}
