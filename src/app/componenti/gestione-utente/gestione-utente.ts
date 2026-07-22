@@ -1,19 +1,20 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
-import { MatCardModule } from "@angular/material/card";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from "@angular/material/list";
-import { UtilitiesServices } from "../../services/utilities-services";
-import { SceltaUpdateUtente } from "../../dialogs/scelta-update-utente/scelta-update-utente";
-import { UtenteServices } from "../../services/utente-services";
+import { SceltaUpdateUtente } from '../../dialogs/scelta-update-utente/scelta-update-utente';
+import { UtilitiesServices } from '../../services/utilities-services';
+import { UtenteServices } from '../../services/utente-services';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-gestione-utente',
   imports: [MatCardModule, MatInputModule,
-    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatListModule,
-    MatOptionModule, FormsModule],
+    ReactiveFormsModule, MatFormFieldModule, MatListModule,
+    MatOptionModule, FormsModule, MatSelectModule],
   templateUrl: './gestione-utente.html',
   styleUrl: './gestione-utente.css',
 })

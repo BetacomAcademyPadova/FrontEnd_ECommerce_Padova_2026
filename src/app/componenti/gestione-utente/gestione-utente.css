@@ -125,29 +125,7 @@ mat-card-content {
   background-color: #261c1a;
 }
 
-::ng-deep .custom-select-panel {
-  background-color: #FAF8F5 !important;
-  border: 1px solid #E0E0E0 !important;
-  border-radius: 6px !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
-}
-
-::ng-deep .custom-select-panel .mat-mdc-option {
-  color: #333333 !important;
-  font-size: 0.95rem !important;
-  transition: background-color 0.2s ease;
-}
-
-::ng-deep .custom-select-panel .mat-mdc-option:hover {
-  background-color: #F2EBE1 !important;
-}
-
-::ng-deep .custom-select-panel .mat-mdc-option.mdc-list-item--selected {
-  background-color: #EFE7DE !important;
-  color: #5D4037 !important;
-  font-weight: 500;
-}
-
+/* Stili puliti per il pannello select personalizzato */
 ::ng-deep .cdk-overlay-pane:has(.custom-select-panel) {
   position: absolute !important;
   transform: translate(305px, 45px) !important;
