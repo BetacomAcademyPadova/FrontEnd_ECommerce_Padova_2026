@@ -8,12 +8,13 @@ import { MatListModule } from "@angular/material/list";
 import { SceltaUpdateUtente } from '../../dialogs/scelta-update-utente/scelta-update-utente';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { UtenteServices } from '../../services/utente-services';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-gestione-utente',
   imports: [MatCardModule, MatInputModule,
-    ReactiveFormsModule, MatFormFieldModule, MatListModule, MatListModule,
-    MatOptionModule, FormsModule],
+    ReactiveFormsModule, MatFormFieldModule, MatListModule,
+    MatOptionModule, FormsModule, MatSelectModule],
   templateUrl: './gestione-utente.html',
   styleUrl: './gestione-utente.css',
 })
