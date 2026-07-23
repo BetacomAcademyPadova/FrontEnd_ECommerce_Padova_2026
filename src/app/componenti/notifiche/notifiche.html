@@ -1,0 +1,67 @@
+<div class="container" style="padding: 20px; max-width: 800px; margin: 0 auto;">
+  @if (auth.grant().isAdmin) 
+  {
+    <h2>Notifiche di Sistema</h2>
+    <p class="subtitle">Gestisci le notifiche in sospeso.</p>
+
+    @if (msg()) {
+      <div class="alert-error" style="color: red; margin-bottom: 15px;">{{ msg() }}</div>
+    }
+
+    @if (notifiche().length === 0) 
+    {
+      <div class="empty-state" style="margin-top: 20px;">
+        <p>Non ci sono nuove notifiche da leggere.</p>
+      </div>
+    } 
+    @else 
+    {
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        @for (n of notifiche(); track n.idNotifica) {
+          <mat-card class="notification-card">
+            <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+              <div>
+                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: gray;">
+                  <strong>Data:</strong> {{ n.dataCreazione | date:'short' }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">{{ n.messaggio }}</p>
+              </div>
+              <button mat-flat-button color="primary" (click)="segnaComeLetta(n.idNotifica)">
+                Segna come letta
+              </button>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  } 
+  @else 
+  {
+    <h2>Invia richiesta all'Admin</h2>
+    <p class="subtitle">Compila il modulo sottostante per inoltrare la tua richiesta.</p>
+
+    @if (msg()) 
+    {
+      <div style="color: red; margin-bottom: 15px;">{{ msg() }}</div>
+    }
+    @if (successMsg()) 
+    {
+      <div style="color: green; margin-bottom: 15px;">{{ successMsg() }}</div>
+    }
+
+    <form [formGroup]="richiestaForm" (ngSubmit)="inviaRichiesta()" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Messaggio di richiesta</mat-label>
+        <textarea matInput formControlName="messaggio" rows="5" placeholder="Scrivi qui i dettagli della tua richiesta..."></textarea>
+        @if (richiestaForm.get('messaggio')?.hasError('required') && richiestaForm.get('messaggio')?.touched) {
+          <mat-error>Il messaggio è obbligatorio</mat-error>
+        }
+      </mat-form-field>
+      <div>
+        <button mat-flat-button color="primary" type="submit" [disabled]="richiestaForm.invalid">
+          INVIA RICHIESTA
+        </button>
+      </div>
+    </form>
+  }
+</div>
