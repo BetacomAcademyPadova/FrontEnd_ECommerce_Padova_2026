@@ -26,19 +26,24 @@ export class ChangePassword {
 
   msg = signal('');
 
-onSubmit(updatePwd: NgForm) {
+  onSubmit(updatePwd: NgForm) {
     this.msg.set("");
 
     if (updatePwd.value.newpassword != updatePwd.value.cntrlpassword) {
       this.msg.set("password non identiche.")
       return
     }
+
+    const currentUsername = this.auth.getUsername();
+
     this.accountServices.changePwd({
-      oldPwd: updatePwd.value.oldpassword,
-      newPwd: updatePwd.value.newpassword
+      username: currentUsername,
+      oldPassword: updatePwd.value.oldpassword,
+      newPassword: updatePwd.value.newpassword
     }).subscribe({
       next: ((r: any) => {
         this.dialogRef.close();
+        console.log("Password modificata con successo");
       }),
       error: ((r: any) => {
         this.msg.set(r.error.msg);
