@@ -1,6 +1,6 @@
 <mat-toolbar class="header-sfondo mat-elevation-z4">
   @if (auth.grant().isLogged){
-    <button matIconButton [matMenuTriggerFor]="menu" class="example-icon"
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon"
         aria-label="Example icon-button with menu icon">
         <mat-icon>menu</mat-icon>
     </button>
@@ -11,7 +11,7 @@
         </button>
         <button mat-menu-item (click)="profile()">
             <mat-icon>person</mat-icon>
-            <span>Profile</span>
+            <span>Profilo</span>
         </button>
     </mat-menu>
     }
@@ -37,14 +37,20 @@
         <mat-icon>category</mat-icon>
         <span>PRODOTTI</span>
     </button>
-    <button mat-button routerLink="carello">
-        <mat-icon [matBadge]="quantitaCarrello" matBadgeColor="warn" [matBadgeHidden]="quantitaCarrello === 0" aria-hidden="false">shopping_cart</mat-icon>
-        <span>CARRELLO</span>
-    </button>
+    @if(!auth.grant().isAdmin && !auth.grant().isVenditore){
+        <button mat-button routerLink="carello">
+            <mat-icon [matBadge]="quantitaCarrello" matBadgeColor="warn" [matBadgeHidden]="quantitaCarrello === 0" aria-hidden="false">shopping_cart</mat-icon>
+            <span>CARRELLO</span>
+        </button>
+    }
     @if(auth.grant().isLogged && auth.grant().isAdmin){
         <button mat-button routerLink="utente">
             <mat-icon>person</mat-icon>
             <span>UTENTI</span>
+        </button>
+        <button mat-button routerLink="notifica">
+            <mat-icon>notifications</mat-icon>
+            <span>NOTIFICHE</span>
         </button>
     }
 </mat-toolbar>
