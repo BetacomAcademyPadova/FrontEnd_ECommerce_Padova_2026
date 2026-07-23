@@ -9,6 +9,7 @@ import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodot
 import { Prodotti } from './componenti/prodotti/prodotti';
 import { Profilo } from './componenti/profilo/profilo';
 import { Login } from './dialogs/login/login';
+import { Notifiche } from './componenti/notifiche/notifiche';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -20,6 +21,7 @@ export const routes: Routes = [
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
         ]
     },
 ];
