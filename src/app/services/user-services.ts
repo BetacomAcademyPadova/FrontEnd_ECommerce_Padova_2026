@@ -59,4 +59,8 @@ export class UtenteServices {
     deleteUser(id?: number) {
         return this.http.get(this.getBaseUrl() + "delete");
     }
+
+    changeUsername(body: {}) {
+        return this.http.put(this.getBaseUrl() + "changeUsername", body);
+    }
 }
