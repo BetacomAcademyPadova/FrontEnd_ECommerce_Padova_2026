@@ -58,10 +58,12 @@ if (data) {
     if (this.mod == 'C') this.onSubmitCreate();
     if (this.mod == 'U') this.onSubmitUpdate();
   }
- onSubmitUpdate() {
+
+  onSubmitUpdate() {
     this.msg.set('');
-    //const updateBody: any = { username: this.account().username };
-    const updateBody: any = {};
+    const updateBody: any = {
+      userId: this.account()?.userId 
+    };
 
     if (this.updateForm.controls['nome'].dirty)
       updateBody.nome = this.updateForm.value.nome;
@@ -74,6 +76,9 @@ if (data) {
 
     if (this.updateForm.controls['telefono'].dirty)
       updateBody.telefono = this.updateForm.value.telefono;
+
+    if (this.updateForm.controls['username'].dirty)
+      updateBody.username = this.updateForm.value.username;
 
     console.log(updateBody);
 
@@ -88,7 +93,8 @@ if (data) {
         })
       })
   }
-onSubmitCreate() {
+
+  onSubmitCreate() {
     this.msg.set("");
 
     if (this.updateForm.value.password != this.updateForm.value.passwordControl) {
@@ -116,8 +122,4 @@ onSubmitCreate() {
       })
     })
   }
-
-
-
-
 }

@@ -33,7 +33,7 @@ export class UtenteServices {
             .pipe(tap(() => this.list()));
     }
     update(body: {}) {
-        return this.http.patch(this.getBaseUrl() + "update", body)
+        return this.http.put(this.getBaseUrl() + "update", body)
             .pipe(tap(() => this.list()));
     }
     updateProfile(body: {}) {
@@ -43,7 +43,20 @@ export class UtenteServices {
     findByUserName(id?: string) {
         return this.http.get(this.getBaseUrl() + "getByUsername");
     }
+
+    findByUserNameNumber(id: number) {
+        return this.http.get<any>(this.getBaseUrl() + "getById/" + id);
+    }
+    
     changePwd(body: {}) {
        return this.http.put(this.getBaseUrl() + "changePwd", body);
+    }
+
+    setRole(id: string, ruolo: string) {
+        return this.http.put(`${this.getBaseUrl()}setRuolo/${id}/${ruolo}`, {});
+    }
+
+    deleteUser(id?: number) {
+        return this.http.get(this.getBaseUrl() + "delete");
     }
 }

@@ -57,8 +57,9 @@ export class Dashboard {
     )
   }
 
- profile() {
-    this.utenteServices.findByUserName()
+  profile() {
+    const userId = this.auth.grant()?.userId;
+    this.utenteServices.findByUserNameNumber(Number(userId))
       .subscribe({
         next: ((r: any) => {
           this.util.openDialog(Registrazione,
@@ -78,6 +79,7 @@ export class Dashboard {
         })
       })
   }
+
   logout() {
     console.log("logout");
     this.auth.resetAll();
@@ -87,6 +89,5 @@ export class Dashboard {
           this.rounting.navigate(['/dash'])
         }
       })
-
   }
 }
