@@ -12,5 +12,6 @@ export interface UserDTO {
   userId:string,
   ruolo:string,
   mailValidate:string,
-  carrelloSize:number
+  carrelloSize:number,
+  username:string
 }

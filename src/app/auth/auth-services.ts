@@ -10,6 +10,7 @@ export class AuthServices {
         isLogged: false,
         isVenditore: false,
         userId: null as string | null,
+        username: null as string | null
     })
 
     setToken(token: string) {
@@ -22,16 +23,16 @@ export class AuthServices {
 
     setAutentificated(user: UserDTO) {
         let admin = user.ruolo === 'Admin' ? true : false;
-        let vendiotore = user.ruolo === 'Venditore' ? true : false;
+        let venditore = user.ruolo === 'Venditore' ? true : false;
 
         this.grant.update(grant => ({
             ...grant, 
             isLogged: true,
             isAdmin: admin,
-            isVenditore: vendiotore,
+            isVenditore: venditore,
             userId: user.userId,
+            username: user.username
         }));
-
     }
 
 
@@ -42,6 +43,7 @@ export class AuthServices {
             isLogged: false,
             isVenditore: false,
             userId: null,
+            username: null
         });
     }
 
@@ -57,4 +59,7 @@ export class AuthServices {
         return this.grant().isVenditore;
     }
 
+    getUsername(): string | null {
+        return this.grant().username;
+    }
 }
