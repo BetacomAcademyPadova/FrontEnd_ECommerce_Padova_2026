@@ -43,6 +43,12 @@
             <span>CARRELLO</span>
         </button>
     }
+    @if(auth.grant().isLogged && auth.grant().isAdmin){
+        <button mat-button routerLink="utente">
+            <mat-icon>person</mat-icon>
+            <span>UTENTI</span>
+        </button>
+    }
     @if(auth.grant().isLogged){
         @if(auth.grant().isLogged && auth.grant().isAdmin){
             <button mat-button routerLink="notifica">

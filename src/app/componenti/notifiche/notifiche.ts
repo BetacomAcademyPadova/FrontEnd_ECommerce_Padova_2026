@@ -34,7 +34,10 @@ export class Notifiche implements OnInit
     {
       this.notificheService.getTutteNonLette().subscribe({
         next: (res) => {
-          this.notifiche.set(res);
+          const ordinate = res.sort((a, b) => 
+            new Date(b.dataCreazione).getTime() - new Date(a.dataCreazione).getTime()
+          );
+          this.notifiche.set(ordinate);
         },
         error: () => {
           this.msg.set("Errore caricamento notifiche");
