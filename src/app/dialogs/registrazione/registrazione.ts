@@ -61,9 +61,12 @@ if (data) {
 
   onSubmitUpdate() {
     this.msg.set('');
-    const updateBody: any = {
-      userId: this.account()?.userId 
-    };
+
+    const userId = this.account()?.userId;
+    const currentUsername = this.account()?.username;
+    const newUsername = this.updateForm.value.username;
+
+    const updateBody: any = { userId: userId };
 
     if (this.updateForm.controls['nome'].dirty)
       updateBody.nome = this.updateForm.value.nome;
@@ -76,22 +79,26 @@ if (data) {
 
     if (this.updateForm.controls['telefono'].dirty)
       updateBody.telefono = this.updateForm.value.telefono;
-
-    if (this.updateForm.controls['username'].dirty)
-      updateBody.username = this.updateForm.value.username;
-
+    
     console.log(updateBody);
 
-    this.accoutServices.update(updateBody)
-      .subscribe({
-        next: ((resp: any) => {
-          console.log(resp);
-          this.dialogRef.close();
-        }),
-        error: ((resp: any) => {
-          this.msg.set(resp.error.msg);
-        })
-      })
+    this.accoutServices.update(updateBody).subscribe({
+      next: () => {
+        // 2. Se lo username è stato modificato, chiamiamo changeUsername pulito
+        if (this.updateForm.controls['username'].dirty && newUsername !== currentUsername) {
+          this.accoutServices.changeUsername({
+            username: currentUsername,
+            newUsername: newUsername
+          }).subscribe({
+            next: () => this.dialogRef.close(true),
+            error: (err: any) => this.msg.set(err.error?.msg || "Errore cambio username")
+          });
+        } else {
+          this.dialogRef.close(true);
+        }
+      },
+      error: (resp: any) => this.msg.set(resp.error?.msg || "Errore aggiornamento profilo")
+    });
   }
 
   onSubmitCreate() {
