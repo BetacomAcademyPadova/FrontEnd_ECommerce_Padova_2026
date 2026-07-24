@@ -8,11 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { NotificheServices } from '../../services/notifiche-services';
 import { AuthServices } from '../../auth/auth-services';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: "app-notifiche",
   imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, 
-    MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
+    MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule,
+    MatOptionModule, MatSelectModule],
   templateUrl: "./notifiche.html",
   styleUrl: "./notifiche.css",
 })
@@ -26,6 +29,7 @@ export class Notifiche implements OnInit
   successMsg = signal('');
 
   richiestaForm: FormGroup = new FormGroup({
+    tipoRichiesta: new FormControl('', Validators.required),
     messaggio: new FormControl('', Validators.required)
   });
 
@@ -68,10 +72,12 @@ export class Notifiche implements OnInit
     this.successMsg.set('');
 
     const userId = Number(this.auth.grant().userId);
+    const tipoRichiesta = this.richiestaForm.value.tipoRichiesta;
     const messaggio = this.richiestaForm.value.messaggio;
 
     if (userId) {
-      this.notificheService.inviaRichiesta(userId, messaggio).subscribe({
+      const testoCompleto = `[${tipoRichiesta}] ${messaggio}`;
+      this.notificheService.inviaRichiesta(userId, testoCompleto).subscribe({
         next: () => {
           this.successMsg.set("Richiesta inviata con successo!");
           this.richiestaForm.reset();
@@ -81,5 +87,17 @@ export class Notifiche implements OnInit
         }
       });
     }
+  }
+
+  estraiIdUtente(testo: string): string {
+    return testo.match(/ID:\s*(\d+)/)![1];
+  }
+
+  estraiTipo(testo: string): string {
+    return testo.match(/\[(.*?)\]/)![1];
+  }
+
+  estraiTesto(testo: string): string {
+     return testo.replace(/.*?\s*-\s*\[.*?\]\s*/, '');
   }
 }
