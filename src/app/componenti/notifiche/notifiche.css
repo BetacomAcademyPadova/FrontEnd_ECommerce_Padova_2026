@@ -42,3 +42,4 @@ button[mat-flat-button], button[mat-raised-button], .btn-primary {
 button[mat-flat-button]:hover, button[mat-raised-button]:hover, .btn-primary:hover {
   background-color: #3b2f2f !important; 
 }
+

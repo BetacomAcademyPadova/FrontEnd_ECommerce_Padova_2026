@@ -6,4 +6,14 @@ import { Component } from '@angular/core';
   templateUrl: './carello.html',
   styleUrl: './carello.css',
 })
-export class Carello {}
+export class Carello {
+    idCarrello:number;
+
+    dataUltimoAgg:string;
+
+    user:any;
+
+   // prodotti:ProdottiCarrello[];
+
+    totale:number;
+}
