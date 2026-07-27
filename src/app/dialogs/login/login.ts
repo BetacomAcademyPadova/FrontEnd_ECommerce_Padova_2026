@@ -12,6 +12,7 @@ import { UtilitiesServices } from '../../services/utilities-services';
 import { Registrazione } from '../registrazione/registrazione';
 import { AutentificazioneServices } from '../../security/autentificazione-services';
 import { UserDTO } from '../../componenti/models/user-dto/user-dto';
+import { ForgotPassword } from '../../componenti/forgot-password/forgot-password';
 
 
 @Component({
@@ -73,6 +74,7 @@ export class Login {
     );
 
   }
-
-  onResendChange(e: MatCheckboxChange) { }
+  passwordDimenticata() {
+    this.dialog.open(ForgotPassword,{width:'400px'});
+  }
 }
