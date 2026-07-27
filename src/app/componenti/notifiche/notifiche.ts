@@ -42,8 +42,6 @@ export class Notifiche implements OnInit
             new Date(b.dataCreazione).getTime() - new Date(a.dataCreazione).getTime()
           );
           this.notifiche.set(ordinate);
-          
-          // AGGIORNA ANCHE IL BADGE DEL SERVICE QUI!
           this.notificheService.badgeCount.set(res.length);
         },
         error: () => {
@@ -52,21 +50,27 @@ export class Notifiche implements OnInit
         }
       });
     }
+    else if (this.auth.grant().isLogged) {
+      this.caricaMieRichieste();
+    }
   }
 
-  /*segnaComeLetta(idNotifica: number) 
-  {
-    this.notificheService.segnaComeLetta(idNotifica).subscribe({
-      next: () => 
-      {
-        this.notifiche.update(lista => lista.filter(n => n.idNotifica !== idNotifica));
-      },
-      error: () => 
-      {
-        this.msg.set("Errore durante aggiornamento notifica");
-      }
-    });
-  }*/
+  caricaMieRichieste() {
+    const userId = Number(this.auth.grant().userId);
+    if (userId) {
+      this.notificheService.getRichiesteUtente(userId).subscribe({
+        next: (res) => {
+          const ordinate = res.sort((a, b) => 
+            new Date(b.dataCreazione).getTime() - new Date(a.dataCreazione).getTime()
+          );
+          this.notifiche.set(ordinate);
+        },
+        error: () => {
+          this.msg.set("Errore caricamento storico richieste");
+        }
+      });
+    }
+  }
 
   inviaRichiesta() 
   {
@@ -85,6 +89,7 @@ export class Notifiche implements OnInit
         next: () => {
           this.successMsg.set("Richiesta inviata con successo!");
           this.richiestaForm.reset();
+          this.caricaMieRichieste();
         },
         error: () => {
           this.msg.set("Errore durante l'invio della richiesta");

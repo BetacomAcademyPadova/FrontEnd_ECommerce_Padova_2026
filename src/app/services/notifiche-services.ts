@@ -57,4 +57,9 @@ export class NotificheServices
     rifiutaRichiesta(idNotifica: number) {
         return this.http.put(this.getBaseUrl() + 'rifiuta/' + idNotifica, {});
     }
+
+    getRichiesteUtente(userId: number)
+    {
+        return this.http.get<any[]>(this.getBaseUrl() + 'utente/' + userId);
+    }
 }
