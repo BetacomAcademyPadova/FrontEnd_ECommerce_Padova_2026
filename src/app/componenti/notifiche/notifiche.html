@@ -96,5 +96,46 @@
         </button>
       </div>
     </form>
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <h2>Le tue richieste inviate</h2>
+    <p class="subtitle">Monitora lo stato delle richieste che hai inoltrato.</p>
+    @if (notifiche().length === 0) 
+    {
+      <div class="empty-state" style="margin-top: 20px;">
+        <p style="color: gray;">Non hai ancora inviato nessuna richiesta.</p>
+      </div>
+    } 
+    @else 
+    {
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        @for (n of notifiche(); track n.idNotifica) {
+          <mat-card class="notification-card">
+            <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: gray;">
+                  <strong>Data:</strong> {{ n.dataCreazione | date:'short' }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Tipo:</strong> {{ estraiTipo(n.messaggio) }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
+                </p>
+              </div>
+              <div>
+                <span class="badge" [ngClass]="{
+                  'bg-warning text-dark': n.statoNotifica?.statoNotifica === 'IN ATTESA',
+                  'bg-success': n.statoNotifica?.statoNotifica === 'ACCETTATA',
+                  'bg-danger': n.statoNotifica?.statoNotifica === 'RIFIUTATA'
+                }" style="padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
+                  {{ n.statoNotifica?.statoNotifica }}
+                </span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
   }
 </div>
