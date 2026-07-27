@@ -1,4 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --brand-bg: #F4EFEA;
+  --brand-surface: #FAF8F5;
+  --brand-dark: #5D4037;
+  --brand-mid: #8D6E63;
+  --brand-line: #E0E0E0;
+  --brand-serif: "Playfair Display", serif;
+}
+
 html, body {
   height: 100%;
   margin: 0;

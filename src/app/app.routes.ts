@@ -9,6 +9,9 @@ import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodot
 import { Prodotti } from './componenti/prodotti/prodotti';
 import { Profilo } from './componenti/profilo/profilo';
 import { Login } from './dialogs/login/login';
+import { Checkout } from './componenti/checkout/checkout';
+import { ConfermaOrdine } from './componenti/conferma-ordine/conferma-ordine';
+import { CheckoutResult } from './componenti/checkout-result/checkout-result';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -20,6 +23,9 @@ export const routes: Routes = [
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
+            { path: 'checkout-result', component: CheckoutResult },
+            { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
         ]
     },
 ];
