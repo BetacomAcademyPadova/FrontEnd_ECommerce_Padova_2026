@@ -12,6 +12,7 @@ import { UtilitiesServices } from '../../services/utilities-services';
 import { Registrazione } from '../registrazione/registrazione';
 import { AutentificazioneServices } from '../../security/autentificazione-services';
 import { UserDTO } from '../../componenti/models/user-dto/user-dto';
+import { NotificheServices } from '../../services/notifiche-services';
 
 
 @Component({
@@ -26,12 +27,14 @@ export class Login {
   readonly dialog = inject(MatDialog);
   username = "";
 
+  private notificheService = inject(NotificheServices);
+
   constructor(
     private account: AutentificazioneServices,
     private auth: AuthServices,
     private routing: Router,
     private util: UtilitiesServices,
-    private dialogRef: MatDialogRef<Login>
+    private dialogRef: MatDialogRef<Login>,
   ) { }
 
   onSubmit(signin: NgForm) {
@@ -47,6 +50,10 @@ export class Login {
 
         console.log('[LoginDialog] dopo login, isAutentificated =', this.auth.isAutentificated());
 
+        const grant = this.auth.grant();
+        if (grant.isAdmin) {
+          this.notificheService.aggiornaConteggio(grant.isAdmin);
+        }
 
         this.dialogRef.close(true);
         this.routing.navigate(['/dash']);

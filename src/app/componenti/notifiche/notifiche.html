@@ -34,9 +34,14 @@
                   <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
                 </p>
               </div>
-              <button mat-flat-button color="primary" (click)="segnaComeLetta(n.idNotifica)">
-                Segna come letta
-              </button>
+              <div style="display: flex; gap: 10px;">
+                <button mat-flat-button class="btn-accetta" (click)="accettaRichiesta(n.idNotifica)">
+                  Accetta
+                </button>
+                <button mat-flat-button class="btn-rifiuta" (click)="rifiutaRichiesta(n.idNotifica)">
+                  Rifiuta
+                </button>
+              </div>
             </mat-card-content>
           </mat-card>
         }
