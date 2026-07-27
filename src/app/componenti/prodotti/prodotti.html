@@ -1,1 +1,217 @@
-<p>prodotti works!</p>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Prodotti</h2>
+
+    <button type="button" class="btn btn-success" (click)="openCreate()">
+      Aggiungi articolo
+    </button>
+  </div>
+
+  <!-- FILTRI -->
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Ricerca prodotti</h5>
+
+      <div class="row g-3">
+        <div class="col-lg-4 col-md-6">
+          <label class="form-label"> Descrizione </label>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Esempio: Mobile"
+            [(ngModel)]="descrizione"
+            (keyup.enter)="cercaProdotti()"
+          />
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label"> Prezzo </label>
+
+          <input
+            type="number"
+            class="form-control"
+            min="0"
+            [(ngModel)]="prezzo"
+            (keyup.enter)="cercaProdotti()"
+          />
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label"> Colore </label>
+
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="colore"
+            (keyup.enter)="cercaProdotti()"
+          />
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label"> Materiale </label>
+
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="materiale"
+            (keyup.enter)="cercaProdotti()"
+          />
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <label class="form-label"> Sottocategoria </label>
+
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="sottocategoria"
+            (keyup.enter)="cercaProdotti()"
+          />
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+          <label class="form-label"> Altezza </label>
+
+          <input type="number" class="form-control" [(ngModel)]="altezza" />
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+          <label class="form-label"> Lunghezza </label>
+
+          <input type="number" class="form-control" [(ngModel)]="lunghezza" />
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+          <label class="form-label"> Larghezza </label>
+
+          <input type="number" class="form-control" [(ngModel)]="larghezza" />
+        </div>
+
+        <div class="col-lg-2 col-md-4 d-flex align-items-end">
+          <button class="btn btn-primary w-100" (click)="cercaProdotti()">
+            Cerca
+          </button>
+        </div>
+
+        <div class="col-lg-2 col-md-4 d-flex align-items-end">
+          <button class="btn btn-secondary w-100" (click)="resetRicerca()">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Numero prodotti: {{ prodotti().length }}</p>
+
+  <!-- CARD PRODOTTI -->
+
+  <div class="row g-4">
+    @for (prodotto of prodotti(); track prodotto.idProdotto) {
+
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div
+        class="card h-100 shadow prodotto-card"
+        (click)="openDetails(prodotto)"
+      >
+        <!-- IMMAGINE -->
+
+        @if (prodotto.immagini && prodotto.immagini.length > 0) {
+
+        <img
+          [src]="prodotto.immagini[0].url"
+          class="card-img-top prodotto-img"
+          alt="{{prodotto.descrizione}}"
+        />
+
+        } @else {
+
+        <div class="no-image">Nessuna immagine</div>
+
+        }
+
+        <div class="card-body d-flex flex-column">
+          <span class="badge bg-secondary mb-2 align-self-start">
+            {{ prodotto.sottoCategoria?.sottoCategoria ?? 'Senza sottocategoria'
+            }}
+          </span>
+
+          <h5 class="card-title">{{ prodotto.descrizione }}</h5>
+
+          <p>
+            Categoria: {{ prodotto.sottoCategoria?.categoria?.categoria ?? 'Non
+            disponibile' }}
+          </p>
+
+          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
+
+          @if(prodotto.sconto != null){
+
+          <p class="text-success fw-bold">Sconto: {{ prodotto.sconto }}%</p>
+
+          }
+
+          <p class="fw-bold">Varianti disponibili</p>
+
+          @for(divisione of prodotto.divisioni ?? []; track
+          divisione.idDivisione){
+
+          <div class="border rounded p-2 mb-2">
+            <p class="mb-1">
+              <strong>Colore:</strong>
+
+              {{divisione.colore ?? 'N/D'}}
+            </p>
+
+            <p class="mb-1">
+              <strong>Materiale:</strong>
+
+              {{divisione.materiale ?? 'N/D'}}
+            </p>
+
+            <p class="mb-1">
+              <strong>Dimensioni:</strong>
+
+              {{divisione.altezza ?? '-'}} × {{divisione.lunghezza ?? '-'}} ×
+              {{divisione.larghezza ?? '-'}}
+            </p>
+
+            <p class="mb-0">
+              <strong>Quantità:</strong>
+
+              {{divisione.quantitaDisponibile ?? 0}}
+            </p>
+          </div>
+
+          } @empty {
+
+          <p class="text-muted">Nessuna variante disponibile.</p>
+
+          }
+
+          <div class="mt-auto pt-3">
+            <button
+              type="button"
+              class="btn btn-primary w-100"
+              (click)="$event.stopPropagation()"
+            >
+              Aggiungi al carrello
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    } @empty {
+
+    <div class="col-12">
+      <div class="alert alert-warning text-center">
+        Nessun prodotto trovato.
+      </div>
+    </div>
+
+    }
+  </div>
+</div>

@@ -43,3 +43,20 @@ button[mat-flat-button]:hover, button[mat-raised-button]:hover, .btn-primary:hov
   background-color: #3b2f2f !important; 
 }
 
+button[mat-flat-button].btn-accetta {
+  background-color: #2e7d32 !important;
+  color: #ffffff !important;
+}
+
+button[mat-flat-button].btn-accetta:hover {
+  background-color: #1b5e20 !important;
+}
+
+button[mat-flat-button].btn-rifiuta {
+  background-color: #c62828 !important;
+  color: #ffffff !important;
+}
+
+button[mat-flat-button].btn-rifiuta:hover {
+  background-color: #8e0000 !important;
+}

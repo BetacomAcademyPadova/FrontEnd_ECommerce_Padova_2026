@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { RouterLink, RouterOutlet, RouterLinkActive, Router } from "@angular/router";
@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UtenteServices } from '../../services/user-services';
 import { AutentificazioneServices } from '../../security/autentificazione-services';
 import { ChangePassword } from '../../dialogs/change-password/change-password';
+import { NotificheServices } from '../../services/notifiche-services';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,7 +25,7 @@ import { ChangePassword } from '../../dialogs/change-password/change-password';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
 
   //VARIABILE PER TESTARE ICONA CARRELLO
   quantitaCarrello: number = 3;
@@ -34,8 +35,16 @@ export class Dashboard {
     private rounting: Router,
     private util: UtilitiesServices,
     private utenteServices: UtenteServices,
+    public notificheService: NotificheServices,
     private autentificazioneServices: AutentificazioneServices
   ) {}
+
+  ngOnInit(): void {
+    const grant = this.auth.grant();
+    if (grant.isLogged && grant.isAdmin) {
+      this.notificheService.aggiornaConteggio(grant.isAdmin);
+    }
+  }
 
   login() {
     this.util.openDialog(Login,
