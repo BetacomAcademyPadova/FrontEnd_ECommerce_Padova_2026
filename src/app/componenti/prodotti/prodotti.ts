@@ -106,6 +106,22 @@ export class Prodotti implements OnInit {
   }
 
   cercaProdotti(): void {
+    const nessunFiltro =
+      this.descrizione.trim() === "" &&
+      this.prezzo == null &&
+      this.colore.trim() === "" &&
+      this.sottocategoria.trim() === "" &&
+      this.materiale.trim() === "" &&
+      this.altezza == null &&
+      this.lunghezza == null &&
+      this.larghezza == null &&
+      this.sconti === false;
+
+    if (nessunFiltro) {
+      this.caricaProdotti();
+      return;
+    }
+
     this.prodottoService
       .search(
         this.descrizione,
@@ -120,37 +136,38 @@ export class Prodotti implements OnInit {
       )
       .subscribe({
         next: (response: any[]) => {
-          this.prodotti.set(response ?? []);
+          let richieste = response.map((prodotto) => {
+            return this.immaginiService
+              .getByProdotto(prodotto.idProdotto)
+              .subscribe({
+                next: (immagini) => {
+                  prodotto.immagini = immagini;
+                },
 
-          console.log("Risultati ricerca:", response);
+                error: () => {
+                  prodotto.immagini = [];
+                },
+              });
+          });
+
+          Promise.all(
+            richieste.map(
+              (req) =>
+                new Promise((resolve) => {
+                  req.add(() => resolve(true));
+                })
+            )
+          ).then(() => {
+            this.prodotti.set(response);
+
+            console.log("Ricerca con immagini:", response);
+          });
         },
 
         error: (errore) => {
           console.error("Errore ricerca prodotti:", errore);
         },
       });
-  }
-
-  resetRicerca(): void {
-    this.descrizione = "";
-
-    this.prezzo = null;
-
-    this.colore = "";
-
-    this.sottocategoria = "";
-
-    this.materiale = "";
-
-    this.altezza = null;
-
-    this.lunghezza = null;
-
-    this.larghezza = null;
-
-    this.sconti = false;
-
-    this.caricaProdotti();
   }
 
   openCreate(): void {

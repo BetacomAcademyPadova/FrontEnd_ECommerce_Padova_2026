@@ -62,7 +62,9 @@ export class ProdottoServices {
       params = params.set("larghezza", larghezza.toString());
     }
 
-    params = params.set("sconti", sconti.toString());
+    if (sconti) {
+      params = params.set("sconti", "true");
+    }
 
     return this.http.get<any[]>(`${this.url}/search`, { params });
   }
