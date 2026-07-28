@@ -30,6 +30,11 @@
                 <p style="margin: 0; font-size: 1rem;">
                   <strong>Tipo di richiesta:</strong> {{ estraiTipo(n.messaggio) }}
                 </p>
+                @if (estraiTipo(n.messaggio).includes('Rimuovere prodotto')) {
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
+                  </p>
+                }
                 <p style="margin: 0; font-size: 1rem;">
                   <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
                 </p>
@@ -81,7 +86,17 @@
           <mat-error>Seleziona un tipo di richiesta</mat-error>
         }
       </mat-form-field>
-
+      @if (richiestaForm.get('tipoRichiesta')?.value === 'Rimuovere prodotto') {
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Seleziona ID Prodotto</mat-label>
+          <mat-select formControlName="prodottoId">
+            @for (prod of prodottiList(); track prod.idProdotto) {
+              <mat-option [value]="prod.idProdotto">ID: {{ prod.idProdotto }} - {{ prod.descrizione }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>Campo obbligatorio</mat-error>
+        </mat-form-field>
+      }
       <mat-form-field appearance="outline" style="width: 100%;">
         <mat-label>Messaggio di richiesta</mat-label>
         <textarea matInput formControlName="messaggio" rows="5" placeholder="Scrivi qui i dettagli della tua richiesta..."></textarea>
@@ -89,7 +104,6 @@
           <mat-error>Il messaggio è obbligatorio</mat-error>
         }
       </mat-form-field>
-
       <div>
         <button mat-flat-button color="primary" type="submit" [disabled]="richiestaForm.invalid">
           INVIA RICHIESTA
@@ -119,6 +133,11 @@
                 <p style="margin: 0; font-size: 1rem;">
                   <strong>Tipo:</strong> {{ estraiTipo(n.messaggio) }}
                 </p>
+                @if (estraiTipo(n.messaggio).includes('Rimuovere prodotto')) {
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
+                  </p>
+                }
                 <p style="margin: 0; font-size: 1rem;">
                   <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
                 </p>
