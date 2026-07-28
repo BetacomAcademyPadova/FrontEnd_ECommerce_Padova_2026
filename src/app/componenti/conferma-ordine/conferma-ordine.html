@@ -1,0 +1,89 @@
+<div class="conf-wrapper">
+  <mat-card class="conf-card">
+
+    <a class="conf-back" routerLink="/dash/carello">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Torna al carrello</span>
+    </a>
+
+    <h2 class="conf-title">Conferma ordine</h2>
+    <p class="conf-sub">Controlla la spedizione e il riepilogo prima di pagare</p>
+
+    @if (caricamento()) {
+      <div class="conf-loading">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>Caricamento del riepilogo...</span>
+      </div>
+    } @else {
+
+      <!-- 1. Spedizione -->
+      <app-selettore-indirizzo
+        titolo="Indirizzo di spedizione"
+        [indirizzi]="indirizzi()"
+        [idUser]="userId()"
+        [selezionato]="spedizioneId()"
+        (cambiato)="spedizioneId.set($event)"
+        (aggiunto)="indirizzoAggiunto($event, true)">
+      </app-selettore-indirizzo>
+
+      <mat-checkbox class="conf-uguale"
+                    [checked]="fatturazioneUguale()"
+                    (change)="cambiaFatturazioneUguale($event.checked)">
+        L'indirizzo di fatturazione è lo stesso
+      </mat-checkbox>
+
+      <!-- 2. Fatturazione, solo se diversa -->
+      @if (!fatturazioneUguale()) {
+        <mat-divider class="conf-divider"></mat-divider>
+
+        <app-selettore-indirizzo
+          titolo="Indirizzo di fatturazione"
+          [indirizzi]="indirizzi()"
+          [idUser]="userId()"
+          [selezionato]="fatturazioneScelta()"
+          (cambiato)="fatturazioneScelta.set($event)"
+          (aggiunto)="indirizzoAggiunto($event, false)">
+        </app-selettore-indirizzo>
+      }
+
+      <mat-divider class="conf-divider"></mat-divider>
+
+      <!-- 3. Riepilogo -->
+      @if (carrelloVuoto()) {
+        <p class="conf-vuoto">
+          Il carrello è vuoto.
+          <a routerLink="/dash/prodotti">Sfoglia i prodotti</a>
+        </p>
+      } @else {
+        <div class="conf-totale">
+          <span class="conf-totale-label">Totale</span>
+          <span class="conf-totale-cifra">€ {{ totale() | number:'1.2-2' }}</span>
+        </div>
+      }
+
+      @if (errore()) {
+        <p class="conf-errore">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errore() }}</span>
+        </p>
+      }
+
+      <button mat-flat-button
+              class="conf-btn"
+              [disabled]="!puoConfermare()"
+              (click)="conferma()">
+        @if (invio()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <span>Conferma e paga</span>
+        }
+      </button>
+
+      <p class="conf-nota">
+        <mat-icon>lock</mat-icon>
+        Il pagamento avviene nel passaggio successivo, protetto da Stripe
+      </p>
+    }
+
+  </mat-card>
+</div>

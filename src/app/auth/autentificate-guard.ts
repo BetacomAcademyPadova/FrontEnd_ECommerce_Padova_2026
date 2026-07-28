@@ -7,7 +7,7 @@ const authservices = inject(AuthServices);
   const routing = inject(Router); 
 
   if (!authservices.isAutentificated())
-    routing.navigate(['login'])
+    routing.navigate(['dash/login'])
       
   return authservices.isAutentificated();
 

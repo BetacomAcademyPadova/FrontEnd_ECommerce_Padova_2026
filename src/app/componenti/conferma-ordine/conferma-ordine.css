@@ -1,0 +1,184 @@
+.conf-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px 64px;
+}
+
+.conf-card {
+  width: 100%;
+  max-width: 560px;
+  padding: 32px;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-line);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(93, 64, 55, 0.08);
+}
+
+.conf-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.conf-back:hover,
+.conf-back:focus-visible {
+  color: var(--brand-dark);
+}
+
+.conf-back mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.conf-title {
+  font-family: var(--brand-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin: 0;
+}
+
+.conf-sub {
+  color: var(--brand-mid);
+  margin: 4px 0 28px;
+  font-size: 0.9rem;
+}
+
+.conf-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--brand-mid);
+  padding: 32px 0;
+}
+
+.conf-uguale {
+  display: block;
+  margin: 18px 0 4px;
+  color: var(--brand-dark);
+}
+
+.conf-divider {
+  margin: 24px 0;
+  border-top-color: var(--brand-line);
+}
+
+.conf-totale {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--brand-bg);
+  font-family: var(--brand-serif);
+  color: var(--brand-dark);
+}
+
+.conf-totale-label {
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+.conf-totale-cifra {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.conf-vuoto {
+  color: var(--brand-mid);
+  font-size: 0.92rem;
+}
+
+.conf-vuoto a {
+  color: var(--brand-dark);
+  margin-left: 4px;
+}
+
+.conf-errore {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fdecea;
+  color: #b3261e;
+  font-size: 0.875rem;
+}
+
+.conf-errore mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.conf-btn {
+  width: 100%;
+  height: 48px;
+  margin-top: 24px;
+  background-color: var(--brand-dark) !important;
+  color: #fff !important;
+  font-family: var(--brand-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+}
+
+.conf-btn:disabled {
+  opacity: 0.5;
+}
+
+.conf-nota {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 20px 0 0;
+  color: var(--brand-mid);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.conf-nota mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+@media (max-width: 600px) {
+  .conf-card {
+    padding: 24px 20px;
+  }
+
+  .conf-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.conf-back:hover,
+.conf-back:focus-visible {
+  color: var(--brand-dark);
+}
+
+.conf-back mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.conf-title {
+    font-size: 1.6rem;
+  }
+}
