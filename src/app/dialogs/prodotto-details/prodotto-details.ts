@@ -25,6 +25,8 @@ import { ProdottoServices } from "../../services/prodotto-services";
 import { DivisioneProdottoServices } from "../../services/divisione-prodotto-services";
 import { AuthServices } from "../../auth/auth-services";
 import { ImmaginiServices } from "../../services/immagini-services";
+import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
+import { CarrelloServices } from "../../services/carrello-services";
 
 @Component({
   selector: "app-prodotto-details",
@@ -57,6 +59,10 @@ export class ProdottoDetails implements OnInit {
   private readonly authService = inject(AuthServices);
 
   private readonly immaginiService = inject(ImmaginiServices);
+
+  private readonly carrelloService = inject(CarrelloServices);
+
+  private readonly prodottiCarrelloService = inject(ProdottiCarrelloServices);
 
   mod = signal("");
 
@@ -176,18 +182,11 @@ export class ProdottoDetails implements OnInit {
   }
 
   cambiaImmagine(url: string): void {
-
     this.imagePreview = url;
-  
   }
 
   puoGestireProdotto(): boolean {
-
-    return (
-      this.authService.isRoleAdmin() ||
-      this.authService.isRoleVenditore()
-    );
-  
+    return this.authService.isRoleAdmin() || this.authService.isRoleVenditore();
   }
 
   caricaImmagini(): void {
@@ -539,7 +538,51 @@ export class ProdottoDetails implements OnInit {
   }
 
   aggiungiAlCarrello(): void {
-    console.log("Prodotto da aggiungere al carrello:", this.prodotto());
+    const userId = Number(this.authService.grant().userId);
+
+    if (!userId) {
+      console.error("Utente non autenticato");
+
+      return;
+    }
+
+    this.carrelloService.getByUser(userId).subscribe({
+      next: (carrello) => {
+        const divisione = this.prodotto().divisioni?.[0];
+
+        if (!divisione) {
+          console.error("Nessuna divisione disponibile");
+
+          return;
+        }
+
+        const body = {
+          idCarrello: carrello.idCarrello,
+
+          idDivisioneProdotto: divisione.idDivisione,
+
+          quantita: 1,
+        };
+
+        console.log("Dati invio carrello:", body);
+
+        this.prodottiCarrelloService.create(body).subscribe({
+          next: (response) => {
+            console.log("Prodotto aggiunto al carrello:", response);
+
+            this.msg.set("Prodotto aggiunto al carrello");
+          },
+
+          error: (errore) => {
+            console.error("Errore aggiunta prodotto:", errore);
+          },
+        });
+      },
+
+      error: (errore) => {
+        console.error("Errore recupero carrello:", errore);
+      },
+    });
   }
 
   remove(): void {

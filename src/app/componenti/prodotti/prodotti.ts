@@ -7,6 +7,8 @@ import { ProdottoServices } from "../../services/prodotto-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottoDetails } from "../../dialogs/prodotto-details/prodotto-details";
 import { AuthServices } from "../../auth/auth-services";
+import { CarrelloServices } from "../../services/carrello-services";
+import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
 
 @Component({
   selector: "app-prodotti",
@@ -46,17 +48,16 @@ export class Prodotti implements OnInit {
 
   private authService = inject(AuthServices);
 
+  private carrelloService = inject(CarrelloServices);
+
+  private prodottiCarrelloService = inject(ProdottiCarrelloServices);
+
   ngOnInit(): void {
     this.caricaProdotti();
   }
 
   puoGestireProdotto(): boolean {
-
-    return (
-      this.authService.isRoleAdmin() ||
-      this.authService.isRoleVenditore()
-    );
-  
+    return this.authService.isRoleAdmin() || this.authService.isRoleVenditore();
   }
 
   caricaProdotti(): void {
@@ -187,6 +188,48 @@ export class Prodotti implements OnInit {
       if (risultato) {
         this.caricaProdotti();
       }
+    });
+  }
+
+  aggiungiAlCarrello(prodotto: any): void {
+    const userId = Number(this.authService.grant().userId);
+
+    if (!userId) {
+      console.error("Utente non autenticato");
+      return;
+    }
+
+    this.carrelloService.getByUser(userId).subscribe({
+      next: (carrello: any) => {
+        const divisione = prodotto.divisioni?.[0];
+
+        if (!divisione) {
+          console.error("Nessuna variante disponibile");
+          return;
+        }
+
+        const body = {
+          idCarrello: carrello.idCarrello,
+          idDivisioneProdotto: divisione.idDivisione,
+          quantita: 1,
+        };
+
+        console.log("Invio:", body);
+
+        this.prodottiCarrelloService.create(body).subscribe({
+          next: () => {
+            console.log("Prodotto aggiunto al carrello");
+          },
+
+          error: (err) => {
+            console.error(err);
+          },
+        });
+      },
+
+      error: (err) => {
+        console.error(err);
+      },
     });
   }
 }
