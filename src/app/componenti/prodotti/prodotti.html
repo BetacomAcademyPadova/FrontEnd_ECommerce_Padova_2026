@@ -4,16 +4,11 @@
 
     @if(puoGestireProdotto()) {
 
-      <button 
-        type="button" 
-        class="btn btn-success" 
-        (click)="openCreate()">
-      
-        Aggiungi articolo
-      
-      </button>
-      
-      }
+    <button type="button" class="btn btn-success" (click)="openCreate()">
+      Aggiungi articolo
+    </button>
+
+    }
   </div>
 
   <!-- FILTRI -->
@@ -204,7 +199,7 @@
             <button
               type="button"
               class="btn btn-primary w-100"
-              (click)="$event.stopPropagation()"
+              (click)="$event.stopPropagation(); aggiungiAlCarrello(prodotto)"
             >
               Aggiungi al carrello
             </button>
