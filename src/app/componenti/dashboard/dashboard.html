@@ -50,7 +50,7 @@
         </button>
     }
     @if(auth.grant().isLogged){
-        @if(auth.grant().isLogged && auth.grant().isAdmin){
+        @if(auth.grant().isAdmin || auth.grant().isVenditore){
             <button mat-button routerLink="notifica">
                 <mat-icon [matBadge]="notificheService.badgeCount()" 
                           [matBadgeHidden]="notificheService.badgeCount() === 0" 
@@ -68,9 +68,7 @@
         }
     }
 </mat-toolbar>
-
 <mat-drawer-container class="example-container">
-    
     <mat-drawer-content>
         <router-outlet></router-outlet>
     </mat-drawer-content>

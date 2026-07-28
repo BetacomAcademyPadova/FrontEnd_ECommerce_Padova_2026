@@ -2,12 +2,14 @@ import { inject, Service, signal } from "@angular/core";
 import { AppSettings } from "../settings/token/config-model";
 import { APP_SETTING } from "../settings/token/token";
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { AuthServices } from "../auth/auth-services";
 
 @Service()
 export class NotificheServices 
 {
     private readonly settings: AppSettings = inject(APP_SETTING);
     private readonly http = inject(HttpClient);
+    private readonly auth = inject(AuthServices);
 
     public badgeCount = signal<number>(0);
 
@@ -15,22 +17,32 @@ export class NotificheServices
         return this.settings.apiUrl + 'Notifica/';
     }
 
-    aggiornaConteggio(isAdmin: boolean): void {
-        if (isAdmin) {
+    aggiornaConteggio(isAdmin?: boolean): void {
+        const grant = this.auth.grant();
+        const checkAdmin = isAdmin !== undefined ? isAdmin : grant.isAdmin;
+
+        if (checkAdmin) {
             this.getTutteNonLette().subscribe({
-                next: (res) => 
-                {
-                    console.log("NOTIFICHE RICEVUTE DAL SERVER:", res);
-                    const quantita = Array.isArray(res) ? res.length : 0;
-                    this.badgeCount.set(quantita);
+                next: (res) => {
+                    const soloRichieste = Array.isArray(res) 
+                        ? res.filter(n => !n.messaggio?.includes('Stock basso')) 
+                        : [];
+                    this.badgeCount.set(soloRichieste.length);
                 },
-                error: (err) => 
-                {
-                    console.error("ERRORE:", err);
-                    this.badgeCount.set(0);
-                }
+                error: () => this.badgeCount.set(0)
             });
-        }
+        } 
+        else if (grant.isVenditore) {
+            this.getNonLette(Number(grant.userId)).subscribe({
+                next: (res) => {
+                    const alerts = Array.isArray(res) 
+                        ? res.filter(n => n.messaggio?.includes('Stock basso')) 
+                        : [];
+                    this.badgeCount.set(alerts.length);
+                },
+                error: () => this.badgeCount.set(0)
+            });
+        } 
     }
 
     getNonLette(userId: number){
