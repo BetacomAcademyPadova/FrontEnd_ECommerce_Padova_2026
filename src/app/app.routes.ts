@@ -26,6 +26,7 @@ export const routes: Routes = [
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'notifica', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult },
