@@ -1,0 +1,109 @@
+.ricevuta-container {
+
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 1300px;
+  margin: 40px auto;
+  box-shadow: 0 10px 20px rgba(93, 64, 55, 0.15);
+}
+
+.titolo-ricevuta {
+
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #3E2723;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.tabella-ricevute {
+
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 30px;
+}
+
+.tabella-ricevute th {
+
+  background-color: #3E2723;
+  color: white;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+.tabella-ricevute td {
+
+  padding: 14px;
+  text-align: center;
+  color: #3E2723;
+  border-bottom: 1px solid #ddd;
+}
+
+.lista-prodotti {
+
+  text-align: left;
+}
+
+.prodotto-item {
+
+  margin-bottom: 10px;
+  color: #5D4037;
+}
+
+.form-ricevuta {
+
+  margin-top: 40px;
+  padding: 25px;
+  background-color: #faf7f5;
+  border-radius: 16px;
+  box-shadow: 0 5px 10px rgba(93,64,55,0.10);
+}
+
+.form-ricevuta h3 {
+
+  color: #3E2723;
+  font-family: 'Playfair Display', serif;
+}
+
+input {
+
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #c8b6ae;
+  margin: 10px;
+  font-size: 1rem;
+}
+
+button {
+
+  background-color: #5D4037;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+
+  background-color: #3E2723;
+}
+
+.ricevuta-card {
+
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 15px rgba(93,64,55,0.12);
+}
+
+.numero-fattura {
+
+  color: #3E2723;
+  font-weight: bold;
+  font-size: 1.2rem;
+}

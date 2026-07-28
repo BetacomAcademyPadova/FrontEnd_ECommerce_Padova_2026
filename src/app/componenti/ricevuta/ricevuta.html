@@ -1,0 +1,49 @@
+<div class="container">
+    <mat-card class="example-card" appearance="outlined">
+        <mat-card-header class="header-row">
+            <mat-card-title>
+                Elenco Ricevute
+            </mat-card-title>
+        </mat-card-header>
+        <mat-divider style="margin-top:20px;"></mat-divider>
+        <mat-card-content>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Numero fattura</th>
+                        <th>Data emissione</th>
+                        <th>Prodotti</th>
+                        <th>Imponibile</th>
+                        <th>IVA (22%)</th>
+                        <th>Totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (ric of ricevute; track ric.idFattura) {
+                    <tr class="clickable-row" (click)="selezionaRicevuta(ric)">
+                        <td>{{ric.numeroFattura}}</td>
+                        <td>{{ric.dataEmissione}}</td>
+                        <td class="lista-prodotti">
+                            @for (p of ric.prodotti; track p.idItem) {
+                                <div class="prodotto-item">
+                                    <b>{{p.prodotto}}</b>
+                                    <br>Quantità:{{p.quantita}}
+                                    <br>Prezzo:{{p.prezzo | number:'1.2-2'}} €
+                                </div>
+                                <hr>
+                            }
+                        </td>
+                        <td>{{ric.imponibile | number:'1.2-2'}} €</td>
+                        <td>{{ric.iva | number:'1.2-2'}} €<br>
+                            <small>Aliquota IVA: 22%</small>
+                        </td>
+                        <td>
+                            <b>{{ric.totale | number:'1.2-2'}} €</b>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+</div>

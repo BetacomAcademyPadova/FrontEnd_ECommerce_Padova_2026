@@ -48,10 +48,24 @@
             <mat-icon>person</mat-icon>
             <span>UTENTI</span>
         </button>
-        <button mat-button routerLink="notifica">
-            <mat-icon>notifications</mat-icon>
-            <span>NOTIFICHE</span>
-        </button>
+    }
+    @if(auth.grant().isLogged){
+        @if(auth.grant().isLogged && auth.grant().isAdmin){
+            <button mat-button routerLink="notifica">
+                <mat-icon [matBadge]="notificheService.badgeCount()" 
+                          [matBadgeHidden]="notificheService.badgeCount() === 0" 
+                          matBadgeColor="warn">
+                    notifications
+                </mat-icon>
+                <span>NOTIFICHE</span>
+            </button>
+        }
+        @else{
+            <button mat-button routerLink="notifica">
+                <mat-icon>notifications</mat-icon>
+                <span>INVIA RICHIESTA</span>
+            </button>
+        }
     }
 </mat-toolbar>
 

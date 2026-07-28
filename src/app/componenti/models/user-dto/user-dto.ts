@@ -15,3 +15,12 @@ export interface UserDTO {
   carrelloSize:number,
   username:string
 }
+
+export interface ForgotPasswordReq {
+    email: string;
+}
+
+export interface ResetPasswordReq {
+    token: string;
+    password: string;
+}

@@ -1,1 +1,63 @@
-<h1>🛒 Il mio carrello</h1>
+<div class="cart-container">
+    <h1>
+        🛒 Il mio carrello
+    </h1>
+    <mat-card>
+        <mat-card-content>
+            @for(prodotto of prodottiView(); track prodotto.idRiga){
+            <div class="product">
+                <div class="info">
+                    <h2>
+                        {{prodotto.descrizione}}
+                    </h2>
+                    <p>
+                        Materiale:
+                        <b>{{prodotto.materiale}}</b>
+                    </p>
+                    <p>
+                        Colore:
+                        <b>{{prodotto.colore}}</b>
+                    </p>
+                    <p>
+                        Dimensioni:
+                        {{prodotto.altezza}} x
+                        {{prodotto.lunghezza}} x
+                        {{prodotto.larghezza}}
+                    </p>
+                    <div class="quantity">
+                        <button mat-mini-fab (click)="modificaQuantita(prodotto, prodotto.quantita - 1)">
+                            -
+                        </button>
+                        <span>
+                            {{prodotto.quantita}}
+                        </span>
+                        <button mat-mini-fab (click)="modificaQuantita(prodotto, prodotto.quantita + 1)">
+                            +
+                        </button>
+                    </div>
+                </div>
+                <div class="price">
+                    <h3>
+                        {{prodotto.subtotale | currency:'EUR'}}
+                    </h3>
+                    <button mat-icon-button color="warn" (click)="eliminaProdotto(prodotto)">
+                        <mat-icon>
+                            delete
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+            }
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="summary">
+        <h2>
+            Totale:
+            {{carrello()?.totale | currency:'EUR'}}
+        </h2>
+        <button mat-raised-button color="primary" (click)="vaiAlCheckout()">
+            Vai al checkout
+        </button>
+    </mat-card>
+</div>

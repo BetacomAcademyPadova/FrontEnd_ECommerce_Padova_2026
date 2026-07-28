@@ -5,7 +5,7 @@ import { catchError, finalize, map, Observable, of, shareReplay, switchMap, tap,
 import { AuthServices } from '../auth/auth-services';
 import { APP_SETTING } from '../settings/token/token';
 import { AppSettings } from '../settings/token/config-model';
-import { LoginDTO, LoginReq, UserDTO } from '../componenti/models/user-dto/user-dto';
+import { LoginDTO, LoginReq, ResetPasswordReq, UserDTO } from '../componenti/models/user-dto/user-dto';
 
 @Service()
 export class AutentificazioneServices {
@@ -86,4 +86,10 @@ export class AutentificazioneServices {
         );
     }
 
+    forgotPassword(body: any): Observable<any> {
+        return this.http.post(this.getBaseUrl() + "forgotPassword",body);
+    }
+    resetPassword(body: ResetPasswordReq) {
+        return this.http.post(this.getBaseUrl() + "resetPassword",body);
+    }
 }

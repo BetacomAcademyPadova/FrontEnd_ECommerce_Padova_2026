@@ -8,11 +8,15 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { NotificheServices } from '../../services/notifiche-services';
 import { AuthServices } from '../../auth/auth-services';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: "app-notifiche",
   imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, 
-    MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule],
+    MatFormFieldModule, MatInputModule, FormsModule, ReactiveFormsModule,
+    MatOptionModule, MatSelectModule, MatBadgeModule],
   templateUrl: "./notifiche.html",
   styleUrl: "./notifiche.css",
 })
@@ -26,35 +30,46 @@ export class Notifiche implements OnInit
   successMsg = signal('');
 
   richiestaForm: FormGroup = new FormGroup({
+    tipoRichiesta: new FormControl('', Validators.required),
     messaggio: new FormControl('', Validators.required)
   });
 
   ngOnInit(): void {
-    if (this.auth.grant().isAdmin) 
-    {
+    if (this.auth.grant().isAdmin) {
       this.notificheService.getTutteNonLette().subscribe({
         next: (res) => {
-          this.notifiche.set(res);
+          const ordinate = res.sort((a, b) => 
+            new Date(b.dataCreazione).getTime() - new Date(a.dataCreazione).getTime()
+          );
+          this.notifiche.set(ordinate);
+          this.notificheService.badgeCount.set(res.length);
         },
         error: () => {
           this.msg.set("Errore caricamento notifiche");
+          this.notificheService.badgeCount.set(0);
         }
       });
     }
+    else if (this.auth.grant().isLogged) {
+      this.caricaMieRichieste();
+    }
   }
 
-  segnaComeLetta(idNotifica: number) 
-  {
-    this.notificheService.segnaComeLetta(idNotifica).subscribe({
-      next: () => 
-      {
-        this.notifiche.update(lista => lista.filter(n => n.idNotifica !== idNotifica));
-      },
-      error: () => 
-      {
-        this.msg.set("Errore durante aggiornamento notifica");
-      }
-    });
+  caricaMieRichieste() {
+    const userId = Number(this.auth.grant().userId);
+    if (userId) {
+      this.notificheService.getRichiesteUtente(userId).subscribe({
+        next: (res) => {
+          const ordinate = res.sort((a, b) => 
+            new Date(b.dataCreazione).getTime() - new Date(a.dataCreazione).getTime()
+          );
+          this.notifiche.set(ordinate);
+        },
+        error: () => {
+          this.msg.set("Errore caricamento storico richieste");
+        }
+      });
+    }
   }
 
   inviaRichiesta() 
@@ -65,18 +80,65 @@ export class Notifiche implements OnInit
     this.successMsg.set('');
 
     const userId = Number(this.auth.grant().userId);
+    const tipoRichiesta = this.richiestaForm.value.tipoRichiesta;
     const messaggio = this.richiestaForm.value.messaggio;
 
     if (userId) {
-      this.notificheService.inviaRichiesta(userId, messaggio).subscribe({
+      const testoCompleto = `[${tipoRichiesta}] ${messaggio}`;
+      this.notificheService.inviaRichiesta(userId, testoCompleto).subscribe({
         next: () => {
           this.successMsg.set("Richiesta inviata con successo!");
           this.richiestaForm.reset();
+          this.caricaMieRichieste();
         },
         error: () => {
           this.msg.set("Errore durante l'invio della richiesta");
         }
       });
     }
+  }
+
+  estraiIdUtente(testo: string): string {
+    return testo.match(/ID:\s*(\d+)/)![1];
+  }
+
+  estraiTipo(testo: string): string {
+    return testo.match(/\[(.*?)\]/)![1];
+  }
+
+  estraiTesto(testo: string): string {
+     return testo.replace(/.*?\s*-\s*\[.*?\]\s*/, '');
+  }
+
+  accettaRichiesta(idNotifica: number) {
+    this.notificheService.accettaRichiesta(idNotifica).subscribe({
+      next: () => {
+        this.notifiche.update(lista => {
+          const nuovaLista = lista.filter(n => n.idNotifica !== idNotifica);
+          // Aggiorna il badge con il nuovo numero residuo
+          this.notificheService.badgeCount.set(nuovaLista.length);
+          return nuovaLista;
+        });
+      },
+      error: () => {
+        this.msg.set("Errore durante l'accettazione della richiesta");
+      }
+    });
+  }
+
+  rifiutaRichiesta(idNotifica: number) {
+    this.notificheService.rifiutaRichiesta(idNotifica).subscribe({
+      next: () => {
+        this.notifiche.update(lista => {
+          const nuovaLista = lista.filter(n => n.idNotifica !== idNotifica);
+          // Aggiorna il badge con il nuovo numero residuo
+          this.notificheService.badgeCount.set(nuovaLista.length);
+          return nuovaLista;
+        });
+      },
+      error: () => {
+        this.msg.set("Errore durante il rifiuto della richiesta");
+      }
+    });
   }
 }

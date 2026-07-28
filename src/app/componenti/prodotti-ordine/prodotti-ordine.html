@@ -1,0 +1,74 @@
+<div class="container">
+    <mat-card class="example-card" appearance="outlined">
+        <mat-card-header class="header-row">
+            <mat-card-title>
+                Prodotti negli ordini
+            </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <table class="table table-striped tabella-prodotti">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Prodotto</th>
+                        <th>Quantità</th>
+                        <th>Prezzo</th>
+                        <th>Indirizzo spedizione</th>
+                        <th>Dettagli prodotto</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (po of prodottiOrdine; track po.idItem) {
+                    <tr class="clickable-row"
+                        (click)="selezionaProdottoOrdine(po)">
+                        <td>{{po.idItem}}</td>
+                        <td>{{po.prodotto}}</td>
+                        <td>{{po.quantita}}</td>
+                        <td>{{po.prezzo | number:'1.2-2'}} €</td>
+                        <td>
+                            @if(po.indirizzoSpedizione) {
+                                <div>
+                                    {{po.indirizzoSpedizione.via}}
+                                    <br>
+                                    {{po.indirizzoSpedizione.citta}}
+                                    <br>
+                                    {{po.indirizzoSpedizione.cap}}
+                                </div>
+                            } @else {
+                                <span>Nessun indirizzo</span>
+                            }
+                        </td>
+                        <td>
+                            @if(po.divisioneOrdine) {
+                                <div>
+                                    @if(po.divisioneOrdine.colore) {
+                                        Colore:
+                                        {{po.divisioneOrdine.colore}}
+                                        <br>
+                                   }
+                                    @if(po.divisioneOrdine.materiale) {
+                                        Materiale:
+                                        {{po.divisioneOrdine.materiale}}
+                                    }
+                                </div>
+                            } @else {
+                                <span>Nessun dettaglio</span>
+                            }
+                        </td>
+                        <td>
+                            <button mat-icon-button color="primary" (click)="aggiorna(po); $event.stopPropagation()">
+                                <mat-icon> edit </mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="elimina(po); $event.stopPropagation()">
+                                <mat-icon> delete </mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+</div>

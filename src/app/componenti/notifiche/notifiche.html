@@ -20,15 +20,28 @@
         @for (n of notifiche(); track n.idNotifica) {
           <mat-card class="notification-card">
             <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-              <div>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
                 <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: gray;">
                   <strong>Data:</strong> {{ n.dataCreazione | date:'short' }}
                 </p>
-                <p style="margin: 0; font-size: 1rem;">{{ n.messaggio }}</p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Richiesta ricevuta dall'utente ID:</strong> {{ estraiIdUtente(n.messaggio) }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Tipo di richiesta:</strong> {{ estraiTipo(n.messaggio) }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
+                </p>
               </div>
-              <button mat-flat-button color="primary" (click)="segnaComeLetta(n.idNotifica)">
-                Segna come letta
-              </button>
+              <div style="display: flex; gap: 10px;">
+                <button mat-flat-button class="btn-accetta" (click)="accettaRichiesta(n.idNotifica)">
+                  Accetta
+                </button>
+                <button mat-flat-button class="btn-rifiuta" (click)="rifiutaRichiesta(n.idNotifica)">
+                  Rifiuta
+                </button>
+              </div>
             </mat-card-content>
           </mat-card>
         }
@@ -51,17 +64,78 @@
 
     <form [formGroup]="richiestaForm" (ngSubmit)="inviaRichiesta()" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
       <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Tipo di richiesta</mat-label>
+        <mat-select formControlName="tipoRichiesta">
+          @if(auth.grant().isVenditore)
+          {
+            <mat-option value="Rimuovere prodotto">Vorrei rimuovere un prodotto</mat-option>
+          }
+          @else
+          {
+            <mat-option value="Diventare Admin">Vorrei diventare admin</mat-option>
+            <mat-option value="Diventare Venditore">Vorrei diventare venditore</mat-option>
+          }
+          <mat-option value="Altro">Altro</mat-option>
+        </mat-select>
+        @if (richiestaForm.get('tipoRichiesta')?.hasError('required') && richiestaForm.get('tipoRichiesta')?.touched) {
+          <mat-error>Seleziona un tipo di richiesta</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width: 100%;">
         <mat-label>Messaggio di richiesta</mat-label>
         <textarea matInput formControlName="messaggio" rows="5" placeholder="Scrivi qui i dettagli della tua richiesta..."></textarea>
         @if (richiestaForm.get('messaggio')?.hasError('required') && richiestaForm.get('messaggio')?.touched) {
           <mat-error>Il messaggio è obbligatorio</mat-error>
         }
       </mat-form-field>
+
       <div>
         <button mat-flat-button color="primary" type="submit" [disabled]="richiestaForm.invalid">
           INVIA RICHIESTA
         </button>
       </div>
     </form>
+    <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <h2>Le tue richieste inviate</h2>
+    <p class="subtitle">Monitora lo stato delle richieste che hai inoltrato.</p>
+    @if (notifiche().length === 0) 
+    {
+      <div class="empty-state" style="margin-top: 20px;">
+        <p style="color: gray;">Non hai ancora inviato nessuna richiesta.</p>
+      </div>
+    } 
+    @else 
+    {
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        @for (n of notifiche(); track n.idNotifica) {
+          <mat-card class="notification-card">
+            <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: gray;">
+                  <strong>Data:</strong> {{ n.dataCreazione | date:'short' }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Tipo:</strong> {{ estraiTipo(n.messaggio) }}
+                </p>
+                <p style="margin: 0; font-size: 1rem;">
+                  <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
+                </p>
+              </div>
+              <div>
+                <span class="badge" [ngClass]="{
+                  'bg-warning text-dark': n.statoNotifica?.statoNotifica === 'IN ATTESA',
+                  'bg-success': n.statoNotifica?.statoNotifica === 'ACCETTATA',
+                  'bg-danger': n.statoNotifica?.statoNotifica === 'RIFIUTATA'
+                }" style="padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.85rem;">
+                  {{ n.statoNotifica?.statoNotifica }}
+                </span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
   }
 </div>

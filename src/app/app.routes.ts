@@ -9,6 +9,8 @@ import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodot
 import { Prodotti } from './componenti/prodotti/prodotti';
 import { Profilo } from './componenti/profilo/profilo';
 import { Login } from './dialogs/login/login';
+import { Notifiche } from './componenti/notifiche/notifiche';
+import { ResetPassword } from './componenti/reset-password/reset-password';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -16,10 +18,12 @@ export const routes: Routes = [
             { path:'', redirectTo:'home', pathMatch:'full'},
             { path: 'home', component: Home },
             { path: 'login', component: Login},
+            { path: 'reset-password', component: ResetPassword},
             { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
         ]
     },
 ];
