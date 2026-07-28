@@ -25,6 +25,7 @@ export class GestioneUtente implements OnInit
 
   utenti = this.userS.accounts;
   isModifica = signal<boolean>(false);
+  errorMessage = signal<string | null>(null);
   utenteCorrente: any = null;
 
   filtroId: string = '';
@@ -65,7 +66,7 @@ export class GestioneUtente implements OnInit
   onSelected(row: any) {
     console.log("Riga selezionata:", row);
     let dialogRef = this.util.openDialog(SceltaUpdateUtente, row, {
-      width: '400px',
+      width: '700px',
       maxWidth: '90vw',
       height: 'auto',
       maxHeight: '100vh'
@@ -74,7 +75,7 @@ export class GestioneUtente implements OnInit
       if (r === 'update') {
         this.eseguoUpdate(row);
       } else if (r === 'delete') {
-        this.eseguoDelete(row);
+        this.userS.list();
       }
     });
   }
@@ -157,20 +158,5 @@ export class GestioneUtente implements OnInit
     }
   }
 
-  eseguoDelete(row: any) {
-    console.log("Eliminazione di:", row);
-    const idUtente = row.userId; 
-
-    this.userS.deleteUser(idUtente).subscribe({
-      next: () => {
-        console.log("Utente eliminato con successo");
-        /*if (this.utenteCorrente && this.utenteCorrente.userId === idUtente) {
-          this.annullaModifica();
-        }*/
-      },
-      error: (err) => {
-        console.error("Errore durante l'eliminazione dell'utente", err);
-      }
-    });
-  }
+  eseguoDelete(row: any) {}
 }
