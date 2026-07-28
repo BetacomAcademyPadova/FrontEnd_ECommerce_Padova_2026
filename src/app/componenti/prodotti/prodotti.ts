@@ -6,6 +6,7 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { ProdottoServices } from "../../services/prodotto-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottoDetails } from "../../dialogs/prodotto-details/prodotto-details";
+import { AuthServices } from "../../auth/auth-services";
 
 @Component({
   selector: "app-prodotti",
@@ -43,8 +44,19 @@ export class Prodotti implements OnInit {
 
   private dialog = inject(MatDialog);
 
+  private authService = inject(AuthServices);
+
   ngOnInit(): void {
     this.caricaProdotti();
+  }
+
+  puoGestireProdotto(): boolean {
+
+    return (
+      this.authService.isRoleAdmin() ||
+      this.authService.isRoleVenditore()
+    );
+  
   }
 
   caricaProdotti(): void {

@@ -22,6 +22,66 @@
     (ngSubmit)="onSubmit()"
     class="form-container"
   >
+    <!-- IMMAGINI PRODOTTO -->
+
+    <div class="image-section">
+      @if(immagini().length > 0){
+
+      <div class="main-image">
+        <img [src]="imagePreview" alt="Immagine principale" />
+      </div>
+
+      <div class="thumbnail-container">
+
+        @for(img of immagini(); track img.id){
+      
+          <img
+            [src]="img.url"
+            class="thumbnail"
+            alt="Immagine prodotto"
+            (click)="cambiaImmagine(img.url)"
+            [class.selected]="imagePreview === img.url"
+          >
+      
+        }
+      
+      </div>
+
+      } @else {
+
+      <div class="image-preview">
+        <mat-icon class="placeholder-icon"> image </mat-icon>
+
+        <p>Nessuna immagine</p>
+      </div>
+
+      } @if(mod() !== 'V'){
+
+      <input
+        #fileInput
+        hidden
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="fileInput.click()"
+      >
+        <mat-icon>photo_camera</mat-icon>
+
+        Seleziona immagine
+      </button>
+
+      }
+    </div>
+
+    <h3 class="section-title">
+      Informazioni prodotto
+    </h3>
     <!-- DATI PRODOTTO -->
 
     <div class="row-fields">
@@ -72,7 +132,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-
+    <h3 class="section-title">
+      Variante prodotto
+    </h3>
     <!-- DIVISIONE PRODOTTO -->
 
     <div class="row-fields">
@@ -105,7 +167,9 @@
         <input matInput type="number" min="0" formControlName="stockAlert" />
       </mat-form-field>
     </div>
-
+    <h3 class="section-title">
+      Dimensioni
+    </h3>
     <!-- MISURE -->
 
     <div class="row-fields">
@@ -128,30 +192,6 @@
       </mat-form-field>
     </div>
 
-    <!-- IMMAGINI PRODOTTO -->
-
-    @if(mod() === 'V' || mod() === 'U') {
-
-    <h3>Immagini prodotto</h3>
-
-    <div class="images-container">
-      @for(img of immagini(); track img.id) {
-
-      <img [src]="img.url" class="product-image" alt="Immagine prodotto" />
-
-      } @if(immagini().length === 0) {
-
-      <p>Nessuna immagine caricata</p>
-
-      }
-    </div>
-
-    } @if(msg()) {
-
-    <div class="msg-error">{{ msg() }}</div>
-
-    }
-
     <!-- BOTTONI -->
 
     <div class="button-group">
@@ -168,28 +208,49 @@
 
       } @if(mod() === 'V') {
 
-      <button
-        mat-raised-button
-        color="primary"
-        type="button"
-        (click)="abilitaModifica()"
-      >
-        <mat-icon>edit</mat-icon>
+        @if(mod() === 'V') {
 
-        Modifica
-      </button>
 
-      <button mat-raised-button color="warn" type="button" (click)="remove()">
-        <mat-icon>delete</mat-icon>
-
-        Elimina
-      </button>
-
-      <button mat-raised-button type="button" (click)="aggiungiAlCarrello()">
-        <mat-icon>shopping_cart</mat-icon>
-
-        Aggiungi al carrello
-      </button>
+          @if(puoGestireProdotto()) {
+        
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              (click)="abilitaModifica()"
+            >
+              <mat-icon>edit</mat-icon>
+        
+              Modifica
+            </button>
+        
+        
+            <button
+              mat-raised-button
+              color="warn"
+              type="button"
+              (click)="remove()"
+            >
+              <mat-icon>delete</mat-icon>
+        
+              Elimina
+            </button>
+        
+          }
+        
+        
+          <button
+            mat-raised-button
+            type="button"
+            (click)="aggiungiAlCarrello()"
+          >
+            <mat-icon>shopping_cart</mat-icon>
+        
+            Aggiungi al carrello
+          </button>
+        
+        
+        }
 
       } @if(mod() === 'U') {
 

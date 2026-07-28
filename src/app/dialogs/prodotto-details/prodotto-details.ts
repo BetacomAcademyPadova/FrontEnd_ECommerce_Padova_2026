@@ -72,6 +72,10 @@ export class ProdottoDetails implements OnInit {
 
   immagini = signal<any[]>([]);
 
+  selectedFiles: File[] = [];
+
+  imagePreview: string | null = null;
+
   prodottoForm: FormGroup = new FormGroup({
     descrizione: new FormControl(null, Validators.required),
 
@@ -171,32 +175,39 @@ export class ProdottoDetails implements OnInit {
     );
   }
 
-  caricaImmagini(): void {
+  cambiaImmagine(url: string): void {
 
+    this.imagePreview = url;
+  
+  }
+
+  puoGestireProdotto(): boolean {
+
+    return (
+      this.authService.isRoleAdmin() ||
+      this.authService.isRoleVenditore()
+    );
+  
+  }
+
+  caricaImmagini(): void {
     const idProdotto = this.prodotto().idProdotto;
-  
-  
-    this.immaginiService.getByProdotto(idProdotto)
-      .subscribe({
-  
-        next: (response) => {
-  
-          console.log("Immagini ricevute:", response);
-  
-          this.immagini.set(response);
-  
-        },
-  
-        error: (errore) => {
-  
-          console.error(
-            "Errore caricamento immagini:",
-            errore
-          );
-  
+
+    this.immaginiService.getByProdotto(idProdotto).subscribe({
+      next: (response) => {
+        console.log("Immagini ricevute:", response);
+
+        this.immagini.set(response);
+
+        if (response.length > 0) {
+          this.imagePreview = response[0].url;
         }
-  
-      });
+      },
+
+      error: (errore) => {
+        console.error("Errore caricamento immagini:", errore);
+      },
+    });
   }
 
   caricaCategorie(): void {
@@ -430,7 +441,7 @@ export class ProdottoDetails implements OnInit {
 
         console.log("Divisione da creare:", divisioneReq);
 
-        this.creaDivisione(divisioneReq);
+        this.creaDivisione(divisioneReq, idProdotto);
       },
 
       error: (errore) => {
@@ -443,12 +454,30 @@ export class ProdottoDetails implements OnInit {
     });
   }
 
-  private creaDivisione(divisioneReq: any): void {
+  private creaDivisione(divisioneReq: any, idProdotto: number): void {
     this.divisioneProdottoService.create(divisioneReq).subscribe({
       next: (response) => {
         console.log("Divisione creata correttamente:", response);
 
-        this.dialogRef.close(true);
+        if (this.selectedFiles.length > 0) {
+          this.immaginiService
+            .upload(this.selectedFiles, idProdotto)
+            .subscribe({
+              next: (response) => {
+                console.log("Immagine caricata:", response);
+
+                this.dialogRef.close(true);
+              },
+
+              error: (errore) => {
+                console.error("Errore caricamento immagine:", errore);
+
+                this.dialogRef.close(true);
+              },
+            });
+        } else {
+          this.dialogRef.close(true);
+        }
       },
 
       error: (errore) => {
@@ -460,6 +489,24 @@ export class ProdottoDetails implements OnInit {
         );
       },
     });
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    this.selectedFiles = [input.files[0]];
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+
+    reader.readAsDataURL(this.selectedFiles[0]);
   }
 
   abilitaModifica(): void {
