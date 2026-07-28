@@ -26,10 +26,10 @@ export const routes: Routes = [
             { path: 'prodotti', component: Prodotti }, 
             { path: 'profilo', component: Profilo },  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'notifica', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult },
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
         ]
     },
 ];
