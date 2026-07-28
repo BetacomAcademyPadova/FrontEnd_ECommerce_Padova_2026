@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardModule } from "@angular/material/card";
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,6 +23,9 @@ export class Checkout {
   private stripe: Stripe | null = null;
   private elements?: StripeElements;
 
+  private route = inject(ActivatedRoute);
+  idOrdine = Number(this.route.snapshot.queryParamMap.get('idOrdine'));
+
   caricamento = signal(true);
   elaborazione = signal(false);
   messaggio = signal('');
@@ -31,12 +35,17 @@ export class Checkout {
   }
 
   private async init() {
+    if (!this.idOrdine || Number.isNaN(this.idOrdine)) {
+      this.caricamento.set(false);
+      this.messaggio.set('Ordine non valido: idOrdine mancante nella URL.');
+      return;
+    }
     try {
       const cfg = await firstValueFrom(this.pagS.getConfig());
       this.stripe = await loadStripe(cfg.publishableKey);
 
       const intent = await firstValueFrom(
-        this.pagS.createIntent({ idOrdine: 3, salvaMetodo: false })
+        this.pagS.createIntent({ idOrdine: this.idOrdine, salvaMetodo: false })
       );
 
       this.elements = this.stripe!.elements({ clientSecret: intent.clientSecret });
@@ -53,13 +62,13 @@ export class Checkout {
   async paga() {
     if (!this.stripe || !this.elements) return;
 
-    this.elaborazione.set(false);
+    this.elaborazione.set(true);
     this.messaggio.set('');
 
     const { error } = await this.stripe.confirmPayment({
       elements: this.elements,
       confirmParams: {
-        return_url: window.location.origin + '/dash/checkout-result?idOrdine=3'
+        return_url: window.location.origin + '/dash/checkout-result?idOrdine=' + this.idOrdine
       }
     });
 

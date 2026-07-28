@@ -1,0 +1,145 @@
+.sel-indirizzo {
+  display: block;
+}
+
+.sel-titolo {
+  font-family: var(--brand-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  margin: 0 0 12px;
+}
+
+.sel-vuoto {
+  color: var(--brand-mid);
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.sel-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sel-riga {
+  border: 1px solid var(--brand-line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.sel-riga:hover {
+  border-color: var(--brand-mid);
+}
+
+/* Material puts the label content in this wrapper; stack the two lines. */
+.sel-riga .mdc-form-field > label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.35;
+}
+
+.sel-via {
+  color: var(--brand-dark);
+  font-weight: 500;
+}
+
+.sel-citta {
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+}
+
+.sel-badge {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--brand-bg);
+  color: var(--brand-mid);
+  font-size: 0.7rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.sel-aggiungi {
+  margin-top: 10px;
+  padding-left: 0;
+  color: var(--brand-dark);
+}
+
+.sel-aggiungi mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  margin-right: 4px;
+}
+
+.sel-form {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px dashed var(--brand-line);
+  border-radius: 10px;
+  background: var(--brand-bg);
+}
+
+.sel-campo {
+  width: 100%;
+}
+
+.sel-riga-doppia {
+  display: flex;
+  gap: 12px;
+}
+
+.sel-campo-cap {
+  flex: 0 0 120px;
+}
+
+.sel-hint-ko {
+  color: #b3261e;
+}
+
+.sel-errore {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0 0;
+  color: #b3261e;
+  font-size: 0.85rem;
+}
+
+.sel-errore mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.sel-azioni {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.sel-salva {
+  background-color: var(--brand-dark) !important;
+  color: #fff !important;
+  min-width: 140px;
+}
+
+.sel-salva:disabled {
+  opacity: 0.55;
+}
+
+@media (max-width: 520px) {
+  .sel-riga-doppia {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sel-campo-cap {
+    flex: 1 1 auto;
+  }
+}
