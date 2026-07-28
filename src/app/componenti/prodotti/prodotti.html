@@ -19,90 +19,93 @@
 
       <div class="row g-3">
         <div class="col-lg-4 col-md-6">
-          <label class="form-label"> Descrizione </label>
+          <label class="form-label">Descrizione</label>
 
           <input
             type="text"
             class="form-control"
             placeholder="Esempio: Mobile"
             [(ngModel)]="descrizione"
-            (keyup.enter)="cercaProdotti()"
+            (ngModelChange)="cercaProdotti()"
           />
         </div>
 
         <div class="col-lg-2 col-md-6">
-          <label class="form-label"> Prezzo </label>
+          <label class="form-label">Prezzo</label>
 
           <input
             type="number"
             class="form-control"
             min="0"
             [(ngModel)]="prezzo"
-            (keyup.enter)="cercaProdotti()"
+            (ngModelChange)="cercaProdotti()"
           />
         </div>
 
         <div class="col-lg-2 col-md-6">
-          <label class="form-label"> Colore </label>
+          <label class="form-label">Colore</label>
 
           <input
             type="text"
             class="form-control"
             [(ngModel)]="colore"
-            (keyup.enter)="cercaProdotti()"
+            (ngModelChange)="cercaProdotti()"
           />
         </div>
 
         <div class="col-lg-2 col-md-6">
-          <label class="form-label"> Materiale </label>
+          <label class="form-label">Materiale</label>
 
           <input
             type="text"
             class="form-control"
             [(ngModel)]="materiale"
-            (keyup.enter)="cercaProdotti()"
+            (ngModelChange)="cercaProdotti()"
           />
         </div>
 
         <div class="col-lg-2 col-md-6">
-          <label class="form-label"> Sottocategoria </label>
+          <label class="form-label">Sottocategoria</label>
 
           <input
             type="text"
             class="form-control"
             [(ngModel)]="sottocategoria"
-            (keyup.enter)="cercaProdotti()"
+            (ngModelChange)="cercaProdotti()"
           />
         </div>
 
         <div class="col-lg-2 col-md-4">
-          <label class="form-label"> Altezza </label>
+          <label class="form-label">Altezza</label>
 
-          <input type="number" class="form-control" [(ngModel)]="altezza" />
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="altezza"
+            (ngModelChange)="cercaProdotti()"
+          />
         </div>
 
         <div class="col-lg-2 col-md-4">
-          <label class="form-label"> Lunghezza </label>
+          <label class="form-label">Lunghezza</label>
 
-          <input type="number" class="form-control" [(ngModel)]="lunghezza" />
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="lunghezza"
+            (ngModelChange)="cercaProdotti()"
+          />
         </div>
 
         <div class="col-lg-2 col-md-4">
-          <label class="form-label"> Larghezza </label>
+          <label class="form-label">Larghezza</label>
 
-          <input type="number" class="form-control" [(ngModel)]="larghezza" />
-        </div>
-
-        <div class="col-lg-2 col-md-4 d-flex align-items-end">
-          <button class="btn btn-primary w-100" (click)="cercaProdotti()">
-            Cerca
-          </button>
-        </div>
-
-        <div class="col-lg-2 col-md-4 d-flex align-items-end">
-          <button class="btn btn-secondary w-100" (click)="resetRicerca()">
-            Reset
-          </button>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="larghezza"
+            (ngModelChange)="cercaProdotti()"
+          />
         </div>
       </div>
     </div>
