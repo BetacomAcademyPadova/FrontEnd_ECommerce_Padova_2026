@@ -52,7 +52,11 @@
     @if(auth.grant().isLogged){
         @if(auth.grant().isLogged && auth.grant().isAdmin){
             <button mat-button routerLink="notifica">
-                <mat-icon>notifications</mat-icon>
+                <mat-icon [matBadge]="notificheService.badgeCount()" 
+                          [matBadgeHidden]="notificheService.badgeCount() === 0" 
+                          matBadgeColor="warn">
+                    notifications
+                </mat-icon>
                 <span>NOTIFICHE</span>
             </button>
         }
