@@ -29,3 +29,121 @@
     line-height: 1.6;
 }
 
+.btn-cta {
+  display: inline-block;
+  background-color: #3E2723;
+  color: #ffffff;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 30px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(62, 39, 35, 0.2);
+}
+
+.btn-cta:hover {
+  background-color: #5D4037;
+  transform: translateY(-2px);
+}
+
+.vantaggi-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1300px;
+  margin: 0 auto 60px auto;
+  padding: 0 20px;
+  flex-wrap: wrap;
+}
+
+.vantaggio-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  flex: 1;
+  min-width: 280px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(93, 64, 55, 0.15);
+  border-top: 4px solid #3E2723;
+}
+
+.vantaggio-card h3 {
+  color: #3E2723;
+  font-size: 1.4rem; 
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  text-transform: uppercase; 
+}
+
+.vantaggio-card p {
+  color: #3E2723;
+  font-size: 1rem; 
+  line-height: 1.6; 
+  font-weight: 400;
+}
+
+.chisiamo-container {
+  margin: 40px auto;
+  padding: 50px 40px;
+}
+
+.chisiamo-titolo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #3E2723;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.chisiamo-testo {
+  font-size: 1.1rem;
+  color: #3E2723;
+  line-height: 1.7;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.footer-ecommerce {
+  background-color: #3E2723;
+  color: #ffffff;
+  padding: 50px 20px 20px 20px;
+  margin-top: 80px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 30px;
+  text-align: left;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-colonna h4 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.footer-colonna p {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #d7ccc8;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  font-size: 0.85rem;
+  color: #a1887f;
+}
