@@ -51,10 +51,7 @@ export class Login {
 
         console.log('[LoginDialog] dopo login, isAutentificated =', this.auth.isAutentificated());
 
-        const grant = this.auth.grant();
-        if (grant.isAdmin) {
-          this.notificheService.aggiornaConteggio(grant.isAdmin);
-        }
+        this.notificheService.aggiornaConteggio();
 
         this.dialogRef.close(true);
         this.routing.navigate(['/dash']);

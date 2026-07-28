@@ -55,6 +55,32 @@
   } 
   @else 
   {
+    @if (auth.grant().isVenditore && stockAlerts().length > 0) {
+      <h2>⚠️ Avvisi di Magazzino</h2>
+      <p class="subtitle">Prodotti in esaurimento che richiedono la tua attenzione.</p>
+      <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px; margin-bottom: 40px;">
+        @for (alert of stockAlerts(); track alert.idNotifica) {
+          <mat-card class="notification-card" style="border-left: 5px solid #ff9800;">
+            <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: gray;">
+                  <strong>Data:</strong> {{ alert.dataCreazione | date:'short' }}
+                </p>
+                <p style="margin: 0; font-size: 1rem; color: #d32f2f; font-weight: 500;">
+                  {{ alert.messaggio }}
+                </p>
+              </div>
+              <div>
+                <button mat-flat-button color="primary" (click)="segnaStockComeLetto(alert.idNotifica)">
+                  Letto
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+      <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
+    }
     <h2>Invia richiesta all'Admin</h2>
     <p class="subtitle">Compila il modulo sottostante per inoltrare la tua richiesta.</p>
 
