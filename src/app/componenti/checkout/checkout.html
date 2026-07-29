@@ -1,5 +1,10 @@
 <div class="checkout-wrapper">
     <mat-card class="checkout-card">
+
+    <a class="conf-back" routerLink="/dash/conferma-ordine">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Torna al conferma Pagamento</span>
+    </a>
   <h2 class="checkout-title">Pagamento</h2>
   <p class="checkout-sub">Completa il tuo ordine in modo sicuro</p>
 
@@ -12,6 +17,13 @@
 
   <div #paymentElement class="strope-slot"></div>
 
+  @if (totale() !== null) {
+    <div class="checkout-totale">
+      <span class="checkout-totale-label">Totale</span>
+      <span class="checkout-totale-cifra">€ {{ totale() | number:'1.2-2' }}</span>
+    </div>
+  }
+
   @if (messaggio()) {
       <div class="checkout-error">
         <mat-icon>error_outline</mat-icon>
@@ -19,16 +31,18 @@
       </div>
     }
 
-    <button mat-flat-button
-            class="btn-paga"
-            [disabled]="caricamento() || elaborazione()"
-            (click)="paga()">
-      @if (elaborazione()) {
-        <mat-spinner diameter="20"></mat-spinner>
-      } @else {
-        <span>Paga ora</span>
-      }
-    </button>
+    <div class="checkout-azioni">
+      <button mat-flat-button
+              class="btn-paga"
+              [disabled]="caricamento() || elaborazione()"
+              (click)="paga()">
+        @if (elaborazione()) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <span>Paga ora</span>
+        }
+      </button>
+    </div>
 
     <p class="checkout-secure">
       <mat-icon>lock</mat-icon>

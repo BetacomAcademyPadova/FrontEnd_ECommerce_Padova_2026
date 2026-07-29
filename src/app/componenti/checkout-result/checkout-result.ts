@@ -8,6 +8,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import type { PaymentIntent } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
 import { PagamentiServices } from '../../services/pagamenti-services';
+import { CarelloServices } from '../../services/carello-services';
+import { AuthServices } from '../../auth/auth-services';
 
 type Stato = PaymentIntent['status'] | 'loading' | 'errore';
 
@@ -21,6 +23,8 @@ export class CheckoutResult {
 
   private route = inject(ActivatedRoute);
   private pagS = inject(PagamentiServices);
+  private carrelloS = inject(CarelloServices);
+  private auth = inject(AuthServices);
 
   stato = signal<Stato>('loading');
   messaggio = signal('Verifica del pagamento in corso...');
@@ -67,6 +71,7 @@ export class CheckoutResult {
       switch (this.stato()) {
         case 'succeeded':
           this.messaggio.set('Pagamento completato con successo.');
+          this.svuotaCarrello();
           break;
         case 'processing':
           this.messaggio.set('Pagamento in elaborazione. Riceverai una conferma a breve.');
@@ -82,5 +87,24 @@ export class CheckoutResult {
       this.messaggio.set('Errore: ' + (e?.message ?? e));
       console.log(e);
     }
+  }
+
+  // Il pagamento è confermato solo qui (Stripe l'ha appena detto 'succeeded'):
+  // è il momento giusto per svuotare il carrello, cosa che la pagina di
+  // conferma non può fare perché crea l'Ordine prima ancora di pagare.
+  private svuotaCarrello() {
+    const userId = Number(this.auth.grant().userId);
+    if (!userId) return;
+
+    this.carrelloS.getByUser(userId).subscribe({
+      next: (carrello) => {
+        if (carrello?.idCarrello) {
+          this.carrelloS.delete(carrello.idCarrello).subscribe({
+            error: (e) => console.error('Errore svuotamento carrello', e),
+          });
+        }
+      },
+      error: (e) => console.error('Errore lettura carrello da svuotare', e),
+    });
   }
 }
