@@ -157,6 +157,4 @@ export class GestioneUtente implements OnInit
       });
     }
   }
-
-  eseguoDelete(row: any) {}
 }
