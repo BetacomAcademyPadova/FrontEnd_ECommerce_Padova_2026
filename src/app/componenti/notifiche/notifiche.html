@@ -35,6 +35,11 @@
                     <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
                   </p>
                 }
+                @if (estraiTipo(n.messaggio).includes('Creare sconto')) {
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Percentuale Sconto:</strong> {{ estraiSconto(n.messaggio) }}
+                  </p>
+                }
                 <p style="margin: 0; font-size: 1rem;">
                   <strong>Messaggio:</strong> {{ estraiTesto(n.messaggio) }}
                 </p>
@@ -100,6 +105,7 @@
           @if(auth.grant().isVenditore)
           {
             <mat-option value="Rimuovere prodotto">Vorrei rimuovere un prodotto</mat-option>
+            <mat-option value="Creare sconto">Vorrei creare uno sconto</mat-option>
           }
           @else
           {
@@ -112,7 +118,8 @@
           <mat-error>Seleziona un tipo di richiesta</mat-error>
         }
       </mat-form-field>
-      @if (richiestaForm.get('tipoRichiesta')?.value === 'Rimuovere prodotto') {
+      @if (richiestaForm.get('tipoRichiesta')?.value === 'Rimuovere prodotto'
+                || richiestaForm.get('tipoRichiesta')?.value === 'Creare sconto') {
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Seleziona ID Prodotto</mat-label>
           <mat-select formControlName="prodottoId">
@@ -121,6 +128,13 @@
             }
           </mat-select>
           <mat-error>Campo obbligatorio</mat-error>
+        </mat-form-field>
+      }
+      @if (richiestaForm.get('tipoRichiesta')?.value === 'Creare sconto') {
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Percentuale sconto</mat-label>
+          <input matInput type="number" formControlName="valoreSconto" placeholder="Es. 20">
+          <mat-error>Inserisci un valore valido</mat-error>
         </mat-form-field>
       }
       <mat-form-field appearance="outline" style="width: 100%;">
@@ -162,6 +176,14 @@
                 @if (estraiTipo(n.messaggio).includes('Rimuovere prodotto')) {
                   <p style="margin: 0; font-size: 1rem;">
                     <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
+                  </p>
+                }
+                @if (estraiTipo(n.messaggio).includes('Creare sconto')) {
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Percentuale Sconto:</strong> {{ estraiSconto(n.messaggio) }}
                   </p>
                 }
                 <p style="margin: 0; font-size: 1rem;">

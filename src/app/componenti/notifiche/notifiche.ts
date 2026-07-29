@@ -36,6 +36,7 @@ export class Notifiche implements OnInit
   richiestaForm: FormGroup = new FormGroup({
     tipoRichiesta: new FormControl('', Validators.required),
     prodottoId: new FormControl(null),
+    valoreSconto: new FormControl(null, [Validators.min(1), Validators.max(100)]),
     messaggio: new FormControl('', Validators.required)
   });
 
@@ -52,13 +53,22 @@ export class Notifiche implements OnInit
     });
     this.richiestaForm.get('tipoRichiesta')?.valueChanges.subscribe(tipo => {
       const prodottoCtrl = this.richiestaForm.get('prodottoId');
-      if (tipo === 'Rimuovere prodotto') {
+      const scontoCtrl = this.richiestaForm.get('valoreSconto');
+      if (tipo === 'Rimuovere prodotto' || tipo === 'Creare sconto') {
         prodottoCtrl?.setValidators([Validators.required]);
       } else {
         prodottoCtrl?.clearValidators();
         prodottoCtrl?.setValue(null);
       }
       prodottoCtrl?.updateValueAndValidity();
+
+      if (tipo === 'Creare sconto') {
+        scontoCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(100)]);
+      } else {
+        scontoCtrl?.clearValidators();
+        scontoCtrl?.setValue(null);
+      }
+      scontoCtrl?.updateValueAndValidity();
     });
     if (this.auth.grant().isAdmin) {
       this.notificheService.getTutteNonLette().subscribe({
@@ -113,12 +123,16 @@ export class Notifiche implements OnInit
     const userId = Number(this.auth.grant().userId);
     const tipoRichiesta = this.richiestaForm.value.tipoRichiesta;
     const prodottoId = this.richiestaForm.value.prodottoId;
+    const valoreSconto = this.richiestaForm.value.valoreSconto;
     const messaggio = this.richiestaForm.value.messaggio;
 
     if (userId) {
       let testoCompleto = `[${tipoRichiesta}] - ${messaggio}`;
       if (tipoRichiesta === 'Rimuovere prodotto' && prodottoId) {
         testoCompleto = `[${tipoRichiesta}] - ID Prodotto: ${prodottoId} - ${messaggio}`;
+      }
+      else if (tipoRichiesta === 'Creare sconto' && prodottoId){
+        testoCompleto = `[${tipoRichiesta}] - ID Prodotto: ${prodottoId} - Sconto: ${valoreSconto}% - ${messaggio}`;
       }
       this.notificheService.inviaRichiesta(userId, testoCompleto).subscribe({
         next: () => {
@@ -209,11 +223,17 @@ export class Notifiche implements OnInit
     return match ? match[1] : '';
   }
 
+  estraiSconto(testo: string): string {
+    const match = testo.match(/Sconto:\s*([^\s-]+)/);
+    return match ? match[1] : '';
+  }
+
   estraiTesto(testo: string): string {
     return testo
       .replace(/Richiesta ricevuta dall'utente ID:\s*\d+\s*-\s*/g, '') 
       .replace(/\[.*?\]\s*-\s*/g, '')                                   
-      .replace(/ID Prodotto:\s*\d+\s*-\s*/g, '')                       
+      .replace(/ID Prodotto:\s*\d+\s*-\s*/g, '') 
+      .replace(/Sconto:\s*[^\s-]+\s*-\s*/g, '')                      
       .trim();
   }
 }
