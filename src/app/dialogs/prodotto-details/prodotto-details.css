@@ -283,4 +283,16 @@ mat-dialog-content {
     border-bottom: 1px solid #ddd;
   
   }
+
+  .sconto-container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  
+  .sconto-container .row-fields {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
 }
