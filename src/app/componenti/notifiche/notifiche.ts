@@ -42,26 +42,15 @@ export class Notifiche implements OnInit
 
   ngOnInit(): void {
     this.notificheService.aggiornaConteggio();
-    const userId = Number(this.auth.grant().userId);
-    if (this.auth.grant().isVenditore && userId) {
-      this.prodottoService.getProdottiByVenditore(userId).subscribe({
-        next: (res: any) => {
-          this.prodottiList.set(res);
-        },
-        error: () => {
-          this.msg.set("Errore caricamento tuoi prodotti");
-        }
-      });
-    } else {
-      this.prodottoService.getAll().subscribe({
-        next: (res: any) => {
-          this.prodottiList.set(res);
-        },
-        error: () => {
-          this.msg.set("Errore caricamento prodotti");
-        }
-      });
-    }
+    this.prodottoService.getAll().subscribe({
+      next: (res: any) => {
+        console.log("DATI PRODOTTO RICEVUTI:", res);
+        this.prodottiList.set(res);
+      },
+      error: () => {
+        this.msg.set("Errore caricamento prodotti");
+      }
+    });
     this.richiestaForm.get('tipoRichiesta')?.valueChanges.subscribe(tipo => {
       const prodottoCtrl = this.richiestaForm.get('prodottoId');
       const scontoCtrl = this.richiestaForm.get('valoreSconto');

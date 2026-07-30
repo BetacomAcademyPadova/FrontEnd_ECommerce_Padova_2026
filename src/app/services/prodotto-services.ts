@@ -17,10 +17,6 @@ export class ProdottoServices {
     return this.http.get<any>(`${this.url}/getById/${idProdotto}`);
   }
 
-  getProdottiByVenditore(userId: number) {
-    return this.http.get<any[]>(`${this.url}/venditore/${userId}`);
-  }
-
   search(
     descrizione: string,
     prezzo: number | null,

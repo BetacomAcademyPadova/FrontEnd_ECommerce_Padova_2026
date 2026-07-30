@@ -1,4 +1,4 @@
-.container {
+c.container {
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px;
@@ -22,38 +22,60 @@
 mat-card-title {
   font-family: 'Playfair Display', serif;
   font-size: 2rem;
-  color: #3e2723;
+  color: #3E2723;
   font-weight: 700;
+  text-align: center;
 }
 
 .tabella-prodotti {
   width: 100%;
   margin-top: 30px;
   border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .tabella-prodotti th {
-  background-color: #3e2723;
+  background-color: #3E2723;
   color: white;
   padding: 15px;
   text-align: center;
+  font-size: 1rem;
 }
 
 .tabella-prodotti td {
   padding: 15px;
   text-align: center;
-  color: #3e2723;
+  color: #3E2723;
   border-bottom: 1px solid #ddd;
   vertical-align: middle;
 }
 
+.tabella-prodotti tr:hover {
+  background-color: #faf7f5;
+}
+
 .clickable-row {
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .clickable-row:hover {
   background-color: #efe5df;
+}
+
+.tabella-prodotti td div {
+  color: #5D4037;
+  line-height: 1.5;
+}
+
+button.mat-mdc-icon-button {
+  margin: 0 5px;
+}
+
+button.mat-mdc-icon-button:hover {
+  background-color: rgba(93, 64, 55, 0.1);
 }
 
 mat-divider {

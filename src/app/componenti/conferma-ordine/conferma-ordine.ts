@@ -1,5 +1,5 @@
 import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthServices } from '../../auth/auth-services';
 import { OrdineServices } from '../../services/ordine-services';
 import { IndirizzoServices } from '../../services/indirizzo-services';
@@ -7,17 +7,15 @@ import { OrdineReq, IndirizzoDTO } from '../../services/ordine-types';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { CarelloServices } from '../../services/carello-services';
+import { CarrelloServices } from '../../services/carello-services';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DecimalPipe } from '@angular/common';
 import { SelettoreIndirizzo } from '../selettore-indirizzo/selettore-indirizzo';
+import { CarrelloDTO } from '../../services/carello-types';
 import { forkJoin } from 'rxjs';
-import { Carrello } from '../../models/carrello';
-import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
-import { ProdottoServices } from '../../services/prodotto-services';
 
 @Component({
   selector: 'app-conferma-ordine',
@@ -30,7 +28,6 @@ import { ProdottoServices } from '../../services/prodotto-services';
     MatProgressSpinnerModule,
     SelettoreIndirizzo,
     DecimalPipe,
-    RouterLink
   ],
   templateUrl: './conferma-ordine.html',
   styleUrl: './conferma-ordine.css',
@@ -41,16 +38,21 @@ export class ConfermaOrdine {
   private ordineS = inject(OrdineServices);
   private indirizzoS = inject(IndirizzoServices);
   private router = inject(Router);
-  private carrelloS = inject(CarelloServices);
-  private prodottoS = inject(ProdottoServices);
+  private carrelloS = inject(CarrelloServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
+  // indirizzoScelto = signal<number | null>(null);
+  // totale = signal(0);
+  // messaggio = signal('');
   statoId = signal<number | null>(null);
-  carrello = signal<Carrello | null>(null);
+  carrello = signal<CarrelloDTO | null>(null);
   spedizioneId = signal<number | null>(null);
   fatturazioneUguale = signal(true);
   fatturazioneScelta = signal<number | null>(null);
-  prodottiView = signal<ProdottoCarrelloView[]>([]);
+
+  // TODO: sostituire quando esisterà Carrello/getByUser/{userId}
+  private readonly ID_CARRELLO_TEST = 4;
+
 
   fatturazioneId = computed(() =>
     this.fatturazioneUguale() ? this.spedizioneId() : this.fatturazioneScelta()
@@ -62,7 +64,7 @@ export class ConfermaOrdine {
 
   righe = computed(() => this.carrello()?.prodotti ?? []);
   totale = computed(() => this.carrello()?.totale ?? 0);
-  carrelloVuoto = computed(() => !this.caricamento() && !this.errore() && this.righe().length === 0);
+  carrelloVuoto = computed(() => !this.caricamento() && this.righe().length === 0);
 
   puoConfermare = computed(() =>
     !this.caricamento() &&
@@ -75,6 +77,10 @@ export class ConfermaOrdine {
   );
 
   userId = signal(0);
+
+  // private getUserId(): number {
+  //   return Number(this.auth.grant().userId);
+  // }
 
   constructor() {
     afterNextRender(() => this.carica());
@@ -94,12 +100,10 @@ export class ConfermaOrdine {
     forkJoin({
       indirizzi: this.indirizzoS.getAllByUser(this.userId()),
       stati: this.ordineS.getStati(),
-      carrello: this.carrelloS.getByUser(this.userId()),
-      prodotti: this.prodottoS.getAll(),
+      carrello: this.carrelloS.getById(this.ID_CARRELLO_TEST),
     }).subscribe({
-      next: ({ indirizzi, stati, carrello, prodotti }) => {
+      next: ({ indirizzi, stati, carrello }) => {
         this.indirizzi.set(indirizzi);
-        this.prodottiView.set(this.mappaProdottiCarrello(carrello, prodotti));
         const pref = indirizzi.find(i => i.predefinito) ?? indirizzi[0];
         if (pref) this.spedizioneId.set(pref.idIndirizzo);
  
@@ -119,28 +123,6 @@ export class ConfermaOrdine {
     });
   }
  
-  // Abbina ogni riga del carrello (idDivisioneProdotto, quantità, prezzo) alla
-  // sua descrizione nel catalogo prodotti, per poterla mostrare nel riepilogo.
-  private mappaProdottiCarrello(carrello: Carrello, prodotti: any[]): ProdottoCarrelloView[] {
-    return carrello.prodotti.map(pc => {
-      let prodottoFinale: any = { ...pc };
-      prodotti.forEach((p: any) => {
-        const divisione = p.divisioni?.find(
-          (d: any) => d.idDivisione === pc.idDivisioneProdotto
-        );
-        if (divisione) {
-          prodottoFinale = {
-            ...pc,
-            descrizione: p.descrizione,
-            colore: divisione.colore,
-            materiale: divisione.materiale,
-          };
-        }
-      });
-      return prodottoFinale;
-    });
-  }
-
   // callback dal selettore indirizzo
   indirizzoAggiunto(ev: { lista: IndirizzoDTO[]; idNuovo: number }, perSpedizione: boolean) {
     this.indirizzi.set(ev.lista);
