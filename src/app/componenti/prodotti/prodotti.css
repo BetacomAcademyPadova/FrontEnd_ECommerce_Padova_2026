@@ -1,85 +1,239 @@
 .card {
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-  
-  .card:hover {
-    transform: translateY(-4px);
-  }
-  
-  .card-title {
-    min-height: 48px;
-  }
-  
-  .badge {
-    white-space: normal;
-  }
-  
-  button {
-    width: 100%;
-  }
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
 
-  .btn-success {
-    width: auto;
-  }
-  .form-label {
-    font-weight: 600;
-  }
+.card:hover {
+  transform: translateY(-4px);
+}
 
-  .prodotto-card {
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .prodotto-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
+/* CARD PRODOTTO */
 
-  .prodotto-card {
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  
-  .prodotto-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  
-  prodotto-img {
+.prodotto-card {
+  cursor: pointer;
 
-    width: 100%;
-    height: 220px;
-    object-fit: contain;
-    padding: 15px;
-  
-  }
-  
-  
-  .no-image {
-  
-    height: 220px;
-  
-    display: flex;
-  
-    justify-content: center;
-  
-    align-items: center;
-  
-    background-color: #f5f5f5;
-  
-    color: gray;
-  
-  }
+  height: 100%;
 
-  .quantita-input {
-    border: 2px solid #8b4513;
-    border-radius: 8px;
-  }
-  
-  .quantita-input:focus {
-    border-color: #5c2e0b;
-    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
-  }
+  display: flex;
+
+  flex-direction: column;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.prodotto-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 10px 25px rgba(62, 39, 35, 0.2);
+}
+
+/* CORPO CARD */
+
+.card-body {
+  display: flex;
+
+  flex-direction: column;
+
+  background-color: #faf7f2;
+}
+
+/* TITOLO */
+
+.card-title {
+  min-height: 48px;
+
+  color: #3e2723;
+
+  font-weight: 700;
+}
+
+/* BADGE CATEGORIA */
+
+.badge {
+  white-space: normal;
+
+  background-color: #c19a6b !important;
+
+  color: white;
+
+  font-weight: 600;
+}
+
+/* TESTI */
+
+p {
+  color: #5d4037;
+}
+
+/* PREZZO */
+
+.text-primary {
+  color: #5d4037 !important;
+
+  font-weight: 700;
+}
+
+/* SCONTO */
+
+.text-danger {
+  color: #b22222 !important;
+}
+
+/* BOTTONI */
+
+button {
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #5d4037;
+
+  border-color: #5d4037;
+}
+
+.btn-primary:hover {
+  background-color: #3e2723;
+
+  border-color: #3e2723;
+}
+
+.btn-success {
+  width: auto;
+
+  background-color: #5d4037;
+
+  border-color: #5d4037;
+}
+
+.btn-success:hover {
+  background-color: #3e2723;
+
+  border-color: #3e2723;
+}
+
+/* LABEL FORM */
+
+.form-label {
+  font-weight: 600;
+
+  color: #3e2723;
+}
+
+/* IMMAGINI CARD */
+
+.prodotto-img {
+  width: 100%;
+
+  height: 220px;
+
+  object-fit: contain;
+
+  padding: 15px;
+
+  background-color: white;
+}
+
+/* NESSUNA IMMAGINE */
+
+.no-image {
+  height: 220px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background-color: #efebe9;
+
+  color: #8d6e63;
+}
+
+/* BOX VARIANTI */
+
+.border {
+  border-color: #d7ccc8 !important;
+
+  background-color: white;
+}
+
+/* QUANTITA CARRELLO */
+
+.quantita-input {
+  border: 2px solid #8b4513;
+
+  border-radius: 8px;
+
+  color: #3e2723;
+}
+
+.quantita-input::placeholder {
+  color: #a1887f;
+}
+
+.quantita-input:focus {
+  border-color: #5d4037;
+
+  box-shadow: 0 0 0 0.2rem rgba(93, 64, 55, 0.25);
+}
+
+/* SPAZIO SCONTO */
+
+.sconto-box {
+  min-height: 30px;
+}
+
+/* PULSANTE SEMPRE IN BASSO */
+
+.mt-auto {
+  margin-top: auto !important;
+}
+
+.prodotto-img {
+
+  transition: transform 0.4s ease;
+
+}
+
+
+.prodotto-card:hover .prodotto-img {
+
+  transform: scale(1.05);
+
+}
+
+.badge-sconto {
+  background-color: #3E2723;
+  color: white;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+
+.sconto-prezzo {
+  display: flex;
+  flex-direction: column;
+  min-height: 70px;
+}
+
+
+.prezzo-originale {
+  color: #8d8d8d;
+  text-decoration: line-through;
+  font-size: 1rem;
+}
+
+
+.prezzo-scontato {
+  color: #3E2723;
+  font-weight: 700;
+  margin: 0;
+}
