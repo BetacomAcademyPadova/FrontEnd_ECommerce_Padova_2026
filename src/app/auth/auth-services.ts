@@ -44,6 +44,9 @@ export class AuthServices {
     }
 
     setToken(token: string) {
+        if (isPlatformBrowser(this.platformId)) {
+            sessionStorage.setItem("token", token);
+        }
         this.grant.update(grant => ({
             ...grant,
             token: token
@@ -51,8 +54,13 @@ export class AuthServices {
     }
 
     setAutentificated(user: UserDTO) {
-        let admin = user.ruolo === 'Admin' ? true : false;
-        let venditore = user.ruolo === 'Venditore' ? true : false;
+
+        if (isPlatformBrowser(this.platformId)) {
+            sessionStorage.setItem("user", JSON.stringify(user));
+        }
+
+        let admin = user.ruolo === 'Admin';
+        let venditore = user.ruolo === 'Venditore';
 
         this.grant.update(grant => ({
             ...grant,
@@ -83,13 +91,16 @@ export class AuthServices {
         return this.grant().isLogged;
     }
 
+
     isRoleAdmin() {
         return this.grant().isAdmin;
     }
 
+
     isRoleVenditore() {
         return this.grant().isVenditore;
     }
+
 
     getUsername(): string | null {
         return this.grant().username;

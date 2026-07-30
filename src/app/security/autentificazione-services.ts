@@ -20,7 +20,7 @@ export class AutentificazioneServices {
     login(body: LoginReq): Observable<UserDTO> {
         return this.http.post<LoginDTO>(this.getBaseUrl() + "login", body).pipe(
             tap(resp => {
-            this.authServices.setToken(resp.accessToken);
+            this.authServices.setToken(resp.token);
             this.authServices.setAutentificated(resp.user);
             }),
             map(resp => resp.user)
@@ -52,7 +52,7 @@ export class AutentificazioneServices {
 
         this.refreshRequest$ = this.http.post<LoginDTO>(this.getBaseUrl() + "refresh", {}, { withCredentials: true })
             .pipe(
-                tap(resp => { this.authServices.setToken(resp.accessToken) }),
+                tap(resp => { this.authServices.setToken(resp.token) }),
                 catchError(error => {  // in case of error
                     this.authServices.resetAll();
                     return throwError(() => error);
