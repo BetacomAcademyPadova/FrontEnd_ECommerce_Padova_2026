@@ -225,10 +225,17 @@ export class Prodotti implements OnInit {
           return;
         }
 
+        const quantita = prodotto.quantitaCarrello ?? 1;
+
+        if (quantita > divisione.quantitaDisponibile) {
+          console.error("Quantità non disponibile");
+          return;
+        }
+
         const body = {
           idCarrello: carrello.idCarrello,
           idDivisioneProdotto: divisione.idDivisione,
-          quantita: 1,
+          quantita: prodotto.quantitaCarrello ?? 1,
         };
 
         console.log("Invio:", body);

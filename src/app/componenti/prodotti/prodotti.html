@@ -152,11 +152,17 @@
             disponibile' }}
           </p>
 
-          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
-
           @if(prodotto.sconto != null){
 
-          <p class="text-success fw-bold">Sconto: {{ prodotto.sconto }}%</p>
+          <p class="text-danger fw-bold mb-1">
+            Sconto: -{{ prodotto.sconto.valore }}%
+          </p>
+
+          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
+
+          } @else {
+
+          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
 
           }
 
@@ -186,10 +192,25 @@
             </p>
 
             <p class="mb-0">
-              <strong>Quantità:</strong>
-
+              <strong>Quantità disponibile:</strong>
               {{divisione.quantitaDisponibile ?? 0}}
             </p>
+            <div class="mt-2" (click)="$event.stopPropagation()">
+
+              <label class="form-label mb-1">
+                Quantità
+              </label>
+            
+              <input
+                type="number"
+                class="form-control quantita-input"
+                min="1"
+                [max]="divisione.quantitaDisponibile"
+                placeholder="Aggiungi quantità"
+                [(ngModel)]="prodotto.quantitaCarrello"
+              />
+            
+            </div>
           </div>
 
           } @empty {
