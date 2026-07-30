@@ -16,6 +16,7 @@ import { UtenteServices } from '../../services/user-services';
 import { AutentificazioneServices } from '../../security/autentificazione-services';
 import { ChangePassword } from '../../dialogs/change-password/change-password';
 import { NotificheServices } from '../../services/notifiche-services';
+import { CarelloServices } from '../../services/carello-services';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,8 +28,6 @@ import { NotificheServices } from '../../services/notifiche-services';
 })
 export class Dashboard implements OnInit {
 
-  //VARIABILE PER TESTARE ICONA CARRELLO
-  quantitaCarrello: number = 3;
 
   constructor(
     public auth: AuthServices,
@@ -36,6 +35,7 @@ export class Dashboard implements OnInit {
     private util: UtilitiesServices,
     private utenteServices: UtenteServices,
     public notificheService: NotificheServices,
+    public carrelloService: CarelloServices,
     private autentificazioneServices: AutentificazioneServices
   ) {}
 
@@ -43,6 +43,9 @@ export class Dashboard implements OnInit {
     const grant = this.auth.grant();
     if (grant.isLogged && grant.isAdmin) {
       this.notificheService.aggiornaConteggio(grant.isAdmin);
+    }
+     if (grant.isLogged) {
+      this.carrelloService.aggiornaConteggio();
     }
   }
 

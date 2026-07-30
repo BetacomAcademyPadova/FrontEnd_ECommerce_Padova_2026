@@ -1,4 +1,4 @@
-import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
+import { Component, afterNextRender, computed, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +24,8 @@ export class CheckoutResult {
   private route = inject(ActivatedRoute);
   private pagS = inject(PagamentiServices);
   private carrelloS = inject(CarelloServices);
-  private auth = inject(AuthServices);
+  private destroyRef = inject(DestroyRef);
+  // private auth = inject(AuthServices);
 
   stato = signal<Stato>('loading');
   messaggio = signal('Verifica del pagamento in corso...');
@@ -71,7 +72,7 @@ export class CheckoutResult {
       switch (this.stato()) {
         case 'succeeded':
           this.messaggio.set('Pagamento completato con successo.');
-          this.svuotaCarrello();
+          this.attendiSvuotamentoCarrello();
           break;
         case 'processing':
           this.messaggio.set('Pagamento in elaborazione. Riceverai una conferma a breve.');
@@ -88,23 +89,22 @@ export class CheckoutResult {
       console.log(e);
     }
   }
+  // Il carrello lo svuota il backend in markSucceeded, cioè quando arriva il
+  // webhook. Stripe però ci riporta qui prima, quindi un solo refresh può
+  // leggere un carrello non ancora svuotato: riprova finché non trova 0.
+  private attendiSvuotamentoCarrello() {
+    this.carrelloS.aggiornaConteggio();
 
-  // Il pagamento è confermato solo qui (Stripe l'ha appena detto 'succeeded'):
-  // è il momento giusto per svuotare il carrello, cosa che la pagina di
-  // conferma non può fare perché crea l'Ordine prima ancora di pagare.
-  private svuotaCarrello() {
-    const userId = Number(this.auth.grant().userId);
-    if (!userId) return;
+    let tentativi = 5;
+    const timer = setInterval(() => {
+      if (this.carrelloS.badgeCount() === 0 || --tentativi <= 0) {
+        clearInterval(timer);
+        return;
+      }
+      this.carrelloS.aggiornaConteggio();
+    }, 2000);
 
-    this.carrelloS.getByUser(userId).subscribe({
-      next: (carrello) => {
-        if (carrello?.idCarrello) {
-          this.carrelloS.delete(carrello.idCarrello).subscribe({
-            error: (e) => console.error('Errore svuotamento carrello', e),
-          });
-        }
-      },
-      error: (e) => console.error('Errore lettura carrello da svuotare', e),
-    });
+    this.destroyRef.onDestroy(() => clearInterval(timer));
   }
+
 }

@@ -1,7 +1,7 @@
 export interface OrdineReq {
   data: string;
-  totale: number;
   userId: number;
+  indirizzoSpedizioneId: number;
   indirizzoFatturazioneId: number;
   statoId: number;
 }

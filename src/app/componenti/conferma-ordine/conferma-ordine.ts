@@ -164,21 +164,21 @@ export class ConfermaOrdine {
  
     const req: OrdineReq = {
       data: new Date().toISOString().slice(0, 10),
-      totale: this.totale(),
+      // totale: this.totale(),
       userId: this.userId(),
+      indirizzoSpedizioneId: this.spedizioneId()!,
       indirizzoFatturazioneId: this.fatturazioneId()!,
       statoId: this.statoId()!,
     };
  
     this.ordineS.create(req).subscribe({
       next: (r) => {
-        // idSpedizione viaggia con la navigazione finché OrdineReq non lo accetta
-        // e OrdineImpl.create non lo scrive sulle righe prodotti_ordine.
         this.router.navigate(['/dash/checkout'], {
-          queryParams: {
-            idOrdine: r.idOrdine,
-            idSpedizione: this.spedizioneId(),
-          },
+          queryParams: { idOrdine: r.idOrdine },
+          // queryParams: {
+          //   idOrdine: r.idOrdine,
+          //   idSpedizione: this.spedizioneId(),
+          // },
         });
       },
       error: (e) => {

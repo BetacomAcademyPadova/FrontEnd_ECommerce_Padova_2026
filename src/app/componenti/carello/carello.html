@@ -54,7 +54,7 @@
     <mat-card class="summary">
         <h2>
             Totale:
-            {{carrello()?.totale | currency:'EUR'}}
+            {{totale() | currency:'EUR'}}
         </h2>
         <button mat-raised-button color="primary" (click)="vaiAlCheckout()">
             Vai al checkout

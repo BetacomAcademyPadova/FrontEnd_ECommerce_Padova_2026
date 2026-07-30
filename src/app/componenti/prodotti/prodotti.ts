@@ -236,6 +236,7 @@ export class Prodotti implements OnInit {
         this.prodottiCarrelloService.create(body).subscribe({
           next: () => {
             console.log("Prodotto aggiunto al carrello");
+            this.carrelloService.aggiornaConteggio();
           },
 
           error: (err) => {
