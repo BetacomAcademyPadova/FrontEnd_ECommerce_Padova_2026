@@ -1,86 +1,80 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Service, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 
 import { APP_SETTING } from '../settings/token/token';
 import { AppSettings } from '../settings/token/config-model';
 
-
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class RicevutaServices {
-    private readonly settings: AppSettings = inject(APP_SETTING);
-    private readonly http = inject(HttpClient);
-    ricevute = signal<any[]>([]);
 
-    private getBaseUrl(): string {
-        return this.settings.apiUrl;
-    }
+  private readonly settings: AppSettings = inject(APP_SETTING);
+  private readonly http = inject(HttpClient);
 
-    getByUserId(
-        userId:number
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl() + "Ricevuta/getByUserId/" + userId
-        );
-    }
+  ricevute = signal<any[]>([]);
 
-    getByUserIdAndDateRange(
-        userId:number,
-        dataInizio:string,
-        dataFine:string
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl()
-            +
-            "Ricevuta/getByUserIdAndDateRange",
-            {
-                params:{
-                    userId,
-                    dataInizio,
-                    dataFine
-                }
-            }
-        );
-    }
+  private getBaseUrl(): string {
+    return this.settings.apiUrl;
+  }
 
-    getRicevuteVenditore(
-        venditoreId:number
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl() + "Ricevuta/getRicevuteVenditore/" + venditoreId
-        );
-    }
 
-    getRicevuteVenditoreByDateRange(
-        venditoreId:number,
-        dataInizio:string,
-        dataFine:string
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl()
-            +
-            "Ricevuta/getRicevuteVenditoreByDateRange/"
-            +
-            venditoreId,
-            {
-                params:{
-                    dataInizio,
-                    dataFine
-                }
-            }
-        );
-    }
+  getByUserId(userId: number) {
+    return this.http.get<any[]>(
+      this.getBaseUrl() + "Ricevuta/user/" + userId
+    );
+  }
 
-    getById(
-        idFattura:number
-    ){
-        return this.http.get<any>(
-            this.getBaseUrl() + "Ricevuta/getById/" + idFattura
-        );
-    }
 
-    setRicevute(
-        lista:any[]
-    ){
-        this.ricevute.set(lista);
-    }
+  getByUserIdAndDateRange(
+    userId: number,
+    dataInizio: string,
+    dataFine: string
+  ) {
+    return this.http.get<any[]>(
+      this.getBaseUrl() + "Ricevuta/user/" + userId + "/date",
+      {
+        params: {
+          dataInizio,
+          dataFine
+        }
+      }
+    );
+  }
+
+
+  getRicevuteVenditore(venditoreId: number) {
+    return this.http.get<any[]>(
+      this.getBaseUrl() + "Ricevuta/venditore/" + venditoreId
+    );
+  }
+
+
+  getRicevuteVenditoreByDateRange(
+    venditoreId: number,
+    dataInizio: string,
+    dataFine: string
+  ) {
+    return this.http.get<any[]>(
+      this.getBaseUrl() + "Ricevuta/venditore/" + venditoreId + "/date",
+      {
+        params: {
+          dataInizio,
+          dataFine
+        }
+      }
+    );
+  }
+
+
+  getById(idFattura: number) {
+    return this.http.get<any>(
+      this.getBaseUrl() + "Ricevuta/getById/" + idFattura
+    );
+  }
+
+
+  setRicevute(lista: any[]) {
+    this.ricevute.set(lista);
+  }
 }

@@ -2,58 +2,41 @@ import { inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 
-import { AppSettings } from '../settings/token/config-model'; 
-import { APP_SETTING } from '../settings/token/token'; 
-
+import { AppSettings } from '../settings/token/config-model';
+import { APP_SETTING } from '../settings/token/token';
 
 @Service()
 export class ProdottiOrdineServices {
-    private readonly settings: AppSettings = inject(APP_SETTING);
-    private readonly http = inject(HttpClient);
-    private readonly endpoint = "ProdottiOrdine/";
-    prodottiOrdine = signal<any[]>([]);
+  private readonly settings: AppSettings = inject(APP_SETTING);
+  private readonly http = inject(HttpClient);
+  private readonly endpoint = 'ProdottiOrdine/';
 
-    getBaseUrl(): string {
-        return this.settings.apiUrl + this.endpoint;
-    }
+  prodottiOrdine = signal<any[]>([]);
 
-    list() {
-        this.http.get<any[]>(
-            this.getBaseUrl() + "getAll"
-        )
-        .subscribe({
-            next: (r) => {
-                this.prodottiOrdine.set(r);
-            },
-            error: (err) => {
-                console.error("Errore caricamento prodotti ordine", err);
-            }
-        });
-    }
+  getBaseUrl(): string {
+    return this.settings.apiUrl + this.endpoint;
+  }
 
-    getById(idItem:number) {
-        return this.http.get<any>(
-            this.getBaseUrl() + "getById/" + idItem
-        );
-    }
+  list() {
+    this.http
+      .get<any[]>(this.getBaseUrl() + 'getAll')
+      .subscribe({
+        next: (r) => {
+          this.prodottiOrdine.set(r);
+        },
+        error: (err) => {
+          console.error('Errore caricamento prodotti ordine', err);
+        },
+      });
+  }
 
-    create(body:any) {
-        return this.http.post(
-            this.getBaseUrl() + "create",
-            body
-        )
+  getById(idItem: number) {
+    return this.http.get<any>(this.getBaseUrl() + 'getById/' + idItem);
+  }
 
-        .pipe(
-            tap(() => this.list())
-        );
-    }
-
-    delete(idItem:number) {
-        return this.http.delete(
-            this.getBaseUrl() + "delete/" + idItem
-        )
-        .pipe(
-            tap(() => this.list())
-        );
-    }
+  create(body: any) {
+    return this.http
+      .post(this.getBaseUrl() + 'create', body)
+      .pipe(tap(() => this.list()));
+  }
 }

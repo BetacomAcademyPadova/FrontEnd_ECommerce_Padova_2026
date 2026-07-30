@@ -32,7 +32,7 @@ export const routes: Routes = [
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult },
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'ricevute', component: Ricevuta},
+            { path: 'ricevute', component: Ricevuta, /*canActivate: [autentificateGuard]*/},
         ]
     },
 ];
