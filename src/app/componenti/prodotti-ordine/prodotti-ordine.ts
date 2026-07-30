@@ -11,7 +11,6 @@ import { ProdottiOrdineServices } from '../../services/prodotti-ordine-services'
 
 @Component({
   selector: 'app-prodotti-ordine',
-  standalone: true,
   imports: [ MatCardModule, MatButtonModule, MatIconModule, MatDividerModule, DecimalPipe],
   templateUrl: './prodotti-ordine.html',
   styleUrl: './prodotti-ordine.css',
@@ -27,21 +26,59 @@ export class ProdottiOrdine implements OnInit {
     return this.prodottiOrdineS.prodottiOrdine();
   }
 
-  selezionaProdottoOrdine(row:any) {
-    console.log("Prodotto ordine selezionato:", row);
+  selezionaProdottoOrdine(row: any) {
+    console.log(
+      "Prodotto ordine selezionato:",
+      row
+    );
   }
 
-  elimina(row:any) {
+  elimina(row: any) {
+    if (!row.idItem) {
+      console.log(
+        "ID prodotto ordine mancante"
+      );
+      return;
+    }
 
-    this.prodottiOrdineS
-        .delete(row.idItem)
-        .subscribe({
-          next:()=>{
-            console.log("Prodotto ordine eliminato");
-          },
-          error:(err)=>{
-            console.error("Errore eliminazione", err);
-          }
-        });
+    this.prodottiOrdineS.delete(row.idItem)
+      .subscribe({
+        next: () => {
+          console.log(
+            "Prodotto ordine eliminato"
+          );
+        },
+        error: (err) => {
+          console.log(
+            "Errore eliminazione:",
+            err
+          );
+        }
+      });
+  }
+
+  aggiorna(row: any) {
+    const body = {
+      idItem: row.idItem,
+      ordineId: row.ordineId,
+      prodottoId: row.prodottoId,
+      prodottiCarrelloId: row.prodottiCarrelloId,
+      indirizzoSpedizioneId: row.indirizzoSpedizioneId,
+      divisioneOrdineId: row.divisioneOrdineId
+    };
+    this.prodottiOrdineS.update(body)
+      .subscribe({
+        next: () => {
+          console.log(
+            "Prodotto ordine aggiornato"
+          );
+        },
+        error: (err) => {
+          console.log(
+            "Errore update:",
+            err
+          );
+        }
+      });
   }
 }

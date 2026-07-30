@@ -32,17 +32,19 @@
       </div>
 
       <div class="thumbnail-container">
+
         @for(img of immagini(); track img.id){
-
-        <img
-          [src]="img.url"
-          class="thumbnail"
-          alt="Immagine prodotto"
-          (click)="cambiaImmagine(img.url)"
-          [class.selected]="imagePreview === img.url"
-        />
-
+      
+          <img
+            [src]="img.url"
+            class="thumbnail"
+            alt="Immagine prodotto"
+            (click)="cambiaImmagine(img.url)"
+            [class.selected]="imagePreview === img.url"
+          >
+      
         }
+      
       </div>
 
       } @else {
@@ -77,7 +79,9 @@
       }
     </div>
 
-    <h3 class="section-title">Informazioni prodotto</h3>
+    <h3 class="section-title">
+      Informazioni prodotto
+    </h3>
     <!-- DATI PRODOTTO -->
 
     <div class="row-fields">
@@ -128,7 +132,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <h3 class="section-title">Variante prodotto</h3>
+    <h3 class="section-title">
+      Variante prodotto
+    </h3>
     <!-- DIVISIONE PRODOTTO -->
 
     <div class="row-fields">
@@ -161,7 +167,9 @@
         <input matInput type="number" min="0" formControlName="stockAlert" />
       </mat-form-field>
     </div>
-    <h3 class="section-title">Dimensioni</h3>
+    <h3 class="section-title">
+      Dimensioni
+    </h3>
     <!-- MISURE -->
 
     <div class="row-fields">
@@ -184,78 +192,6 @@
       </mat-form-field>
     </div>
 
-    @if(puoGestireProdotto() && (mod() === 'V' || mod() === 'U')) {
-
-    <div class="sconto-container">
-      <div class="d-flex align-items-center gap-2">
-        <h3 class="section-title mb-0">Gestione sconto</h3>
-
-        @if(scontoEsistente()) {
-
-        <button
-          mat-icon-button
-          color="warn"
-          type="button"
-          matTooltip="Elimina sconto"
-          (click)="eliminaSconto()"
-        >
-          <mat-icon>delete_outline</mat-icon>
-        </button>
-
-        }
-      </div>
-
-      <div class="row-fields">
-        <mat-form-field appearance="fill">
-          <mat-label> Percentuale sconto </mat-label>
-
-          <input
-            matInput
-            type="number"
-            min="0"
-            max="100"
-            [(ngModel)]="valoreSconto"
-            [ngModelOptions]="{standalone:true}"
-          />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label> Data inizio </mat-label>
-
-          <input
-            matInput
-            type="date"
-            [(ngModel)]="dataInizio"
-            [ngModelOptions]="{standalone:true}"
-          />
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label> Data fine </mat-label>
-
-          <input
-            matInput
-            type="date"
-            [(ngModel)]="dataFine"
-            [ngModelOptions]="{standalone:true}"
-          />
-        </mat-form-field>
-      </div>
-
-      <button
-        mat-raised-button
-        color="accent"
-        type="button"
-        (click)="creaSconto()"
-      >
-        <mat-icon>discount</mat-icon>
-
-        Salva sconto
-      </button>
-    </div>
-
-    }
-
     <!-- BOTTONI -->
 
     <div class="button-group">
@@ -270,34 +206,53 @@
         Registrazione
       </button>
 
-      } @if(mod() === 'V') { @if(mod() === 'V') { @if(puoGestireProdotto()) {
+      } @if(mod() === 'V') {
 
-      <button
-        mat-raised-button
-        color="primary"
-        type="button"
-        (click)="abilitaModifica()"
-      >
-        <mat-icon>edit</mat-icon>
+        @if(mod() === 'V') {
 
-        Modifica
-      </button>
 
-      <button mat-raised-button color="warn" type="button" (click)="remove()">
-        <mat-icon>delete</mat-icon>
+          @if(puoGestireProdotto()) {
+        
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              (click)="abilitaModifica()"
+            >
+              <mat-icon>edit</mat-icon>
+        
+              Modifica
+            </button>
+        
+        
+            <button
+              mat-raised-button
+              color="warn"
+              type="button"
+              (click)="remove()"
+            >
+              <mat-icon>delete</mat-icon>
+        
+              Elimina
+            </button>
+        
+          }
+        
+        
+          <button
+            mat-raised-button
+            type="button"
+            (click)="aggiungiAlCarrello()"
+          >
+            <mat-icon>shopping_cart</mat-icon>
+        
+            Aggiungi al carrello
+          </button>
+        
+        
+        }
 
-        Elimina
-      </button>
-
-      }
-
-      <button mat-raised-button type="button" (click)="aggiungiAlCarrello()">
-        <mat-icon>shopping_cart</mat-icon>
-
-        Aggiungi al carrello
-      </button>
-
-      } } @if(mod() === 'U') {
+      } @if(mod() === 'U') {
 
       <button
         mat-raised-button

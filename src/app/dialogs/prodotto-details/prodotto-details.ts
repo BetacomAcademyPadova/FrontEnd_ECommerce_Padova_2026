@@ -12,7 +12,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { FormsModule } from "@angular/forms";
 
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -28,8 +27,6 @@ import { AuthServices } from "../../auth/auth-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
 import { CarrelloServices } from "../../services/carrello-services";
-import { ScontoServices } from "../../services/sconto-services";
-import { CarelloServices } from "../../services/carello-services";
 
 @Component({
   selector: "app-prodotto-details",
@@ -39,7 +36,6 @@ import { CarelloServices } from "../../services/carello-services";
     MatIconModule,
     MatDialogModule,
     ReactiveFormsModule,
-    FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -64,17 +60,9 @@ export class ProdottoDetails implements OnInit {
 
   private readonly immaginiService = inject(ImmaginiServices);
 
-  private readonly carrelloService = inject(CarelloServices);
+  private readonly carrelloService = inject(CarrelloServices);
 
   private readonly prodottiCarrelloService = inject(ProdottiCarrelloServices);
-
-  private readonly scontoService = inject(ScontoServices);
-
-  valoreSconto: number | null = null;
-
-  dataInizio: string = "";
-
-  dataFine: string = "";
 
   mod = signal("");
 
@@ -85,8 +73,6 @@ export class ProdottoDetails implements OnInit {
   tutteSottocategorie = signal<any[]>([]);
 
   sottocategorie = signal<any[]>([]);
-
-  scontoEsistente = signal<any>(null);
 
   msg = signal("");
 
@@ -140,18 +126,6 @@ export class ProdottoDetails implements OnInit {
 
     if (this.prodotto()) {
       this.caricaImmagini();
-
-      const prodotto = this.prodotto();
-
-      if (prodotto.sconto) {
-        this.scontoEsistente.set(prodotto.sconto);
-
-        this.valoreSconto = prodotto.sconto.valore;
-
-        this.dataInizio = prodotto.sconto.dataInizio;
-
-        this.dataFine = prodotto.sconto.dataFine;
-      }
     }
 
     if (this.mod() === "V") {
@@ -607,98 +581,6 @@ export class ProdottoDetails implements OnInit {
 
       error: (errore) => {
         console.error("Errore recupero carrello:", errore);
-      },
-    });
-  }
-
-  private convertiData(data: string): string {
-    const parti = data.split("-");
-
-    return `${parti[2]}/${parti[1]}/${parti[0]}`;
-  }
-
-  creaSconto(): void {
-    const prodotto = this.prodotto();
-
-    if (!prodotto) {
-      console.error("Nessun prodotto selezionato");
-      return;
-    }
-
-    if (!this.valoreSconto || !this.dataInizio || !this.dataFine) {
-      this.msg.set("Compila tutti i campi dello sconto");
-
-      return;
-    }
-
-    const scontoReq = {
-      idProdotto: prodotto.idProdotto,
-
-      valore: this.valoreSconto,
-
-      dataInizio: this.convertiData(this.dataInizio),
-
-      dataFine: this.convertiData(this.dataFine),
-    };
-
-    console.log("Sconto inviato:", scontoReq);
-
-    this.scontoService.create(scontoReq).subscribe({
-      next: (response) => {
-        console.log("Sconto creato correttamente:", response);
-
-        const nuovoSconto = {
-          valore: this.valoreSconto,
-          dataInizio: this.dataInizio,
-          dataFine: this.dataFine,
-        };
-
-        this.scontoEsistente.set(nuovoSconto);
-
-        this.msg.set("Sconto applicato al prodotto");
-      },
-
-      error: (errore) => {
-        console.error("Errore creazione sconto:", errore);
-
-        this.msg.set(errore?.error?.msg ?? "Errore creazione sconto");
-      },
-    });
-  }
-
-  eliminaSconto(): void {
-    const sconto = this.scontoEsistente();
-
-    if (!sconto) {
-      console.error("Nessuno sconto da eliminare");
-      return;
-    }
-
-    const conferma = confirm("Sei sicuro di voler eliminare questo sconto?");
-
-    if (!conferma) {
-      return;
-    }
-
-    this.scontoService.delete(sconto.idSconto).subscribe({
-      next: () => {
-        console.log("Sconto eliminato");
-
-        this.scontoEsistente.set(null);
-
-        this.valoreSconto = null;
-
-        this.dataInizio = "";
-
-        this.dataFine = "";
-
-        this.msg.set("Sconto eliminato");
-      },
-
-      error: (errore) => {
-        console.error("Errore eliminazione sconto:", errore);
-
-        this.msg.set(errore?.error?.msg ?? "Errore eliminazione sconto");
       },
     });
   }

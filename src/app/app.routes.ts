@@ -14,7 +14,6 @@ import { ConfermaOrdine } from './componenti/conferma-ordine/conferma-ordine';
 import { CheckoutResult } from './componenti/checkout-result/checkout-result';
 import { Notifiche } from './componenti/notifiche/notifiche';
 import { ResetPassword } from './componenti/reset-password/reset-password';
-import { Ricevuta } from './componenti/ricevuta/ricevuta';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -32,7 +31,6 @@ export const routes: Routes = [
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult, /*canActivate:[autentificateGuard]*/},
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'ricevute', component: Ricevuta},
         ]
     },
 ];
