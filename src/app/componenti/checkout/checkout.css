@@ -61,10 +61,42 @@
   width: 20px;
 }
 
-.btn-paga {
-  width: 100%;
-  height: 48px;
+.checkout-totale {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--brand-bg);
+  font-family: var(--brand-serif);
+  color: var(--brand-dark);
+}
+
+.checkout-totale-label {
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+.checkout-totale-cifra {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.checkout-azioni {
+  display: flex;
+  gap: 12px;
   margin-top: 24px;
+}
+
+.btn-indietro:disabled {
+  opacity: 0.6;
+}
+
+.btn-paga {
+  flex: 1;
+  height: 48px;
   background-color: var(--brand-dark) !important;
   color: #fff !important;
   font-family: var(--brand-serif);
@@ -90,4 +122,14 @@
   font-size: 16px;
   height: 16px;
   width: 16px;
+}
+ .conf-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
 }

@@ -6,12 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardModule } from "@angular/material/card";
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
+import { OrdineServices } from '../../services/ordine-services';
 
 
 @Component({
   selector: "app-checkout",
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink, DecimalPipe],
   templateUrl: "./checkout.html",
   styleUrl: "./checkout.css",
 })
@@ -20,6 +22,7 @@ export class Checkout {
   @ViewChild('paymentElement') paymentElementRef!: ElementRef;
 
   private pagS = inject(PagamentiServices);
+  private ordineS = inject(OrdineServices);
   private stripe: Stripe | null = null;
   private elements?: StripeElements;
 
@@ -29,6 +32,7 @@ export class Checkout {
   caricamento = signal(true);
   elaborazione = signal(false);
   messaggio = signal('');
+  totale = signal<number | null>(null);
 
   constructor() {
     afterNextRender(() => this.init());
@@ -41,6 +45,9 @@ export class Checkout {
       return;
     }
     try {
+      const ordine = await firstValueFrom(this.ordineS.getById(this.idOrdine));
+      this.totale.set(ordine.totale);
+
       const cfg = await firstValueFrom(this.pagS.getConfig());
       this.stripe = await loadStripe(cfg.publishableKey);
 
