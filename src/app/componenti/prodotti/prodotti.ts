@@ -7,7 +7,7 @@ import { ProdottoServices } from "../../services/prodotto-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottoDetails } from "../../dialogs/prodotto-details/prodotto-details";
 import { AuthServices } from "../../auth/auth-services";
-import { CarrelloServices } from "../../services/carrello-services";
+import { CarelloServices } from "../../services/carello-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
 
 @Component({
@@ -48,7 +48,7 @@ export class Prodotti implements OnInit {
 
   private authService = inject(AuthServices);
 
-  private carrelloService = inject(CarrelloServices);
+  private carrelloService = inject(CarelloServices);
 
   private prodottiCarrelloService = inject(ProdottiCarrelloServices);
 
@@ -225,10 +225,17 @@ export class Prodotti implements OnInit {
           return;
         }
 
+        const quantita = prodotto.quantitaCarrello ?? 1;
+
+        if (quantita > divisione.quantitaDisponibile) {
+          console.error("Quantità non disponibile");
+          return;
+        }
+
         const body = {
           idCarrello: carrello.idCarrello,
           idDivisioneProdotto: divisione.idDivisione,
-          quantita: 1,
+          quantita: prodotto.quantitaCarrello ?? 1,
         };
 
         console.log("Invio:", body);

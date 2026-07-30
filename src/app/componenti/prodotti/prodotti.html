@@ -36,6 +36,7 @@
           <input
             type="number"
             class="form-control"
+            placeholder="Esempio: 20"
             min="0"
             [(ngModel)]="prezzo"
             (ngModelChange)="cercaProdotti()"
@@ -48,6 +49,7 @@
           <input
             type="text"
             class="form-control"
+            placeholder="Esempio: Rosso"
             [(ngModel)]="colore"
             (ngModelChange)="cercaProdotti()"
           />
@@ -59,6 +61,7 @@
           <input
             type="text"
             class="form-control"
+            placeholder="Esempio: Legno"
             [(ngModel)]="materiale"
             (ngModelChange)="cercaProdotti()"
           />
@@ -70,6 +73,7 @@
           <input
             type="text"
             class="form-control"
+            placeholder="Esempio: Cucina"
             [(ngModel)]="sottocategoria"
             (ngModelChange)="cercaProdotti()"
           />
@@ -81,6 +85,7 @@
           <input
             type="number"
             class="form-control"
+            placeholder="Esempio: 100"
             [(ngModel)]="altezza"
             (ngModelChange)="cercaProdotti()"
           />
@@ -92,6 +97,7 @@
           <input
             type="number"
             class="form-control"
+            placeholder="Esempio: 100"
             [(ngModel)]="lunghezza"
             (ngModelChange)="cercaProdotti()"
           />
@@ -103,6 +109,7 @@
           <input
             type="number"
             class="form-control"
+            placeholder="Esempio: 100"
             [(ngModel)]="larghezza"
             (ngModelChange)="cercaProdotti()"
           />
@@ -145,18 +152,42 @@
             }}
           </span>
 
+        
+
           <h5 class="card-title">{{ prodotto.descrizione }}</h5>
 
           <p>
-            Categoria: {{ prodotto.sottoCategoria?.categoria?.categoria ?? 'Non
+            Categoria: {{ prodotto.sottoCategoria?.categoria ?? 'Non
             disponibile' }}
           </p>
 
-          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
+          <div class="sconto-box">
+            @if(prodotto.sconto != null){
+
+            <p class="text-danger fw-bold mb-1">
+              Sconto: -{{ prodotto.sconto.valore }}%
+            </p>
+
+            } @else {
+
+            <p class="mb-1 invisible">Sconto</p>
+
+            }
+          </div>
 
           @if(prodotto.sconto != null){
 
-          <p class="text-success fw-bold">Sconto: {{ prodotto.sconto }}%</p>
+          <div class="sconto-prezzo">
+            <span class="prezzo-originale">
+              {{ prodotto.prezzoOriginale }} €
+            </span>
+
+            <h4 class="prezzo-scontato">{{ prodotto.prezzo }} €</h4>
+          </div>
+
+          } @else {
+
+          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
 
           }
 
@@ -186,10 +217,21 @@
             </p>
 
             <p class="mb-0">
-              <strong>Quantità:</strong>
-
+              <strong>Quantità disponibile:</strong>
               {{divisione.quantitaDisponibile ?? 0}}
             </p>
+            <div class="mt-2" (click)="$event.stopPropagation()">
+              <label class="form-label mb-1"> Quantità </label>
+
+              <input
+                type="number"
+                class="form-control quantita-input"
+                min="1"
+                [max]="divisione.quantitaDisponibile"
+                placeholder="Aggiungi quantità"
+                [(ngModel)]="prodotto.quantitaCarrello"
+              />
+            </div>
           </div>
 
           } @empty {

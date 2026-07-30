@@ -1,20 +1,47 @@
-import { Service, signal, inject, PLATFORM_ID } from '@angular/core';
+import { inject, PLATFORM_ID, Service, effect, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDTO } from '../componenti/models/user-dto/user-dto';
+
+const CHIAVE = 'grant';
 
 @Service()
 export class AuthServices {
 
-    private readonly platformId = inject(PLATFORM_ID);
+    // 1. serve a sapere se siamo nel browser (con l'SSR non c'è sessionStorage)
+    private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-    grant = signal({
-        token: null,
-        isAdmin: false,
-        isLogged: false,
-        isVenditore: false,
-        userId: null as string | null,
-        username: null as string | null
-    });
+    // 2. il valore iniziale non è più fisso: prova a rileggere quello salvato
+    grant = signal(this.leggiIniziale());
+
+    constructor() {
+        // 3. ogni volta che grant cambia, lo salva
+        effect(() => {
+            const g = this.grant();
+            if (this.isBrowser) {
+                sessionStorage.setItem(CHIAVE, JSON.stringify(g));
+            }
+        });
+    }
+
+    private leggiIniziale() {
+        const vuoto = {
+            token: null as string | null,
+            isAdmin: false,
+            isLogged: false,
+            isVenditore: false,
+            userId: null as string | null,
+            username: null as string | null
+        };
+
+        if (!this.isBrowser) return vuoto;
+
+        try {
+            const salvato = sessionStorage.getItem(CHIAVE);
+            return salvato ? { ...vuoto, ...JSON.parse(salvato) } : vuoto;
+        } catch {
+            return vuoto;
+        }
+    }
 
     setToken(token: string) {
         if (isPlatformBrowser(this.platformId)) {
@@ -24,32 +51,6 @@ export class AuthServices {
             ...grant,
             token: token
         }));
-    }
-
-    loadToken() {
-        if (!isPlatformBrowser(this.platformId)) {
-            return;
-        }
-
-        const token = sessionStorage.getItem("token");
-        const user = sessionStorage.getItem("user");
-
-        console.log("TOKEN:", token);
-        console.log("USER:", user);
-
-        if (token && user) {
-
-            const userObj: UserDTO = JSON.parse(user);
-
-            this.grant.set({
-                token: token,
-                isLogged: true,
-                isAdmin: userObj.ruolo === 'Admin',
-                isVenditore: userObj.ruolo === 'Venditore',
-                userId: userObj.userId,
-                username: userObj.username
-            });
-        }
     }
 
     setAutentificated(user: UserDTO) {
@@ -72,22 +73,19 @@ export class AuthServices {
     }
 
     resetAll() {
+        this.grant.set(this.vuoto());
+    }
 
-        if (isPlatformBrowser(this.platformId)) {
-            sessionStorage.removeItem("token");
-            sessionStorage.removeItem("user");
-        }
-
-        this.grant.set({
-            token: null,
+    private vuoto() {
+        return {
+            token: null as string | null,
             isAdmin: false,
             isLogged: false,
             isVenditore: false,
-            userId: null,
-            username: null
-        });
-    }   
-
+            userId: null as string | null,
+            username: null as string | null
+        };
+    }
 
     isAutentificated(): boolean {
         return this.grant().isLogged;
