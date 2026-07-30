@@ -27,7 +27,6 @@ import { DivisioneProdottoServices } from "../../services/divisione-prodotto-ser
 import { AuthServices } from "../../auth/auth-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
-import { CarrelloServices } from "../../services/carrello-services";
 import { ScontoServices } from "../../services/sconto-services";
 import { CarelloServices } from "../../services/carello-services";
 
