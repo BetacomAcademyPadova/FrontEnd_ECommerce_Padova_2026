@@ -40,10 +40,6 @@ export class UtenteServices {
         return this.http.patch(this.getBaseUrl() + "update", body);
     }
 
-    findByUserName(id?: string) {
-        return this.http.get(this.getBaseUrl() + "getByUsername");
-    }
-
     findByUserNameNumber(id: number) {
         return this.http.get<any>(this.getBaseUrl() + "getById/" + id);
     }
