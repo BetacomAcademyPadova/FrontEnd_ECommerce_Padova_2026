@@ -14,7 +14,6 @@ import { ConfermaOrdine } from './componenti/conferma-ordine/conferma-ordine';
 import { CheckoutResult } from './componenti/checkout-result/checkout-result';
 import { Notifiche } from './componenti/notifiche/notifiche';
 import { ResetPassword } from './componenti/reset-password/reset-password';
-import { Ricevuta } from './componenti/ricevuta/ricevuta';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -23,16 +22,15 @@ export const routes: Routes = [
             { path: 'home', component: Home },
             { path: 'login', component: Login},
             { path: 'reset-password', component: ResetPassword},
-            { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
             { path: 'prodotti', component: Prodotti }, 
-            { path: 'profilo', component: Profilo },  
+            { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
+            { path: 'profilo', component: Profilo, /*canActivate:[autentificateGuard]*/},  
             { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'notifica', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
-            { path: 'checkout-result', component: CheckoutResult },
+            { path: 'checkout-result', component: CheckoutResult, /*canActivate:[autentificateGuard]*/},
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'ricevute', component: Ricevuta},
         ]
     },
 ];

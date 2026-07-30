@@ -37,9 +37,6 @@
                 }
                 @if (estraiTipo(n.messaggio).includes('Creare sconto')) {
                   <p style="margin: 0; font-size: 1rem;">
-                    <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
-                  </p>
-                  <p style="margin: 0; font-size: 1rem;">
                     <strong>Percentuale Sconto:</strong> {{ estraiSconto(n.messaggio) }}
                   </p>
                 }

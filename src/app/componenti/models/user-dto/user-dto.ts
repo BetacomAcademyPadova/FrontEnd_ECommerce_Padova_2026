@@ -4,7 +4,7 @@ export interface LoginReq{
 }
 
 export interface LoginDTO {
-  accessToken:string;
+  token: string;
   user: UserDTO;
 }
 

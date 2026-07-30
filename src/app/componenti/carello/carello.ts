@@ -1,4 +1,5 @@
-import { afterNextRender, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { CarrelloServices } from '../../services/carrello-services';
 import { AuthServices } from '../../auth/auth-services';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
@@ -11,7 +12,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDivider } from "@angular/material/divider";
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { CarelloServices } from '../../services/carello-services';
 
 @Component({
   selector:'app-carello',
@@ -21,7 +21,7 @@ import { CarelloServices } from '../../services/carello-services';
 })
 
 export class Carello {
-  private carrelloService = inject(CarelloServices);
+  private carrelloService = inject(CarrelloServices);
   private auth = inject(AuthServices);
   private router = inject(Router);
   private prodottoService = inject(ProdottoServices);
@@ -30,12 +30,10 @@ export class Carello {
   carrello = signal<Carrello | null>(null);
   prodottiView = signal<ProdottoCarrelloView[]>([]);
 
-  // ngOnInit(){
-  //   this.caricaCarrello();
-  // }
-constructor() {
-  afterNextRender(() => this.caricaCarrello());
-}
+  ngOnInit(){
+    this.caricaCarrello();
+  }
+
   caricaCarrello(){
     const userId = Number(this.auth.grant().userId);
     this.carrelloService
@@ -144,7 +142,7 @@ eliminaProdotto(prodotto:any){
 }
 
 vaiAlCheckout(){
-  this.router.navigate(['/dash/conferma-ordine']);
+  this.router.navigate(['/checkout']);
 }
 
 }

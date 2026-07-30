@@ -46,11 +46,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             console.log('prova de refresh.....')
             return autentificationSercice.refreshToken().pipe(
                 switchMap(response => { 
-                    authServices.setToken(response.accessToken); // save new token 
+                    authServices.setToken(response.token); // save new token 
                    const repeatedRequest = req.clone({     // resend ol request with new token
                     withCredentials: true, 
                     setHeaders: { 
-                        Authorization: 'Bearer ' + response.accessToken 
+                        Authorization: 'Bearer ' + response.token 
                     } }); 
                     return next(repeatedRequest); 
                 }), 

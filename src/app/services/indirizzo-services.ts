@@ -17,7 +17,16 @@ export class IndirizzoServices {
   getAllByUser(idUser: number) {
     return this.http.get<IndirizzoDTO[]>(this.getBaseUrl() + 'getAllByUser/' + idUser);
   }
+
   create(req: IndirizzoReq) {
     return this.http.post<{ msg: string }>(this.getBaseUrl() + 'create', req);
+  }
+
+  update(req: IndirizzoReq) {
+    return this.http.put<{ msg: string }>(this.getBaseUrl() + 'update', req);
+  }
+
+  delete(idIndirizzo: number) {
+    return this.http.delete<{ msg: string }>(this.getBaseUrl() + 'delete/' + idIndirizzo);
   }
 }

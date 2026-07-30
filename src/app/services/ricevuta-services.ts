@@ -1,86 +1,72 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
-
-import { APP_SETTING } from '../settings/token/token';
-import { AppSettings } from '../settings/token/config-model';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 
 @Service()
 export class RicevutaServices {
-    private readonly settings: AppSettings = inject(APP_SETTING);
     private readonly http = inject(HttpClient);
+    private readonly baseUrl = 'http://localhost:9090/rest/Ricevuta/';
+
     ricevute = signal<any[]>([]);
 
-    private getBaseUrl(): string {
-        return this.settings.apiUrl;
-    }
+    list() {
 
-    getByUserId(
-        userId:number
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl() + "Ricevuta/getByUserId/" + userId
-        );
-    }
+        this.http.get<any[]>(
+            this.baseUrl + 'getAll'
+        )
 
-    getByUserIdAndDateRange(
-        userId:number,
-        dataInizio:string,
-        dataFine:string
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl()
-            +
-            "Ricevuta/getByUserIdAndDateRange",
-            {
-                params:{
-                    userId,
-                    dataInizio,
-                    dataFine
-                }
+        .subscribe({
+
+            next: (r) => {
+                this.ricevute.set(r);
+            },
+
+            error: (err) => {
+
+                console.error(
+                    'Errore caricamento ricevute',
+                    err
+                );
             }
+        });
+    }
+
+    create(body: any) {
+
+        return this.http.post(
+            this.baseUrl + 'create',
+            body
+        )
+
+        .pipe(
+            tap(() => this.list())
         );
     }
 
-    getRicevuteVenditore(
-        venditoreId:number
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl() + "Ricevuta/getRicevuteVenditore/" + venditoreId
+    update(body: any) {
+
+        return this.http.put(
+            this.baseUrl + 'update',
+            body
+        )
+
+        .pipe(
+            tap(() => this.list())
         );
     }
 
-    getRicevuteVenditoreByDateRange(
-        venditoreId:number,
-        dataInizio:string,
-        dataFine:string
-    ){
-        return this.http.get<any[]>(
-            this.getBaseUrl()
-            +
-            "Ricevuta/getRicevuteVenditoreByDateRange/"
-            +
-            venditoreId,
-            {
-                params:{
-                    dataInizio,
-                    dataFine
-                }
-            }
-        );
-    }
+    getById(idFattura: number) {
 
-    getById(
-        idFattura:number
-    ){
         return this.http.get<any>(
-            this.getBaseUrl() + "Ricevuta/getById/" + idFattura
+            this.baseUrl + 'getById/' + idFattura
         );
     }
 
-    setRicevute(
-        lista:any[]
-    ){
-        this.ricevute.set(lista);
+    getByVenditore(venditoreId: number) {
+
+        return this.http.get<any[]>(
+            this.baseUrl + 'getRicevutaBy/' + venditoreId
+        );
     }
 }
