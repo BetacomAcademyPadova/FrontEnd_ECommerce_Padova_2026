@@ -1,49 +1,193 @@
-<div class="container">
-    <mat-card class="example-card" appearance="outlined">
-        <mat-card-header class="header-row">
-            <mat-card-title>
-                Elenco Ricevute
+<div class="ricevuta-container">
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-card-title class="titolo-ricevuta">
+                Ricevute
             </mat-card-title>
         </mat-card-header>
-        <mat-divider style="margin-top:20px;"></mat-divider>
+        <mat-divider></mat-divider>
         <mat-card-content>
-            <table class="table table-striped">
+            <div class="selettore-ricevute">
+                <button mat-raised-button [color]="modalita === 'ordini' ? 'primary' : ''"
+                    (click)="cambiaVista('ordini')">
+                    <mat-icon>
+                        shopping_bag
+                    </mat-icon>
+                    Ricevute ordini
+                </button>
+                @if(isVenditore){
+                    <button mat-raised-button [color]="modalita === 'vendite' ? 'primary' : ''"
+                        (click)="cambiaVista('vendite')">
+                        <mat-icon>store</mat-icon>
+                        Ricevute vendite
+                    </button>
+                }
+            </div>
+            <div class="filtro-date">
+                <label>
+                    Dal:
+                    <input
+                        type="date"
+                        #dataInizio>
+                </label>
+                <label>
+                    Al:
+                    <input
+                        type="date"
+                        #dataFine>
+                </label>
+                <button mat-raised-button (click)="filtraDate(dataInizio.value,dataFine.value)">
+                    Filtra
+                </button>
+
+                <button mat-raised-button (click)="caricaRicevute()">
+                    Tutte
+                </button>
+            </div>
+            <table class="tabella-ricevute">
                 <thead>
                     <tr>
                         <th>Numero fattura</th>
                         <th>Data emissione</th>
+                        @if(modalita === 'vendite'){
+                            <th>Cliente</th>
+                        }
                         <th>Prodotti</th>
                         <th>Imponibile</th>
-                        <th>IVA (22%)</th>
+                        <th>IVA</th>
                         <th>Totale</th>
                     </tr>
                 </thead>
                 <tbody>
-                @for (ric of ricevute; track ric.idFattura) {
-                    <tr class="clickable-row" (click)="selezionaRicevuta(ric)">
-                        <td>{{ric.numeroFattura}}</td>
-                        <td>{{ric.dataEmissione}}</td>
-                        <td class="lista-prodotti">
-                            @for (p of ric.prodotti; track p.idItem) {
-                                <div class="prodotto-item">
-                                    <b>{{p.prodotto}}</b>
-                                    <br>Quantità:{{p.quantita}}
-                                    <br>Prezzo:{{p.prezzo | number:'1.2-2'}} €
-                                </div>
-                                <hr>
+                    @for(
+                        ric of ricevute;
+                        track ric.idFattura
+                    ){
+                        <tr class="clickable-row" (click)="selezionaRicevuta(ric)">
+                            <td>
+                                <b>{{ric.numeroFattura}}</b>
+                            </td>
+                            <td>{{ric.dataEmissione}}</td>
+                            @if(modalita === 'vendite'){
+                                <td>{{ric.cliente}}</td>
                             }
-                        </td>
-                        <td>{{ric.imponibile | number:'1.2-2'}} €</td>
-                        <td>{{ric.iva | number:'1.2-2'}} €<br>
-                            <small>Aliquota IVA: 22%</small>
-                        </td>
-                        <td>
-                            <b>{{ric.totale | number:'1.2-2'}} €</b>
-                        </td>
-                    </tr>
-                }
+                            <td class="lista-prodotti">
+                                @for(
+                                    p of ric.prodotti;
+                                    track p.idItem
+                                ){
+                                    <div class="prodotto-item">
+                                        <b>{{p.prodotto}}</b>
+                                        <br>
+                                        Quantità:
+                                        {{p.quantita}}
+                                        <br>
+                                        Prezzo:
+                                        {{p.prezzo | number:'1.2-2'}} €
+                                    </div>
+                                    <hr>
+                                }
+                            </td>
+                            <td>
+                                {{ric.imponibile | number:'1.2-2'}} €
+                            </td>
+                            <td>
+                                {{ric.iva | number:'1.2-2'}} €
+                                <br>
+                                <small>IVA 22%</small>
+                            </td>
+                            <td>
+                                <b>{{ric.totale | number:'1.2-2'}} €</b>
+                            </td>
+                        </tr>
+                    }
+                    @empty {
+                        <tr>
+                            <td colspan="7">
+                                Nessuna ricevuta disponibile
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </mat-card-content>
     </mat-card>
 </div>
+
+@if(ricevutaSelezionata){
+
+<div class="ricevuta-dettaglio">
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-card-title>
+                Dettaglio ricevuta
+            </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+            <div id="ricevuta-stampa">
+                <h1>RICEVUTA</h1>
+                <div class="info-ricevuta">
+                    <p>
+                        Numero fattura:
+                        <b>{{ricevutaSelezionata.numeroFattura}}</b>
+                    </p>
+                    <p>
+                        Data emissione:
+                        <b>{{ricevutaSelezionata.dataEmissione}}</b>
+                    </p>
+                    @if(modalita === 'vendite'){
+                        <p>
+                            Cliente:
+                            <b>{{ricevutaSelezionata.cliente}}</b>
+                        </p>
+                    }
+                </div>
+                <table class="tabella-stampa">
+                    <thead>
+                        <tr>
+                            <th>Prodotto</th>
+                            <th>Quantità</th>
+                            <th>Prezzo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(
+                            p of ricevutaSelezionata.prodotti;
+                            track p.idItem
+                        ){
+                            <tr>
+                                <td>{{p.prodotto}}</td>
+                                <td>{{p.quantita}}</td>
+                                <td>{{p.prezzo | number:'1.2-2'}} €</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="totali-stampa">
+                    <p>
+                        Imponibile:
+                        <b>{{ricevutaSelezionata.imponibile | number:'1.2-2'}} €</b>
+                    </p>
+                    <p>
+                        IVA 22%:
+                        <b>{{ricevutaSelezionata.iva | number:'1.2-2'}} €</b>
+                    </p>
+                    <h2>
+                        Totale:
+                        <b>{{ricevutaSelezionata.totale | number:'1.2-2'}} €</b>
+                    </h2>
+                </div>
+            </div>
+            <div class="azioni">
+                <button mat-raised-button (click)="stampa()">
+                    Stampa
+                </button>
+                <button mat-raised-button (click)="chiudiDettaglio()">
+                    Chiudi
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+}

@@ -29,6 +29,7 @@ import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
 import { CarrelloServices } from "../../services/carrello-services";
 import { ScontoServices } from "../../services/sconto-services";
+import { CarelloServices } from "../../services/carello-services";
 
 @Component({
   selector: "app-prodotto-details",
@@ -63,7 +64,7 @@ export class ProdottoDetails implements OnInit {
 
   private readonly immaginiService = inject(ImmaginiServices);
 
-  private readonly carrelloService = inject(CarrelloServices);
+  private readonly carrelloService = inject(CarelloServices);
 
   private readonly prodottiCarrelloService = inject(ProdottiCarrelloServices);
 

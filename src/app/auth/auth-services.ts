@@ -1,24 +1,53 @@
-import { Service, signal } from '@angular/core';
+import { inject, PLATFORM_ID, Service, effect, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { UserDTO } from '../componenti/models/user-dto/user-dto';
+
+const CHIAVE = 'grant';
 
 @Service()
 export class AuthServices {
 
-    grant = signal({
-        token: null,
-        isAdmin: false,
-        isLogged: false,
-        isVenditore: false,
-        userId: null as string | null,
-        username: null as string | null
-    })
+    // 1. serve a sapere se siamo nel browser (con l'SSR non c'è sessionStorage)
+    private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
+    // 2. il valore iniziale non è più fisso: prova a rileggere quello salvato
+    grant = signal(this.leggiIniziale());
+
+    constructor() {
+        // 3. ogni volta che grant cambia, lo salva
+        effect(() => {
+            const g = this.grant();
+            if (this.isBrowser) {
+                sessionStorage.setItem(CHIAVE, JSON.stringify(g));
+            }
+        });
+    }
+
+    private leggiIniziale() {
+        const vuoto = {
+            token: null as string | null,
+            isAdmin: false,
+            isLogged: false,
+            isVenditore: false,
+            userId: null as string | null,
+            username: null as string | null
+        };
+
+        if (!this.isBrowser) return vuoto;
+
+        try {
+            const salvato = sessionStorage.getItem(CHIAVE);
+            return salvato ? { ...vuoto, ...JSON.parse(salvato) } : vuoto;
+        } catch {
+            return vuoto;
+        }
+    }
 
     setToken(token: string) {
         this.grant.update(grant => ({
             ...grant,
             token: token
         }));
-
     }
 
     setAutentificated(user: UserDTO) {
@@ -26,7 +55,7 @@ export class AuthServices {
         let venditore = user.ruolo === 'Venditore' ? true : false;
 
         this.grant.update(grant => ({
-            ...grant, 
+            ...grant,
             isLogged: true,
             isAdmin: admin,
             isVenditore: venditore,
@@ -35,16 +64,19 @@ export class AuthServices {
         }));
     }
 
-
     resetAll() {
-        this.grant.set({
-            token: null,
+        this.grant.set(this.vuoto());
+    }
+
+    private vuoto() {
+        return {
+            token: null as string | null,
             isAdmin: false,
             isLogged: false,
             isVenditore: false,
-            userId: null,
-            username: null
-        });
+            userId: null as string | null,
+            username: null as string | null
+        };
     }
 
     isAutentificated(): boolean {
