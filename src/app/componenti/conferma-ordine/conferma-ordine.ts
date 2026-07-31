@@ -1,5 +1,5 @@
 import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthServices } from '../../auth/auth-services';
 import { OrdineServices } from '../../services/ordine-services';
 import { IndirizzoServices } from '../../services/indirizzo-services';
@@ -14,8 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DecimalPipe } from '@angular/common';
 import { SelettoreIndirizzo } from '../selettore-indirizzo/selettore-indirizzo';
-import { CarrelloDTO } from '../../services/carello-types';
 import { forkJoin } from 'rxjs';
+import { Carrello } from '../../models/carrello';
+import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
+import { ProdottoServices } from '../../services/prodotto-services';
 
 @Component({
   selector: 'app-conferma-ordine',
@@ -28,6 +30,7 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule,
     SelettoreIndirizzo,
     DecimalPipe,
+    RouterLink
   ],
   templateUrl: './conferma-ordine.html',
   styleUrl: './conferma-ordine.css',
@@ -41,11 +44,8 @@ export class ConfermaOrdine {
   private carrelloS = inject(CarelloServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
-  // indirizzoScelto = signal<number | null>(null);
-  // totale = signal(0);
-  // messaggio = signal('');
   statoId = signal<number | null>(null);
-  carrello = signal<CarrelloDTO | null>(null);
+  carrello = signal<Carrello | null>(null);
   spedizioneId = signal<number | null>(null);
   fatturazioneUguale = signal(true);
   fatturazioneScelta = signal<number | null>(null);
@@ -64,7 +64,7 @@ export class ConfermaOrdine {
 
   righe = computed(() => this.carrello()?.prodotti ?? []);
   totale = computed(() => this.carrello()?.totale ?? 0);
-  carrelloVuoto = computed(() => !this.caricamento() && this.righe().length === 0);
+  carrelloVuoto = computed(() => !this.caricamento() && !this.errore() && this.righe().length === 0);
 
   puoConfermare = computed(() =>
     !this.caricamento() &&
@@ -77,10 +77,6 @@ export class ConfermaOrdine {
   );
 
   userId = signal(0);
-
-  // private getUserId(): number {
-  //   return Number(this.auth.grant().userId);
-  // }
 
   constructor() {
     afterNextRender(() => this.carica());
@@ -102,8 +98,9 @@ export class ConfermaOrdine {
       stati: this.ordineS.getStati(),
       carrello: this.carrelloS.getById(this.userId()),
     }).subscribe({
-      next: ({ indirizzi, stati, carrello }) => {
+      next: ({ indirizzi, stati, carrello, prodotti }) => {
         this.indirizzi.set(indirizzi);
+        this.prodottiView.set(this.mappaProdottiCarrello(carrello, prodotti));
         const pref = indirizzi.find(i => i.predefinito) ?? indirizzi[0];
         if (pref) this.spedizioneId.set(pref.idIndirizzo);
  
@@ -123,6 +120,28 @@ export class ConfermaOrdine {
     });
   }
  
+  // Abbina ogni riga del carrello (idDivisioneProdotto, quantità, prezzo) alla
+  // sua descrizione nel catalogo prodotti, per poterla mostrare nel riepilogo.
+  private mappaProdottiCarrello(carrello: Carrello, prodotti: any[]): ProdottoCarrelloView[] {
+    return carrello.prodotti.map(pc => {
+      let prodottoFinale: any = { ...pc };
+      prodotti.forEach((p: any) => {
+        const divisione = p.divisioni?.find(
+          (d: any) => d.idDivisione === pc.idDivisioneProdotto
+        );
+        if (divisione) {
+          prodottoFinale = {
+            ...pc,
+            descrizione: p.descrizione,
+            colore: divisione.colore,
+            materiale: divisione.materiale,
+          };
+        }
+      });
+      return prodottoFinale;
+    });
+  }
+
   // callback dal selettore indirizzo
   indirizzoAggiunto(ev: { lista: IndirizzoDTO[]; idNuovo: number }, perSpedizione: boolean) {
     this.indirizzi.set(ev.lista);
@@ -146,7 +165,6 @@ export class ConfermaOrdine {
  
     const req: OrdineReq = {
       data: new Date().toISOString().slice(0, 10),
-      // totale: this.totale(),
       userId: this.userId(),
       indirizzoSpedizioneId: this.spedizioneId()!,
       indirizzoFatturazioneId: this.fatturazioneId()!,
@@ -157,10 +175,6 @@ export class ConfermaOrdine {
       next: (r) => {
         this.router.navigate(['/dash/checkout'], {
           queryParams: { idOrdine: r.idOrdine },
-          // queryParams: {
-          //   idOrdine: r.idOrdine,
-          //   idSpedizione: this.spedizioneId(),
-          // },
         });
       },
       error: (e) => {

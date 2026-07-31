@@ -30,8 +30,8 @@ export class CarelloServices {
     return this.http.delete(this.getBaseUrl() + 'delete/' + idCarrello);
   }
 
-  // Ricalcola il numero di pezzi nel carrello e lo scrive nel signal
-  // badgeCount, letto dal badge del carrello in navbar.
+  // Ricalcola il numero di pezzi nel carrello e lo scrive in badgeCount,
+  // il signal letto dal badge del carrello in navbar.
   aggiornaConteggio(): void {
     const grant = this.auth.grant();
 

@@ -1,73 +1,53 @@
 import { inject, Injectable, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { APP_SETTING } from '../settings/token/token';
+import { AppSettings } from '../settings/token/config-model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class RicevutaServices {
+
+    private readonly settings: AppSettings = inject(APP_SETTING);
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = 'http://localhost:9090/rest/Ricevuta/';
 
-    ricevute = signal<any[]>([]);
-
-    list() {
-
-        this.http.get<any[]>(
-            this.baseUrl + 'getAll'
-        )
-
-        .subscribe({
-
-            next: (r) => {
-                this.ricevute.set(r);
-            },
-
-            error: (err) => {
-
-                console.error(
-                    'Errore caricamento ricevute',
-                    err
-                );
-            }
-        });
+    private getBaseUrl(): string {
+        return this.settings.apiUrl + 'Ricevuta/';
     }
 
-    create(body: any) {
-
-        return this.http.post(
-            this.baseUrl + 'create',
-            body
-        )
-
-        .pipe(
-            tap(() => this.list())
-        );
-    }
-
-    update(body: any) {
-
-        return this.http.put(
-            this.baseUrl + 'update',
-            body
-        )
-
-        .pipe(
-            tap(() => this.list())
-        );
-    }
+    // Endpoint attivi in RicevutaController:
+    //   getById/{idFattura}
+    //   user/{userId}            user/{userId}/date
+    //   venditore/{venditoreId}  venditore/{venditoreId}/date
+    // getAll, update e getRicevutaBy sono commentati nel controller: le
+    // chiamate precedenti tornavano 404 e la lista restava sempre vuota.
 
     getById(idFattura: number) {
+        return this.http.get<any>(this.getBaseUrl() + 'getById/' + idFattura);
+    }
 
-        return this.http.get<any>(
-            this.baseUrl + 'getById/' + idFattura
+    /** Le ricevute del cliente: serve alla pagina "i miei ordini". */
+    getByUser(userId: number) {
+        return this.http.get<any[]>(this.getBaseUrl() + 'user/' + userId);
+    }
+
+    getByUserAndDate(userId: number, da: string, a: string) {
+        return this.http.get<any[]>(
+            this.getBaseUrl() + 'user/' + userId + '/date?dataInizio=' + da + '&dataFine=' + a
         );
     }
 
     getByVenditore(venditoreId: number) {
+        return this.http.get<any[]>(this.getBaseUrl() + 'venditore/' + venditoreId);
+    }
 
+    getByVenditoreAndDate(venditoreId: number, da: string, a: string) {
         return this.http.get<any[]>(
-            this.baseUrl + 'getRicevutaBy/' + venditoreId
+            this.getBaseUrl() + 'venditore/' + venditoreId + '/date?dataInizio=' + da + '&dataFine=' + a
         );
+    }
+
+    // create resta per i test da Postman: nel flusso reale la ricevuta la
+    // emette il backend dentro markSucceeded quando Stripe conferma.
+    create(body: any) {
+        return this.http.post(this.getBaseUrl() + 'create', body);
     }
 }
