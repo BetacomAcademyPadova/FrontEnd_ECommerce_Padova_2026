@@ -15,7 +15,7 @@ import { CarelloServices } from '../../services/carello-services';
 
 @Component({
   selector: 'app-carello',
-  imports: [ MatIcon, MatDivider, CurrencyPipe, MatIconModule, MatButtonModule],
+  imports: [MatCard, MatCardContent, MatIcon, MatDivider, CurrencyPipe, MatIconModule, MatButtonModule],
   templateUrl: './carello.html',
   styleUrl: './carello.css'
 })

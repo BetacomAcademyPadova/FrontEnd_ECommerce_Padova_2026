@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DecimalPipe } from '@angular/common';
 import { SelettoreIndirizzo } from '../selettore-indirizzo/selettore-indirizzo';
-
 import { forkJoin } from 'rxjs';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
@@ -45,9 +44,6 @@ export class ConfermaOrdine {
   private prodottoS = inject(ProdottoServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
-
-
-
   statoId = signal<number | null>(null);
   carrello = signal<Carrello | null>(null);
   spedizioneId = signal<number | null>(null);
@@ -81,10 +77,6 @@ export class ConfermaOrdine {
   );
 
   userId = signal(0);
-
-
-
-
 
   constructor() {
     afterNextRender(() => this.carica());
@@ -128,7 +120,7 @@ export class ConfermaOrdine {
       },
     });
   }
-
+ 
   // Abbina ogni riga del carrello (idDivisioneProdotto, quantità, prezzo) alla
   // sua descrizione nel catalogo prodotti, per poterla mostrare nel riepilogo.
   private mappaProdottiCarrello(carrello: Carrello, prodotti: any[]): ProdottoCarrelloView[] {
@@ -174,7 +166,6 @@ export class ConfermaOrdine {
 
     const req: OrdineReq = {
       data: new Date().toISOString().slice(0, 10),
-
       userId: this.userId(),
       indirizzoSpedizioneId: this.spedizioneId()!,
       indirizzoFatturazioneId: this.fatturazioneId()!,
@@ -185,10 +176,6 @@ export class ConfermaOrdine {
       next: (r) => {
         this.router.navigate(['/dash/checkout'], {
           queryParams: { idOrdine: r.idOrdine },
-
-
-
-
         });
       },
       error: (e) => {
