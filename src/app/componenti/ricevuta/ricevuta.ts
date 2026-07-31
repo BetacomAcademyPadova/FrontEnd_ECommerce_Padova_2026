@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
+import { AuthServices } from '../../auth/auth-services';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,15 +19,38 @@ import { RicevutaServices } from '../../services/ricevuta-services';
   styleUrl: './ricevuta.css',
 
 })
-export class Ricevuta implements OnInit {
+export class Ricevuta {
   private readonly ricevutaS = inject(RicevutaServices);
+  private readonly auth = inject(AuthServices);
 
-  ngOnInit(): void {
-    this.ricevutaS.list();
+  ricevute = signal<any[]>([]);
+  caricamento = signal(true);
+  errore = signal('');
+
+  // afterNextRender e non ngOnInit: in SSR non c'e' sessione, l'userId
+  // sarebbe 0 e la chiamata partirebbe due volte.
+  constructor() {
+    afterNextRender(() => this.carica());
   }
 
-  get ricevute() {
-    return this.ricevutaS.ricevute();
+  private carica() {
+    const userId = Number(this.auth.grant().userId);
+    if (!userId) {
+      this.caricamento.set(false);
+      this.errore.set('Accedi per vedere le tue ricevute.');
+      return;
+    }
+
+    this.ricevutaS.getByUser(userId).subscribe({
+      next: (r) => {
+        this.ricevute.set(r);
+        this.caricamento.set(false);
+      },
+      error: (e) => {
+        this.caricamento.set(false);
+        this.errore.set(e?.error?.msg ?? 'Non e\' stato possibile caricare le ricevute.');
+      },
+    });
   }
 
   creaRicevuta() {
@@ -39,24 +63,5 @@ export class Ricevuta implements OnInit {
 
   dettaglio(row:any) {
     console.log("dettaglio ricevuta:", row);
-  }
-
-  aggiorna(row:any) {
-    const body = {
-      idFattura: row.idFattura
-    };
-
-    this.ricevutaS.update(body)
-
-      .subscribe({
-
-        next: () => {
-          console.log("ricevuta aggiornata");
-        },
-
-        error: (err) => {
-          console.error(err);
-        }
-      });
   }
 }

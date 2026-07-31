@@ -569,7 +569,9 @@ export class ProdottoDetails implements OnInit {
         this.prodottiCarrelloService.create(body).subscribe({
           next: (response) => {
             console.log("Prodotto aggiunto al carrello:", response);
+
             this.msg.set("Prodotto aggiunto al carrello");
+
             this.carrelloService.aggiornaConteggio();
           },
 

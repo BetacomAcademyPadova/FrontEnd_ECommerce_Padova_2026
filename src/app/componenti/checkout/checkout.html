@@ -1,5 +1,11 @@
 <div class="checkout-wrapper">
     <mat-card class="checkout-card">
+      @if (!elaborazione()) {
+      <a class="checkout-back" routerLink="/dash/conferma-ordine">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Modifica l'ordine</span>
+      </a>
+    }
   <h2 class="checkout-title">Pagamento</h2>
   <p class="checkout-sub">Completa il tuo ordine in modo sicuro</p>
 

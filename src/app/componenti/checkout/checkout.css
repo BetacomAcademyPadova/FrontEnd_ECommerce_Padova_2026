@@ -91,3 +91,24 @@
   height: 16px;
   width: 16px;
 }
+.checkout-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.checkout-back:hover,
+.checkout-back:focus-visible {
+  color: var(--brand-dark);
+}
+
+.checkout-back mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
