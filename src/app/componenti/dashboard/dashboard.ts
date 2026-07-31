@@ -28,6 +28,7 @@ import { CarelloServices } from '../../services/carello-services';
 })
 export class Dashboard implements OnInit {
 
+
   constructor(
     public auth: AuthServices,
     private rounting: Router,
@@ -43,7 +44,7 @@ export class Dashboard implements OnInit {
     if (grant.isLogged && grant.isAdmin) {
       this.notificheService.aggiornaConteggio(grant.isAdmin);
     }
-    if (grant.isLogged) {
+     if (grant.isLogged) {
       this.carrelloService.aggiornaConteggio();
     }
   }
@@ -58,37 +59,8 @@ export class Dashboard implements OnInit {
     )
   }
 
-  changePWD(){
-    this.util.openDialog(ChangePassword,
-      {},
-      {
-        width: '400px',
-        disableClose: false,
-      }
-    )
-  }
-
   profile() {
-    const userId = this.auth.grant()?.userId;
-    this.utenteServices.findByUserNameNumber(Number(userId))
-      .subscribe({
-        next: ((r: any) => {
-          this.util.openDialog(Registrazione,
-            {
-              account: r,
-              mode: "U"
-            },
-            {
-              width: '90vw',
-              maxWidth: '1200px',
-              height: 'auto',
-            }
-          );
-        }),
-        error: ((r: any) => {
-          console.log("error getAccount:" + r.error.msg);
-        })
-      })
+    this.rounting.navigate(['/dash/profilo']);
   }
 
   ordini() {
