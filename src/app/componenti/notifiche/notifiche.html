@@ -154,7 +154,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Data Fine</mat-label>
-          <input matInput [matDatepicker]="pickerFine" formControlName="dataFine" placeholder="gg/mm/aaaa">
+          <input matInput [matDatepicker]="pickerFine" [min]="richiestaForm.get('dataInizio')?.value" formControlName="dataFine" placeholder="gg/mm/aaaa">
           <mat-datepicker-toggle matIconSuffix [for]="pickerFine"></mat-datepicker-toggle>
           <mat-datepicker #pickerFine></mat-datepicker>
           <mat-error>Inserisci una data valida</mat-error>
