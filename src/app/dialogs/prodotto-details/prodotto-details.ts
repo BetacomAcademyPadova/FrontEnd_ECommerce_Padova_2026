@@ -18,7 +18,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-
+import { FormsModule } from "@angular/forms";
 import { CategoriaServices } from "../../services/categoria-services";
 import { SottoCategoriaServices } from "../../services/sotto-categoria-services";
 import { ProdottoServices } from "../../services/prodotto-services";
@@ -27,6 +27,7 @@ import { AuthServices } from "../../auth/auth-services";
 import { ImmaginiServices } from "../../services/immagini-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
 import { CarelloServices } from "../../services/carello-services";
+import { ScontoServices } from "../../services/sconto-services";
 
 @Component({
   selector: "app-prodotto-details",
@@ -37,6 +38,7 @@ import { CarelloServices } from "../../services/carello-services";
     MatDialogModule,
     ReactiveFormsModule,
     MatFormFieldModule,
+    FormsModule,
     MatInputModule,
     MatSelectModule,
   ],
@@ -45,24 +47,16 @@ import { CarelloServices } from "../../services/carello-services";
 })
 export class ProdottoDetails implements OnInit {
   private readonly data = inject(MAT_DIALOG_DATA);
-
   private readonly dialogRef = inject(MatDialogRef<ProdottoDetails>);
-
   private readonly categoriaService = inject(CategoriaServices);
-
   private readonly sottoCategoriaService = inject(SottoCategoriaServices);
-
   private readonly prodottoService = inject(ProdottoServices);
-
   private readonly divisioneProdottoService = inject(DivisioneProdottoServices);
-
   private readonly authService = inject(AuthServices);
-
   private readonly immaginiService = inject(ImmaginiServices);
-
   private readonly carrelloService = inject(CarelloServices);
-
   private readonly prodottiCarrelloService = inject(ProdottiCarrelloServices);
+  private readonly scontoService = inject(ScontoServices);
 
   mod = signal("");
 
@@ -81,6 +75,14 @@ export class ProdottoDetails implements OnInit {
   selectedFiles: File[] = [];
 
   imagePreview: string | null = null;
+
+  valoreSconto: number | null = null;
+
+  dataInizio = "";
+
+  dataFine = "";
+
+  scontoEsistente = signal<any>(null);
 
   prodottoForm: FormGroup = new FormGroup({
     descrizione: new FormControl(null, Validators.required),
@@ -125,6 +127,15 @@ export class ProdottoDetails implements OnInit {
     this.ascoltaCambioCategoria();
 
     if (this.prodotto()) {
+      if (this.prodotto().sconto) {
+        this.scontoEsistente.set(this.prodotto().sconto);
+
+        this.valoreSconto = this.prodotto().sconto.valore;
+
+        this.dataInizio = this.prodotto().sconto.dataInizio;
+
+        this.dataFine = this.prodotto().sconto.dataFine;
+      }
       this.caricaImmagini();
     }
 
@@ -581,6 +592,53 @@ export class ProdottoDetails implements OnInit {
 
       error: (errore) => {
         console.error("Errore recupero carrello:", errore);
+      },
+    });
+  }
+
+  creaSconto() {
+    const formattaData = (data: string) => {
+      const [anno, mese, giorno] = data.split("-");
+      return `${giorno}/${mese}/${anno}`;
+    };
+
+    const body = {
+      idProdotto: this.prodotto()?.idProdotto,
+      valore: this.valoreSconto,
+      dataInizio: formattaData(this.dataInizio),
+      dataFine: formattaData(this.dataFine),
+    };
+
+    console.log("BODY SCONTO:", body);
+
+    this.scontoService.create(body).subscribe({
+      next: (res) => {
+        console.log("Sconto creato", res);
+      },
+      error: (err) => {
+        console.error("Errore creazione sconto", err);
+      },
+    });
+  }
+
+  eliminaSconto(): void {
+    const idSconto = this.scontoEsistente()?.idSconto;
+
+    if (!idSconto) {
+      return;
+    }
+
+    this.scontoService.delete(idSconto).subscribe({
+      next: () => {
+        console.log("Sconto eliminato");
+
+        this.scontoEsistente.set(null);
+
+        this.msg.set("Sconto eliminato");
+      },
+
+      error: (errore) => {
+        console.error("Errore eliminazione sconto", errore);
       },
     });
   }
