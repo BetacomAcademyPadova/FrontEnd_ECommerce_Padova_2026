@@ -5,6 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { ProdottiOrdineServices } from '../../services/prodotti-ordine-services';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-prodotti-ordine',

@@ -7,7 +7,7 @@ import { OrdineReq, IndirizzoDTO } from '../../services/ordine-types';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { CarrelloServices } from '../../services/carello-services';
+import { CarelloServices } from '../../services/carello-services';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,7 +38,7 @@ export class ConfermaOrdine {
   private ordineS = inject(OrdineServices);
   private indirizzoS = inject(IndirizzoServices);
   private router = inject(Router);
-  private carrelloS = inject(CarrelloServices);
+  private carrelloS = inject(CarelloServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
   // indirizzoScelto = signal<number | null>(null);
@@ -51,7 +51,7 @@ export class ConfermaOrdine {
   fatturazioneScelta = signal<number | null>(null);
 
   // TODO: sostituire quando esisterà Carrello/getByUser/{userId}
-  private readonly ID_CARRELLO_TEST = 4;
+  //private readonly ID_CARRELLO_TEST = 4;
 
 
   fatturazioneId = computed(() =>
@@ -100,7 +100,7 @@ export class ConfermaOrdine {
     forkJoin({
       indirizzi: this.indirizzoS.getAllByUser(this.userId()),
       stati: this.ordineS.getStati(),
-      carrello: this.carrelloS.getById(this.ID_CARRELLO_TEST),
+      carrello: this.carrelloS.getById(this.userId()),
     }).subscribe({
       next: ({ indirizzi, stati, carrello }) => {
         this.indirizzi.set(indirizzi);
