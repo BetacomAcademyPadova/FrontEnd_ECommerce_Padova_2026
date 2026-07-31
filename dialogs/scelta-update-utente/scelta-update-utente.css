@@ -1,0 +1,76 @@
+.dialog-container {
+  position: relative;
+  padding: 40px 30px 30px 30px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FAF8F5 !important;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dialog-close-btn {
+  position: absolute !important;
+  top: 12px;
+  right: 12px;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #D7CCC8 !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+  padding: 0 !important;
+  z-index: 10;
+}
+
+.dialog-close-btn mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  color: #5D4037 !important;
+}
+
+h2[mat-dialog-title] {
+  color: #5D4037 !important;
+  font-family: serif;
+  font-size: 1.3rem !important;
+  font-weight: bold;
+  text-align: center !important;
+  width: 100%;
+  margin-top: 10px !important;
+  margin-bottom: 25px !important;
+  padding-left: 32px; 
+  padding-right: 32px;
+  box-sizing: border-box;
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 !important;
+}
+
+mat-button-toggle-group {
+  border: 1px solid #D7CCC8 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+
+mat-button-toggle {
+  background-color: #FFFFFF;
+  color: #5D4037;
+  font-weight: 500;
+  padding: 0 15px;
+}
+
+mat-button-toggle.mat-button-toggle-checked {
+  background-color: #EFEBE9 !important;
+  color: #3E2723 !important;
+  font-weight: bold;
+}

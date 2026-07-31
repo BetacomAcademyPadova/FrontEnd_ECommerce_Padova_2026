@@ -1,0 +1,123 @@
+.dialog-container {
+    padding: 20px;
+    font-family: 'Playfair Display', serif;
+}
+
+.login-title {
+    color: #5D4037;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    width: 100%;
+    margin: 0 0 20px 0;
+    padding: 10px 0;
+}
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 350px;
+}
+
+
+.full-width {
+    width: 100%;
+}
+
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+.error-msg {
+    color: #b71c1c;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+
+/* PASSWORD DIMENTICATA */
+.forgot-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+
+.forgot-pwd {
+    border: none;
+    background: transparent;
+
+    color: #1976d2;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    transition: .3s;
+}
+
+
+.forgot-pwd mat-icon {
+    font-size: 20px;
+}
+
+
+.forgot-pwd:hover {
+    color: #0d47a1;
+    transform: translateY(-2px);
+    text-decoration: underline;
+}
+
+
+/* REGISTRAZIONE */
+.register-btn {
+
+    border: none;
+    background: transparent;
+
+    color: #1976d2;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 15px;
+    border-radius: 20px;
+
+    transition: .3s;
+}
+
+
+.register-btn mat-icon {
+    font-size: 20px;
+}
+
+
+.register-btn:hover {
+    background: #e3f2fd;
+    transform: translateY(-2px);
+}
+
+
+/* CHIUSURA DIALOG */
+.dialog-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

@@ -1,0 +1,275 @@
+@if (mod() === 'V') {
+<h2 mat-dialog-title>Dettaglio {{ prodotto()?.descrizione }}</h2>
+} @else if (mod() === 'U') {
+<h2 mat-dialog-title>Modifica {{ prodotto()?.descrizione }}</h2>
+} @else {
+<h2 mat-dialog-title>Creazione nuovo prodotto</h2>
+}
+
+<button
+  mat-icon-button
+  mat-dialog-close
+  type="button"
+  class="dialog-close-btn"
+  aria-label="Chiudi dialog"
+>
+  <mat-icon>close</mat-icon>
+</button>
+
+<mat-dialog-content>
+  <form
+    [formGroup]="prodottoForm"
+    (ngSubmit)="onSubmit()"
+    class="form-container"
+  >
+    <!-- IMMAGINI PRODOTTO -->
+
+    <div class="image-section">
+      @if(immagini().length > 0){
+
+      <div class="main-image">
+        <img [src]="imagePreview" alt="Immagine principale" />
+      </div>
+
+      <div class="thumbnail-container">
+
+        @for(img of immagini(); track img.id){
+      
+          <img
+            [src]="img.url"
+            class="thumbnail"
+            alt="Immagine prodotto"
+            (click)="cambiaImmagine(img.url)"
+            [class.selected]="imagePreview === img.url"
+          >
+      
+        }
+      
+      </div>
+
+      } @else {
+
+      <div class="image-preview">
+        <mat-icon class="placeholder-icon"> image </mat-icon>
+
+        <p>Nessuna immagine</p>
+      </div>
+
+      } @if(mod() !== 'V'){
+
+      <input
+        #fileInput
+        hidden
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="fileInput.click()"
+      >
+        <mat-icon>photo_camera</mat-icon>
+
+        Seleziona immagine
+      </button>
+
+      }
+    </div>
+
+    <h3 class="section-title">
+      Informazioni prodotto
+    </h3>
+    <!-- DATI PRODOTTO -->
+
+    <div class="row-fields">
+      <mat-form-field appearance="fill" class="small-field">
+        <mat-label>Descrizione</mat-label>
+
+        <input matInput type="text" formControlName="descrizione" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="small-field">
+        <mat-label>Prezzo</mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="prezzo"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+
+        <mat-select formControlName="categoria">
+          @for (categoria of categorie(); track categoria.categoria) {
+
+          <mat-option [value]="categoria.categoria">
+            {{ categoria.categoria }}
+          </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sottocategoria</mat-label>
+
+        <mat-select formControlName="sottoCategoria">
+          @for (sottoCategoria of sottocategorie(); track
+          sottoCategoria.idSottoCategoria) {
+
+          <mat-option [value]="sottoCategoria.idSottoCategoria">
+            {{ sottoCategoria.sottoCategoria }}
+          </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <h3 class="section-title">
+      Variante prodotto
+    </h3>
+    <!-- DIVISIONE PRODOTTO -->
+
+    <div class="row-fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Colore</mat-label>
+
+        <input matInput type="text" formControlName="colore" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Materiale</mat-label>
+
+        <input matInput type="text" formControlName="materiale" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Quantità disponibile</mat-label>
+
+        <input
+          matInput
+          type="number"
+          min="0"
+          formControlName="quantitaDisponibile"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Stock alert</mat-label>
+
+        <input matInput type="number" min="0" formControlName="stockAlert" />
+      </mat-form-field>
+    </div>
+    <h3 class="section-title">
+      Dimensioni
+    </h3>
+    <!-- MISURE -->
+
+    <div class="row-fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Altezza</mat-label>
+
+        <input matInput type="number" min="0" formControlName="altezza" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Lunghezza</mat-label>
+
+        <input matInput type="number" min="0" formControlName="lunghezza" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Larghezza</mat-label>
+
+        <input matInput type="number" min="0" formControlName="larghezza" />
+      </mat-form-field>
+    </div>
+
+    <!-- BOTTONI -->
+
+    <div class="button-group">
+      @if(mod() === 'C') {
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="prodottoForm.invalid"
+      >
+        Registrazione
+      </button>
+
+      } @if(mod() === 'V') {
+
+        @if(mod() === 'V') {
+
+
+          @if(puoGestireProdotto()) {
+        
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              (click)="abilitaModifica()"
+            >
+              <mat-icon>edit</mat-icon>
+        
+              Modifica
+            </button>
+        
+        
+            <button
+              mat-raised-button
+              color="warn"
+              type="button"
+              (click)="remove()"
+            >
+              <mat-icon>delete</mat-icon>
+        
+              Elimina
+            </button>
+        
+          }
+        
+        
+          <button
+            mat-raised-button
+            type="button"
+            (click)="aggiungiAlCarrello()"
+          >
+            <mat-icon>shopping_cart</mat-icon>
+        
+            Aggiungi al carrello
+          </button>
+        
+        
+        }
+
+      } @if(mod() === 'U') {
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="prodottoForm.invalid"
+      >
+        <mat-icon>save</mat-icon>
+
+        Salva modifiche
+      </button>
+
+      <button mat-raised-button type="button" (click)="annullaModifica()">
+        Annulla
+      </button>
+
+      }
+    </div>
+  </form>
+</mat-dialog-content>
