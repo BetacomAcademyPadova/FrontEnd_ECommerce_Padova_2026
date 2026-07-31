@@ -84,11 +84,6 @@ constructor() {
       });
   }
 
-  modificaQuantita(prodotto: ProdottoCarrelloView, nuovaQuantita: number) {
-    if(!Number.isFinite(nuovaQuantita)){
-    return;
-  }
-
 modificaQuantita(prodotto:any, nuovaQuantita:number){
   if(nuovaQuantita < 1){
     return;
@@ -117,19 +112,6 @@ modificaQuantita(prodotto:any, nuovaQuantita:number){
 }
 
 eliminaProdotto(prodotto:any){
-  this.prodottiCarrelloService
-  .delete(prodotto.idRiga)
-  .subscribe({
-    next:()=>{
-      console.log("Prodotto eliminato");
-      this.prodottiView.update(
-        prodotti => 
-          prodotti.filter(
-            p => p.idRiga !== prodotto.idRiga
-          )
-      );
-
-  eliminaProdotto(prodotto: ProdottoCarrelloView) {
     this.prodottiCarrelloService
       .delete(prodotto.idRiga)
       .subscribe({

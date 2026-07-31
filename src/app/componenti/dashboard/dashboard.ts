@@ -91,6 +91,9 @@ export class Dashboard implements OnInit {
       })
   }
 
+  ordini() {
+    this.rounting.navigate(['/dash/ordini']);
+  }
   logout() {
     console.log("logout");
     this.auth.resetAll();
