@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { CarrelloServices } from '../../services/carrello-services';
+import { afterNextRender, Component, computed, inject, signal } from '@angular/core';
+import { CarelloServices } from '../../services/carello-services';
 import { AuthServices } from '../../auth/auth-services';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
@@ -14,14 +14,14 @@ import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  selector:'app-carello',
+  selector: 'app-carello',
   imports: [MatCard, MatCardContent, MatIcon, MatDivider, CurrencyPipe, MatIconModule, MatButtonModule],
-  templateUrl:'./carello.html',
-  styleUrl:'./carello.css'
+  templateUrl: './carello.html',
+  styleUrl: './carello.css'
 })
 
 export class Carello {
-  private carrelloService = inject(CarrelloServices);
+  private carrelloService = inject(CarelloServices);
   private auth = inject(AuthServices);
   private router = inject(Router);
   private prodottoService = inject(ProdottoServices);
@@ -30,124 +30,122 @@ export class Carello {
   carrello = signal<Carrello | null>(null);
   prodottiView = signal<ProdottoCarrelloView[]>([]);
 
-  ngOnInit(){
-    this.caricaCarrello();
+  // il totale non viene piu' tenuto allineato a mano: e' derivato dalle righe,
+  // quindi si ricalcola da solo a ogni modifica di prodottiView
+  totale = computed(() =>
+    this.prodottiView().reduce((tot, p) => tot + p.subtotale, 0)
+  );
+
+  constructor() {
+    afterNextRender(() => this.caricaCarrello());
   }
 
-  caricaCarrello(){
+  caricaCarrello() {
     const userId = Number(this.auth.grant().userId);
     this.carrelloService
-    .getByUser(userId)
-    .subscribe({
-        next:(res)=>{
-            this.carrello.set(res);
-            this.caricaDettagliProdotti(res);
-            console.log(res);
+      .getByUser(userId)
+      .subscribe({
+        next: (res) => {
+          this.carrello.set(res);
+          this.caricaDettagliProdotti(res);
+          console.log(res);
         },
-        error:(err)=>{
-            console.error(err);
+        error: (err) => {
+          console.error(err);
         }
-    });
-}
+      });
+  }
 
-caricaDettagliProdotti(carrello:Carrello){
-  this.prodottoService.getAll()
-  .subscribe({
-      next:(prodotti)=>{
-          const lista = carrello.prodotti.map(pc=>{
-              let prodottoFinale:any = {};
-              prodotti.forEach((p:any)=>{
-                  const divisione = p.divisioni?.find(
-                      (d:any)=>
-                      d.idDivisione === pc.idDivisioneProdotto
-                  );
-                  if(divisione){
-                      prodottoFinale = {
-                          ...pc,
-                          descrizione:p.descrizione,
-                          colore:divisione.colore,
-                          materiale:divisione.materiale,
-                          altezza:divisione.altezza,
-                          lunghezza:divisione.lunghezza,
-                          larghezza:divisione.larghezza
-                      };
-                  }
-              });
-              return prodottoFinale;
+  caricaDettagliProdotti(carrello: Carrello) {
+    this.prodottoService.getAll()
+      .subscribe({
+        next: (prodotti) => {
+          const lista = carrello.prodotti.map(pc => {
+            let prodottoFinale: any = {};
+            prodotti.forEach((p: any) => {
+              const divisione = p.divisioni?.find(
+                (d: any) =>
+                  d.idDivisione === pc.idDivisioneProdotto
+              );
+              if (divisione) {
+                prodottoFinale = {
+                  ...pc,
+                  descrizione: p.descrizione,
+                  colore: divisione.colore,
+                  materiale: divisione.materiale,
+                  altezza: divisione.altezza,
+                  lunghezza: divisione.lunghezza,
+                  larghezza: divisione.larghezza
+                };
+              }
+            });
+            return prodottoFinale;
           });
           this.prodottiView.set(lista);
-      }
-  });
-}
+        }
+      });
+  }
 
-modificaQuantita(prodotto:ProdottoCarrelloView, nuovaQuantita:number){
+  modificaQuantita(prodotto: ProdottoCarrelloView, nuovaQuantita: number) {
+    if(!Number.isFinite(nuovaQuantita)){
+    return;
+  }
+
   if(nuovaQuantita < 1){
     this.eliminaProdotto(prodotto);
     return;
   }
 
-  const body = {
-    idRiga: prodotto.idRiga,
-    quantita: nuovaQuantita
-  };
+    const body = {
+      idRiga: prodotto.idRiga,
+      idDivisioneProdotto: prodotto.idDivisioneProdotto,
+      quantita: nuovaQuantita
+    };
 
-  this.prodottiCarrelloService
-  .update(body)
-  .subscribe({
-    next:()=>{
-      this.prodottiView.update(prodotti =>
-        prodotti.map(p => 
-          p.idRiga === prodotto.idRiga
-          ? {...p, quantita:nuovaQuantita, subtotale:p.prezzo * nuovaQuantita} 
-          : p 
-        )
-      );
-    },
-
-    error:(err)=>{
-      console.error("Errore aggiornamento quantità", err);
-    }
-  });
-}
-
-eliminaProdotto(prodotto:any){
-  this.prodottiCarrelloService
-  .delete(prodotto.idRiga)
-  .subscribe({
-    next:()=>{
-      console.log("Prodotto eliminato");
-      this.prodottiView.update(
-        prodotti => 
-          prodotti.filter(
-            p => p.idRiga !== prodotto.idRiga
-          )
-      );
-      this.carrelloService.aggiornaConteggio();
-
-      const carrelloAttuale = this.carrello();
-      if(carrelloAttuale){
-        carrelloAttuale.prodotti =
-          carrelloAttuale.prodotti.filter(
-            p => p.idRiga !== prodotto.idRiga
+    this.prodottiCarrelloService
+      .update(body)
+      .subscribe({
+        next: () => {
+          this.prodottiView.update(
+            prodotti =>
+              prodotti.map(
+                p => p.idRiga === prodotto.idRiga
+                  ? { ...p, quantita: nuovaQuantita, subtotale: p.prezzo * nuovaQuantita }
+                  : p
+              )
           );
-        carrelloAttuale.totale =
-          carrelloAttuale.prodotti.reduce(
-            (tot,p)=> tot + p.subtotale,
-            0
-          );
-        this.carrello.set({
-          ...carrelloAttuale
-        });
-      }
-    },
-    error:(err)=>{
-      console.error("Errore eliminazione prodotto", err);
-    }
-  });
-}
+          this.carrelloService.aggiornaConteggio();
+          console.log("Quantità aggiornata");
+        },
 
-vaiAlCheckout(){
-  this.router.navigate(['/checkout']);
-}
+        error: (err) => {
+          console.error("Errore aggiornamento quantità", err);
+        }
+      });
+  }
+
+  eliminaProdotto(prodotto: ProdottoCarrelloView) {
+    this.prodottiCarrelloService
+      .delete(prodotto.idRiga)
+      .subscribe({
+        next: () => {
+          console.log("Prodotto eliminato");
+          this.prodottiView.update(
+            prodotti =>
+              prodotti.filter(
+                p => p.idRiga !== prodotto.idRiga
+              )
+          );
+          this.carrelloService.aggiornaConteggio();
+        },
+        error: (err) => {
+          console.error("Errore eliminazione prodotto", err);
+        }
+      });
+  }
+
+  vaiAllaConferma() {
+    this.router.navigate(['/dash/conferma-ordine']);
+  }
 
 }

@@ -7,6 +7,13 @@
         </mat-card-header>
         <mat-divider style="margin-top:20px;"></mat-divider>
         <mat-card-content>
+            @if (caricamento()) {
+                <p class="stato-msg">Caricamento delle ricevute...</p>
+            } @else if (errore()) {
+                <p class="stato-msg errore">{{ errore() }}</p>
+            } @else if (ricevute().length === 0) {
+                <p class="stato-msg">Non hai ancora nessuna ricevuta.</p>
+            } @else {
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -19,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @for (ric of ricevute; track ric.idFattura) {
+                @for (ric of ricevute(); track ric.idFattura) {
                     <tr class="clickable-row" (click)="selezionaRicevuta(ric)">
                         <td>{{ric.numeroFattura}}</td>
                         <td>{{ric.dataEmissione}}</td>
@@ -44,6 +51,7 @@
                 }
                 </tbody>
             </table>
+            }
         </mat-card-content>
     </mat-card>
 </div>

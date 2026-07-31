@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-
 import { ProdottiOrdineServices } from '../../services/prodotti-ordine-services';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-prodotti-ordine',
-  imports: [ MatCardModule, MatButtonModule, MatIconModule, MatDividerModule, DecimalPipe],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatDividerModule, DecimalPipe],
   templateUrl: './prodotti-ordine.html',
   styleUrl: './prodotti-ordine.css',
 })

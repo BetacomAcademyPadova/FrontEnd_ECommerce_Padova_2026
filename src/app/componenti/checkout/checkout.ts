@@ -6,12 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardModule } from "@angular/material/card";
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 
 @Component({
   selector: "app-checkout",
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: "./checkout.html",
   styleUrl: "./checkout.css",
 })

@@ -1,4 +1,4 @@
-<div class="cart-container">
+<!-- <div class="cart-container">
     <h1>
         🛒 Il mio carrello
     </h1>
@@ -56,8 +56,125 @@
             Totale:
             {{totale() | currency:'EUR'}}
         </h2>
-        <button mat-raised-button color="primary" (click)="vaiAlCheckout()">
-            Vai al checkout
+        <button mat-raised-button color="primary" (click)="vaiAllaConferma()">
+            Procedi con l'ordine
         </button>
     </mat-card>
+</div> -->
+<div class="cart-wrapper">
+
+  <header class="cart-head">
+    <h1 class="cart-title">Il mio carrello</h1>
+    @if (prodottiView().length) {
+      <span class="cart-count">
+        {{ prodottiView().length }}
+        {{ prodottiView().length === 1 ? 'articolo' : 'articoli' }}
+      </span>
+    }
+  </header>
+
+  @if (!prodottiView().length) {
+
+    <div class="cart-vuoto">
+      <mat-icon>shopping_bag</mat-icon>
+      <p>Il tuo carrello è vuoto.</p>
+      <a mat-flat-button class="btn-primario" routerLink="/dash/prodotti">
+        Sfoglia i prodotti
+      </a>
+    </div>
+
+  } @else {
+
+    <div class="cart-layout">
+
+      <!-- colonna sinistra: articoli -->
+      <section class="cart-lista">
+        @for (prodotto of prodottiView(); track prodotto.idRiga; let ultimo = $last) {
+
+          <article class="riga">
+
+            <div class="riga-thumb" aria-hidden="true">
+              {{ prodotto.descrizione?.charAt(0) }}
+            </div>
+
+            <div class="riga-info">
+              <h2 class="riga-nome">{{ prodotto.descrizione }}</h2>
+
+              <ul class="riga-attributi">
+                @if (prodotto.materiale) { <li>{{ prodotto.materiale }}</li> }
+                @if (prodotto.colore)    { <li>{{ prodotto.colore }}</li> }
+                @if (prodotto.altezza) {
+                  <li>{{ prodotto.altezza }}&times;{{ prodotto.lunghezza }}&times;{{ prodotto.larghezza }} cm</li>
+                }
+              </ul>
+
+              <div class="riga-stepper">
+                <button class="step"
+                        type="button"
+                        aria-label="Riduci quantità"
+                        (click)="modificaQuantita(prodotto, prodotto.quantita - 1)">
+                  <mat-icon>{{ prodotto.quantita === 1 ? 'delete_outline' : 'remove' }}</mat-icon>
+                </button>
+
+                <span class="step-valore">{{ prodotto.quantita }}</span>
+
+                <button class="step"
+                        type="button"
+                        aria-label="Aumenta quantità"
+                        (click)="modificaQuantita(prodotto, prodotto.quantita + 1)">
+                  <mat-icon>add</mat-icon>
+                </button>
+
+                <span class="riga-unitario">
+                  {{ prodotto.prezzo | currency:'EUR' }} cad.
+                </span>
+              </div>
+            </div>
+
+            <div class="riga-destra">
+              <span class="riga-subtotale">{{ prodotto.subtotale | currency:'EUR' }}</span>
+              <button mat-icon-button
+                      class="riga-elimina"
+                      aria-label="Rimuovi dal carrello"
+                      (click)="eliminaProdotto(prodotto)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+
+          </article>
+
+          @if (!ultimo) { <mat-divider class="riga-sep"></mat-divider> }
+        }
+      </section>
+
+      <!-- colonna destra: riepilogo -->
+      <aside class="cart-riepilogo">
+        <h2 class="riep-titolo">Riepilogo</h2>
+
+        <div class="riep-voce">
+          <span>Subtotale</span>
+          <span>{{ totale() | currency:'EUR' }}</span>
+        </div>
+
+        <div class="riep-voce riep-nota">
+          <span>Spedizione</span>
+          <span>Calcolata al passo successivo</span>
+        </div>
+
+        <mat-divider class="riep-sep"></mat-divider>
+
+        <div class="riep-totale">
+          <span>Totale</span>
+          <span class="riep-cifra">{{ totale() | currency:'EUR' }}</span>
+        </div>
+
+        <button mat-flat-button class="btn-primario riep-btn" (click)="vaiAllaConferma()">
+          Procedi con l'ordine
+        </button>
+
+        <a class="riep-continua" routerLink="/dash/prodotti">Continua lo shopping</a>
+      </aside>
+
+    </div>
+  }
 </div>
