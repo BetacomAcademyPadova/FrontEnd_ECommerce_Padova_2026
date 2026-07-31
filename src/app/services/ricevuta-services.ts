@@ -2,8 +2,9 @@ import { inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 
-
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class RicevutaServices {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = 'http://localhost:9090/rest/Ricevuta/';

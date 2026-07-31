@@ -59,37 +59,8 @@ export class Dashboard implements OnInit {
     )
   }
 
-  changePWD(){
-    this.util.openDialog(ChangePassword,
-      {},
-      {
-        width: '400px',
-        disableClose: false,
-      }
-    )
-  }
-
   profile() {
-    const userId = this.auth.grant()?.userId;
-    this.utenteServices.findByUserNameNumber(Number(userId))
-      .subscribe({
-        next: ((r: any) => {
-          this.util.openDialog(Registrazione,
-            {
-              account: r,
-              mode: "U"
-            },
-            {
-              width: '90vw',
-              maxWidth: '1200px',
-              height: 'auto',
-            }
-          );
-        }),
-        error: ((r: any) => {
-          console.log("error getAccount:" + r.error.msg);
-        })
-      })
+    this.rounting.navigate(['/dash/profilo']);
   }
 
   logout() {

@@ -1,13 +1,11 @@
-import { ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideAppInitializer, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { provideHttpClient, withInterceptors} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_SETTING } from './settings/token/token';
 import { authInterceptor } from './interceptors/auth-interceptors/auth-interceptors';
-import { AutentificazioneServices } from './security/autentificazione-services';
-import { firstValueFrom } from 'rxjs';
+import { AuthServices } from './auth/auth-services';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,16 +16,18 @@ export const appConfig: ApplicationConfig = {
         pageSize: 4
       }
     },
-    provideHttpClient(
-      withInterceptors([authInterceptor])    // interceptor registration
-    ),
-    //TODO 
-    // provideAppInitializer(() => { // service to execute in startup
-    //   const refreshService = inject(AutentificazioneServices);
-    //   return firstValueFrom(refreshService.restoreSession()) // execute refresh in startup
 
-    // }),
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
+
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration()
+    provideRouter(routes),
+    provideClientHydration(),
+
+    provideAppInitializer(() => {
+      const auth = inject(AuthServices);
+      auth.loadToken();
+    })
   ]
 };

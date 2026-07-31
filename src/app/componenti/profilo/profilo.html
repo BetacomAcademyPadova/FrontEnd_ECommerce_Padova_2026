@@ -1,12 +1,168 @@
-<div class="profilo-layout">
-  <aside class="sidebar">
-    <nav class="nav-menu">
-        <a routerLink="/profilo/dati">Mio Profilo</a>
-        <a routerLink="/profilo/dati">Ordini</a>
-    </nav>
-  </aside>
-  <main class="content">
-    
-    <router-outlet></router-outlet>
-  </main>
+<div class="profilo-container">
+  <div class="menu-laterale">
+    <div
+      class="tab"
+      [class.active]="sezione() === 'profilo'"
+      (click)="cambiaSezione('profilo')"
+    >
+      <mat-icon>person</mat-icon>
+      Profilo
+    </div>
+
+    <div
+      class="tab"
+      [class.active]="sezione() === 'indirizzi'"
+      (click)="cambiaSezione('indirizzi')"
+    >
+      <mat-icon>location_on</mat-icon>
+      Indirizzi
+    </div>
+
+    <div
+      class="tab"
+      [class.active]="sezione() === 'sicurezza'"
+      (click)="cambiaSezione('sicurezza')"
+    >
+      <mat-icon>lock</mat-icon>
+      Sicurezza
+    </div>
+  </div>
+
+  <div class="contenuto">
+    @if (sezione() === 'profilo') {
+
+    <div class="profile-card">
+      @if (utente()) {
+
+      <h2>{{utente()!.cognome}} {{utente()!.nome}}</h2>
+
+      <h3>Ruolo: {{utente()!.ruolo}}</h3>
+
+      <mat-divider></mat-divider>
+
+      <div class="campo">
+        <mat-icon>email</mat-icon>
+        <div>
+          <label>Email</label>
+          <p>{{utente()!.email}}</p>
+        </div>
+      </div>
+
+      <div class="campo">
+        <mat-icon>phone</mat-icon>
+        <div>
+          <label>Telefono</label>
+          <p>{{utente()!.telefono}}</p>
+        </div>
+      </div>
+
+      <div class="azioni">
+        <button
+          class="btn-profilo"
+          mat-raised-button
+          (click)="modificaProfilo()"
+        >
+          <mat-icon>edit</mat-icon>
+          Modifica profilo
+        </button>
+      </div>
+
+      } @else {
+
+      <p>Caricamento profilo...</p>
+
+      }
+    </div>
+
+    } @if (sezione() === 'indirizzi') {
+
+    <div class="profile-card">
+      <h2>I miei indirizzi</h2>
+
+      <mat-divider></mat-divider>
+
+      @if (indirizzi().length > 0) { @for (ind of indirizzi(); track
+      ind.idIndirizzo) {
+
+      <div
+        class="campo"
+        [class.selezionato]="isSelezionato(ind.idIndirizzo)"
+        (click)="toggleSelezione(ind.idIndirizzo)"
+      >
+        <mat-icon>location_on</mat-icon>
+
+        <div>
+          <label>
+            {{ind.via}} @if(ind.predefinito){
+            <span class="badge-predefinito">Predefinito</span>
+            }
+          </label>
+
+          <p>{{ind.citta}}, {{ind.cap}}</p>
+        </div>
+      </div>
+
+      } } @else {
+
+      <p>Nessun indirizzo salvato.</p>
+
+      }
+
+      <div class="azioni">
+        <button mat-raised-button (click)="aggiungiIndirizzo()">
+          <mat-icon>add</mat-icon>
+          Aggiungi indirizzo
+        </button>
+
+        <button
+          mat-raised-button
+          [disabled]="!puoModificare()"
+          (click)="modificaIndirizzo()"
+        >
+          <mat-icon>edit</mat-icon>
+          Modifica
+        </button>
+
+        <button
+          mat-raised-button
+          color="warn"
+          [disabled]="!haSelezione()"
+          (click)="cancellaIndirizzo()"
+        >
+          <mat-icon>delete</mat-icon>
+          Elimina
+        </button>
+      </div>
+    </div>
+
+    } @if (sezione() === 'sicurezza') {
+
+    <div class="profile-card">
+      <h2>Sicurezza account</h2>
+
+      <mat-divider></mat-divider>
+
+      <div class="campo">
+        <mat-icon>lock</mat-icon>
+
+        <div>
+          <label>Password</label>
+          <p>Modifica la password del tuo account</p>
+        </div>
+      </div>
+
+      <div class="azioni">
+        <button
+          mat-raised-button
+          class="btn-password"
+          (click)="changePassword()"
+        >
+          <mat-icon>lock</mat-icon>
+          Cambia password
+        </button>
+      </div>
+    </div>
+
+    }
+  </div>
 </div>

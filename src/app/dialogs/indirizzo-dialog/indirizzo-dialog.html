@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>{{ isModifica ? 'Modifica indirizzo' : 'Nuovo indirizzo' }}</h2>
+
+<mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Via</mat-label>
+    <input matInput formControlName="via">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Città</mat-label>
+    <input matInput formControlName="citta">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>CAP</mat-label>
+    <input matInput formControlName="cap">
+  </mat-form-field>
+
+  <mat-checkbox formControlName="predefinito">Indirizzo predefinito</mat-checkbox>
+
+  @if (errore) {
+    <p style="color: red;">{{ errore }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="chiudi()">Annulla</button>
+  <button mat-raised-button color="primary" (click)="salva()" [disabled]="salvando">
+    Salva
+  </button>
+</mat-dialog-actions>

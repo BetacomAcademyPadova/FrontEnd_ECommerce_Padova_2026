@@ -8,8 +8,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import type { PaymentIntent } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
 import { PagamentiServices } from '../../services/pagamenti-services';
-import { CarelloServices } from '../../services/carello-services';
-import { AuthServices } from '../../auth/auth-services';
 
 type Stato = PaymentIntent['status'] | 'loading' | 'errore';
 
@@ -23,9 +21,6 @@ export class CheckoutResult {
 
   private route = inject(ActivatedRoute);
   private pagS = inject(PagamentiServices);
-  private carrelloS = inject(CarelloServices);
-  private destroyRef = inject(DestroyRef);
-  // private auth = inject(AuthServices);
 
   stato = signal<Stato>('loading');
   messaggio = signal('Verifica del pagamento in corso...');
@@ -72,7 +67,6 @@ export class CheckoutResult {
       switch (this.stato()) {
         case 'succeeded':
           this.messaggio.set('Pagamento completato con successo.');
-          this.attendiSvuotamentoCarrello();
           break;
         case 'processing':
           this.messaggio.set('Pagamento in elaborazione. Riceverai una conferma a breve.');
@@ -89,22 +83,4 @@ export class CheckoutResult {
       console.log(e);
     }
   }
-  // Il carrello lo svuota il backend in markSucceeded, cioè quando arriva il
-  // webhook. Stripe però ci riporta qui prima, quindi un solo refresh può
-  // leggere un carrello non ancora svuotato: riprova finché non trova 0.
-  private attendiSvuotamentoCarrello() {
-    this.carrelloS.aggiornaConteggio();
-
-    let tentativi = 5;
-    const timer = setInterval(() => {
-      if (this.carrelloS.badgeCount() === 0 || --tentativi <= 0) {
-        clearInterval(timer);
-        return;
-      }
-      this.carrelloS.aggiornaConteggio();
-    }, 2000);
-
-    this.destroyRef.onDestroy(() => clearInterval(timer));
-  }
-
 }

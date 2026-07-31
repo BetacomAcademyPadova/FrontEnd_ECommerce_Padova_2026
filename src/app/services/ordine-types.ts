@@ -19,16 +19,16 @@ export interface IndirizzoDTO {
   cap: string;
   predefinito: boolean;
 }
-
 export interface StatoOrdineDTO {
     idStatoOrdine: number;
     statoOrdine: string;
 }
 
 export interface IndirizzoReq {
-  idUser: number;
+  idIndirizzo?: number;
   via: string;
   citta: string;
   cap: string;
-  predefinito: boolean;
+  predefinito?: boolean;
+  idUser?: number;
 }

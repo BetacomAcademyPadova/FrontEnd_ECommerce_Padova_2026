@@ -55,15 +55,6 @@
           <a routerLink="/dash/prodotti">Sfoglia i prodotti</a>
         </p>
       } @else {
-        <ul class="conf-articoli">
-          @for (p of prodottiView(); track p.idRiga) {
-            <li class="conf-articolo-riga">
-              <span class="conf-articolo-nome">{{ p.descrizione }} × {{ p.quantita }}</span>
-              <span class="conf-articolo-prezzo">€ {{ p.subtotale | number:'1.2-2' }}</span>
-            </li>
-          }
-        </ul>
-
         <div class="conf-totale">
           <span class="conf-totale-label">Totale</span>
           <span class="conf-totale-cifra">€ {{ totale() | number:'1.2-2' }}</span>
