@@ -1,4 +1,4 @@
-import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
+import { Component, afterNextRender, computed, DestroyRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';

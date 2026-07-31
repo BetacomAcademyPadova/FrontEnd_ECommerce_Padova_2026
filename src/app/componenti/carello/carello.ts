@@ -80,8 +80,9 @@ caricaDettagliProdotti(carrello:Carrello){
   });
 }
 
-modificaQuantita(prodotto:any, nuovaQuantita:number){
+modificaQuantita(prodotto:ProdottoCarrelloView, nuovaQuantita:number){
   if(nuovaQuantita < 1){
+    this.eliminaProdotto(prodotto);
     return;
   }
 
@@ -94,10 +95,13 @@ modificaQuantita(prodotto:any, nuovaQuantita:number){
   .update(body)
   .subscribe({
     next:()=>{
-      prodotto.quantita = nuovaQuantita;
-      prodotto.subtotale =
-        prodotto.prezzo * nuovaQuantita;
-      console.log("Quantità aggiornata");
+      this.prodottiView.update(prodotti =>
+        prodotti.map(p => 
+          p.idRiga === prodotto.idRiga
+          ? {...p, quantita:nuovaQuantita, subtotale:p.prezzo * nuovaQuantita} 
+          : p 
+        )
+      );
     },
 
     error:(err)=>{
@@ -118,6 +122,7 @@ eliminaProdotto(prodotto:any){
             p => p.idRiga !== prodotto.idRiga
           )
       );
+      this.carrelloService.aggiornaConteggio();
 
       const carrelloAttuale = this.carrello();
       if(carrelloAttuale){
