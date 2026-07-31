@@ -55,6 +55,24 @@
           <a routerLink="/dash/prodotti">Sfoglia i prodotti</a>
         </p>
       } @else {
+        <h3 class="conf-sezione">Riepilogo</h3>
+
+        <ul class="conf-righe">
+          @for (p of prodottiView(); track p.idRiga) {
+            <li class="conf-riga">
+              <span class="conf-riga-testo">
+                <span class="conf-riga-nome">{{ p.descrizione }}</span>
+                <span class="conf-riga-dett">
+                  @if (p.materiale) { <span>{{ p.materiale }}</span> }
+                  @if (p.colore) { <span>{{ p.colore }}</span> }
+                  <span>&times; {{ p.quantita }}</span>
+                </span>
+              </span>
+              <span class="conf-riga-prezzo">&euro; {{ p.subtotale | number:'1.2-2' }}</span>
+            </li>
+          }
+        </ul>
+
         <div class="conf-totale">
           <span class="conf-totale-label">Totale</span>
           <span class="conf-totale-cifra">€ {{ totale() | number:'1.2-2' }}</span>
@@ -86,4 +104,3 @@
     }
 
   </mat-card>
-</div>

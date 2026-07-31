@@ -1,44 +1,312 @@
-.cart-container{
-    max-width:1000px;
-    margin:40px auto; 
-}
-    
-    
-.product{
-display:flex;
-align-items:center;
-gap:25px;
-padding:25px 0;
+.cart-wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
 }
 
-.image-placeholder{
-width:120px;
-height:120px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:50px;
-background:#eee;
-border-radius:15px;
+/* ---------- intestazione ---------- */
+.cart-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
-.info{
-flex:1;
+.cart-title {
+  font-family: var(--brand-serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin: 0;
 }
 
-.quantity{
-display:flex;
-align-items:center;
-gap:15px;
+.cart-count {
+  color: var(--brand-mid);
+  font-size: 0.9rem;
 }
 
-.price{
-text-align:right;
+/* ---------- due colonne, riepilogo appiccicato ---------- */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+  align-items: start;
 }
 
-.summary{
-margin-top:30px;
-padding:20px;
-display:flex;
-justify-content:space-between;
+.cart-lista,
+.cart-riepilogo {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-line);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(93, 64, 55, 0.06);
+}
+
+.cart-lista {
+  padding: 8px 24px;
+}
+
+/* ---------- riga prodotto ---------- */
+.riga {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px 0;
+}
+
+.riga-thumb {
+  flex: 0 0 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--brand-bg);
+  color: var(--brand-mid);
+  font-family: var(--brand-serif);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.riga-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.riga-nome {
+  font-family: var(--brand-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  margin: 0 0 6px;
+}
+
+.riga-attributi {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.riga-attributi li {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--brand-bg);
+  color: var(--brand-mid);
+  font-size: 0.78rem;
+}
+
+/* ---------- stepper quantità ---------- */
+.riga-stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--brand-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--brand-dark);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.step:hover {
+  border-color: var(--brand-mid);
+  background: var(--brand-bg);
+}
+
+.step mat-icon {
+  font-size: 17px;
+  height: 17px;
+  width: 17px;
+}
+
+.step-valore {
+  min-width: 22px;
+  text-align: center;
+  color: var(--brand-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.riga-unitario {
+  margin-left: 6px;
+  color: var(--brand-mid);
+  font-size: 0.8rem;
+}
+
+/* ---------- prezzo e cestino ---------- */
+.riga-destra {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.riga-subtotale {
+  font-family: var(--brand-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.riga-elimina {
+  color: var(--brand-mid);
+}
+
+.riga-elimina:hover {
+  color: #b3261e;
+}
+
+.riga-sep {
+  border-top-color: var(--brand-line);
+}
+
+/* ---------- riepilogo ---------- */
+.cart-riepilogo {
+  padding: 24px;
+  position: sticky;
+  top: 24px;
+}
+
+.riep-titolo {
+  font-family: var(--brand-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  margin: 0 0 18px;
+}
+
+.riep-voce {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: var(--brand-dark);
+  font-size: 0.92rem;
+}
+
+.riep-nota {
+  color: var(--brand-mid);
+  font-size: 0.82rem;
+}
+
+.riep-sep {
+  margin: 16px 0;
+  border-top-color: var(--brand-line);
+}
+
+.riep-totale {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--brand-serif);
+  color: var(--brand-dark);
+}
+
+.riep-cifra {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-primario {
+  background-color: var(--brand-dark) !important;
+  color: #fff !important;
+  font-family: var(--brand-serif);
+  letter-spacing: 0.4px;
+}
+
+.riep-btn {
+  width: 100%;
+  height: 46px;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.riep-continua {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  color: var(--brand-mid);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.riep-continua:hover {
+  color: var(--brand-dark);
+  text-decoration: underline;
+}
+
+/* ---------- carrello vuoto ---------- */
+.cart-vuoto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 72px 24px;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-line);
+  border-radius: 12px;
+  color: var(--brand-mid);
+}
+
+.cart-vuoto mat-icon {
+  font-size: 44px;
+  height: 44px;
+  width: 44px;
+  opacity: 0.5;
+}
+
+.cart-vuoto p {
+  margin: 0;
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 900px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-riepilogo {
+    position: static;
+  }
+}
+
+@media (max-width: 560px) {
+  .cart-title {
+    font-size: 1.7rem;
+  }
+
+  .cart-lista {
+    padding: 8px 16px;
+  }
+
+  .riga {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .riga-thumb {
+    flex-basis: 52px;
+    height: 52px;
+    font-size: 1.3rem;
+  }
+
+  .riga-destra {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
 }

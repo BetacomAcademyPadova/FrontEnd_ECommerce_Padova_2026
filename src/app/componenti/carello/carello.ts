@@ -14,10 +14,10 @@ import { Router } from '@angular/router';
 import { CarelloServices } from '../../services/carello-services';
 
 @Component({
-  selector:'app-carello',
-  imports: [MatCard, MatCardContent, MatIcon, MatDivider, CurrencyPipe, MatIconModule, MatButtonModule],
-  templateUrl:'./carello.html',
-  styleUrl:'./carello.css'
+  selector: 'app-carello',
+  imports: [ MatIcon, MatDivider, CurrencyPipe, MatIconModule, MatButtonModule],
+  templateUrl: './carello.html',
+  styleUrl: './carello.css'
 })
 
 export class Carello {
@@ -41,58 +41,59 @@ constructor() {
   caricaCarrello(){
     const userId = Number(this.auth.grant().userId);
     this.carrelloService
-    .getByUser(userId)
-    .subscribe({
-        next:(res)=>{
-            this.carrello.set(res);
-            this.caricaDettagliProdotti(res);
-            console.log(res);
+      .getByUser(userId)
+      .subscribe({
+        next: (res) => {
+          this.carrello.set(res);
+          this.caricaDettagliProdotti(res);
+          console.log(res);
         },
-        error:(err)=>{
-            console.error(err);
+        error: (err) => {
+          console.error(err);
         }
-    });
-}
+      });
+  }
 
-caricaDettagliProdotti(carrello:Carrello){
-  this.prodottoService.getAll()
-  .subscribe({
-      next:(prodotti)=>{
-          const lista = carrello.prodotti.map(pc=>{
-              let prodottoFinale:any = {};
-              prodotti.forEach((p:any)=>{
-                  const divisione = p.divisioni?.find(
-                      (d:any)=>
-                      d.idDivisione === pc.idDivisioneProdotto
-                  );
-                  if(divisione){
-                      prodottoFinale = {
-                          ...pc,
-                          descrizione:p.descrizione,
-                          colore:divisione.colore,
-                          materiale:divisione.materiale,
-                          altezza:divisione.altezza,
-                          lunghezza:divisione.lunghezza,
-                          larghezza:divisione.larghezza
-                      };
-                  }
-              });
-              return prodottoFinale;
+  caricaDettagliProdotti(carrello: Carrello) {
+    this.prodottoService.getAll()
+      .subscribe({
+        next: (prodotti) => {
+          const lista = carrello.prodotti.map(pc => {
+            let prodottoFinale: any = {};
+            prodotti.forEach((p: any) => {
+              const divisione = p.divisioni?.find(
+                (d: any) =>
+                  d.idDivisione === pc.idDivisioneProdotto
+              );
+              if (divisione) {
+                prodottoFinale = {
+                  ...pc,
+                  descrizione: p.descrizione,
+                  colore: divisione.colore,
+                  materiale: divisione.materiale,
+                  altezza: divisione.altezza,
+                  lunghezza: divisione.lunghezza,
+                  larghezza: divisione.larghezza
+                };
+              }
+            });
+            return prodottoFinale;
           });
           this.prodottiView.set(lista);
-      }
-  });
-}
+        }
+      });
+  }
 
 modificaQuantita(prodotto:any, nuovaQuantita:number){
   if(nuovaQuantita < 1){
     return;
   }
 
-  const body = {
-    idRiga: prodotto.idRiga,
-    quantita: nuovaQuantita
-  };
+    const body = {
+      idRiga: prodotto.idRiga,
+      idDivisioneProdotto: prodotto.idDivisioneProdotto,
+      quantita: nuovaQuantita
+    };
 
   this.prodottiCarrelloService
   .update(body)
@@ -111,39 +112,24 @@ modificaQuantita(prodotto:any, nuovaQuantita:number){
 }
 
 eliminaProdotto(prodotto:any){
-  this.prodottiCarrelloService
-  .delete(prodotto.idRiga)
-  .subscribe({
-    next:()=>{
-      console.log("Prodotto eliminato");
-      this.prodottiView.update(
-        prodotti => 
-          prodotti.filter(
-            p => p.idRiga !== prodotto.idRiga
-          )
-      );
-
-      const carrelloAttuale = this.carrello();
-      if(carrelloAttuale){
-        carrelloAttuale.prodotti =
-          carrelloAttuale.prodotti.filter(
-            p => p.idRiga !== prodotto.idRiga
+    this.prodottiCarrelloService
+      .delete(prodotto.idRiga)
+      .subscribe({
+        next: () => {
+          console.log("Prodotto eliminato");
+          this.prodottiView.update(
+            prodotti =>
+              prodotti.filter(
+                p => p.idRiga !== prodotto.idRiga
+              )
           );
-        carrelloAttuale.totale =
-          carrelloAttuale.prodotti.reduce(
-            (tot,p)=> tot + p.subtotale,
-            0
-          );
-        this.carrello.set({
-          ...carrelloAttuale
-        });
-      }
-    },
-    error:(err)=>{
-      console.error("Errore eliminazione prodotto", err);
-    }
-  });
-}
+          this.carrelloService.aggiornaConteggio();
+        },
+        error: (err) => {
+          console.error("Errore eliminazione prodotto", err);
+        }
+      });
+  }
 
 vaiAlCheckout(){
   this.router.navigate(['/dash/conferma-ordine']);

@@ -1,12 +1,11 @@
 import { Component, afterNextRender, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthServices } from '../../auth/auth-services';
 import { OrdineServices } from '../../services/ordine-services';
 import { IndirizzoServices } from '../../services/indirizzo-services';
 import { OrdineReq, IndirizzoDTO } from '../../services/ordine-types';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatRadioModule } from '@angular/material/radio';
 import { CarelloServices } from '../../services/carello-services';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -14,8 +13,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DecimalPipe } from '@angular/common';
 import { SelettoreIndirizzo } from '../selettore-indirizzo/selettore-indirizzo';
-import { CarrelloDTO } from '../../services/carello-types';
+
 import { forkJoin } from 'rxjs';
+import { Carrello } from '../../models/carrello';
+import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
+import { ProdottoServices } from '../../services/prodotto-services';
 
 @Component({
   selector: 'app-conferma-ordine',
@@ -28,6 +30,7 @@ import { forkJoin } from 'rxjs';
     MatProgressSpinnerModule,
     SelettoreIndirizzo,
     DecimalPipe,
+    RouterLink
   ],
   templateUrl: './conferma-ordine.html',
   styleUrl: './conferma-ordine.css',
@@ -39,32 +42,33 @@ export class ConfermaOrdine {
   private indirizzoS = inject(IndirizzoServices);
   private router = inject(Router);
   private carrelloS = inject(CarelloServices);
+  private prodottoS = inject(ProdottoServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
-  // indirizzoScelto = signal<number | null>(null);
-  // totale = signal(0);
-  // messaggio = signal('');
+
+
+
   statoId = signal<number | null>(null);
-  carrello = signal<CarrelloDTO | null>(null);
+  carrello = signal<Carrello | null>(null);
   spedizioneId = signal<number | null>(null);
   fatturazioneUguale = signal(true);
   fatturazioneScelta = signal<number | null>(null);
+  prodottiView = signal<ProdottoCarrelloView[]>([]);
 
-  // TODO: sostituire quando esisterà Carrello/getByUser/{userId}
-  //private readonly ID_CARRELLO_TEST = 4;
+
 
 
   fatturazioneId = computed(() =>
     this.fatturazioneUguale() ? this.spedizioneId() : this.fatturazioneScelta()
   );
-  
+
   caricamento = signal(true);
   invio = signal(false);
   errore = signal('');
 
   righe = computed(() => this.carrello()?.prodotti ?? []);
   totale = computed(() => this.carrello()?.totale ?? 0);
-  carrelloVuoto = computed(() => !this.caricamento() && this.righe().length === 0);
+  carrelloVuoto = computed(() => !this.caricamento() && !this.errore() && this.righe().length === 0);
 
   puoConfermare = computed(() =>
     !this.caricamento() &&
@@ -78,9 +82,9 @@ export class ConfermaOrdine {
 
   userId = signal(0);
 
-  // private getUserId(): number {
-  //   return Number(this.auth.grant().userId);
-  // }
+
+
+
 
   constructor() {
     afterNextRender(() => this.carica());
@@ -88,31 +92,33 @@ export class ConfermaOrdine {
 
    private carica() {
     this.userId.set(Number(this.auth.grant().userId));
- 
+
     if (!this.userId()) {
       this.caricamento.set(false);
       this.errore.set('Accedi per completare l\'ordine.');
       return;
     }
- 
+
     // Un'unica forkJoin: o la pagina è pronta, o mostra un errore. Niente
     // stati intermedi in cui metà schermo è popolata e metà no.
     forkJoin({
       indirizzi: this.indirizzoS.getAllByUser(this.userId()),
       stati: this.ordineS.getStati(),
-      carrello: this.carrelloS.getById(this.userId()),
+      carrello: this.carrelloS.getByUser(this.userId()),
+      prodotti: this.prodottoS.getAll(),
     }).subscribe({
-      next: ({ indirizzi, stati, carrello }) => {
+      next: ({ indirizzi, stati, carrello, prodotti }) => {
         this.indirizzi.set(indirizzi);
+        this.prodottiView.set(this.mappaProdottiCarrello(carrello, prodotti));
         const pref = indirizzi.find(i => i.predefinito) ?? indirizzi[0];
         if (pref) this.spedizioneId.set(pref.idIndirizzo);
- 
+
         // Confronto tollerante: il seed del team contiene "In Attessa".
         const attesa = stati.find(s =>
           s.statoOrdine?.trim().toLowerCase().startsWith('in attes'));
         if (attesa) this.statoId.set(attesa.idStatoOrdine);
         else this.errore.set('Stato ordine iniziale non configurato.');
- 
+
         this.carrello.set(carrello);
         this.caricamento.set(false);
       },
@@ -122,14 +128,36 @@ export class ConfermaOrdine {
       },
     });
   }
- 
+
+  // Abbina ogni riga del carrello (idDivisioneProdotto, quantità, prezzo) alla
+  // sua descrizione nel catalogo prodotti, per poterla mostrare nel riepilogo.
+  private mappaProdottiCarrello(carrello: Carrello, prodotti: any[]): ProdottoCarrelloView[] {
+    return carrello.prodotti.map(pc => {
+      let prodottoFinale: any = { ...pc };
+      prodotti.forEach((p: any) => {
+        const divisione = p.divisioni?.find(
+          (d: any) => d.idDivisione === pc.idDivisioneProdotto
+        );
+        if (divisione) {
+          prodottoFinale = {
+            ...pc,
+            descrizione: p.descrizione,
+            colore: divisione.colore,
+            materiale: divisione.materiale,
+          };
+        }
+      });
+      return prodottoFinale;
+    });
+  }
+
   // callback dal selettore indirizzo
   indirizzoAggiunto(ev: { lista: IndirizzoDTO[]; idNuovo: number }, perSpedizione: boolean) {
     this.indirizzi.set(ev.lista);
     if (perSpedizione) this.spedizioneId.set(ev.idNuovo);
     else this.fatturazioneScelta.set(ev.idNuovo);
   }
- 
+
   cambiaFatturazioneUguale(uguale: boolean) {
     this.fatturazioneUguale.set(uguale);
     // Riparti dalla spedizione: è la scelta più probabile anche quando differiscono.
@@ -137,30 +165,30 @@ export class ConfermaOrdine {
       this.fatturazioneScelta.set(this.spedizioneId());
     }
   }
- 
+
   conferma() {
     if (!this.puoConfermare()) return;
- 
+
     this.invio.set(true);
     this.errore.set('');
- 
+
     const req: OrdineReq = {
       data: new Date().toISOString().slice(0, 10),
-      // totale: this.totale(),
+
       userId: this.userId(),
       indirizzoSpedizioneId: this.spedizioneId()!,
       indirizzoFatturazioneId: this.fatturazioneId()!,
       statoId: this.statoId()!,
     };
- 
+
     this.ordineS.create(req).subscribe({
       next: (r) => {
         this.router.navigate(['/dash/checkout'], {
           queryParams: { idOrdine: r.idOrdine },
-          // queryParams: {
-          //   idOrdine: r.idOrdine,
-          //   idSpedizione: this.spedizioneId(),
-          // },
+
+
+
+
         });
       },
       error: (e) => {
@@ -168,5 +196,4 @@ export class ConfermaOrdine {
         this.errore.set(e?.error?.msg ?? 'Non è stato possibile creare l\'ordine.');
       },
     });
-  }
-}
+  }}

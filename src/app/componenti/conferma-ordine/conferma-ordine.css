@@ -182,3 +182,56 @@
     font-size: 1.6rem;
   }
 }
+.conf-sezione {
+  font-family: var(--brand-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+  margin: 0 0 12px;
+}
+
+.conf-righe {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+.conf-riga {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--brand-line);
+}
+
+.conf-riga:last-child {
+  border-bottom: none;
+}
+
+.conf-riga-testo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.conf-riga-nome {
+  color: var(--brand-dark);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.conf-riga-dett {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--brand-mid);
+  font-size: 0.82rem;
+}
+
+.conf-riga-prezzo {
+  color: var(--brand-dark);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
