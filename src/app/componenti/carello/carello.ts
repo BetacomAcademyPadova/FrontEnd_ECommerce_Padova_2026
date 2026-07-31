@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { CarrelloServices } from '../../services/carrello-services';
+import { Component, computed, inject, signal } from '@angular/core';
+import { CarelloServices } from '../../services/carello-services';
 import { AuthServices } from '../../auth/auth-services';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 })
 
 export class Carello {
-  private carrelloService = inject(CarrelloServices);
+  private carrelloService = inject(CarelloServices);
   private auth = inject(AuthServices);
   private router = inject(Router);
   private prodottoService = inject(ProdottoServices);
@@ -30,9 +30,9 @@ export class Carello {
   carrello = signal<Carrello | null>(null);
   prodottiView = signal<ProdottoCarrelloView[]>([]);
 
-  ngOnInit(){
-    this.caricaCarrello();
-  }
+  totale = computed(() =>
+    this.prodottiView().reduce((tot, p) => tot + (p.subtotale ?? 0), 0)
+  );
 
   caricaCarrello(){
     const userId = Number(this.auth.grant().userId);

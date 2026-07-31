@@ -7,7 +7,7 @@ import { OrdineReq, IndirizzoDTO } from '../../services/ordine-types';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { CarrelloServices } from '../../services/carello-services';
+import { CarelloServices } from '../../services/carello-services';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,7 +38,7 @@ export class ConfermaOrdine {
   private ordineS = inject(OrdineServices);
   private indirizzoS = inject(IndirizzoServices);
   private router = inject(Router);
-  private carrelloS = inject(CarrelloServices);
+  private carrelloS = inject(CarelloServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
   // indirizzoScelto = signal<number | null>(null);
