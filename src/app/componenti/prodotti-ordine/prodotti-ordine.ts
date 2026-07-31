@@ -2,12 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { ProdottiOrdineServices } from '../../services/prodotti-ordine-services';
-
 
 @Component({
   selector: 'app-prodotti-ordine',
