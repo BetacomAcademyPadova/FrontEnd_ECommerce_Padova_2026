@@ -1,5 +1,4 @@
 import { afterNextRender, Component, computed, inject, signal } from '@angular/core';
-import { CarelloServices } from '../../services/carello-services';
 import { AuthServices } from '../../auth/auth-services';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
@@ -12,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDivider } from "@angular/material/divider";
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { CarelloServices } from '../../services/carello-services';
 
 @Component({
   selector: 'app-carello',
@@ -29,18 +29,16 @@ export class Carello {
 
   carrello = signal<Carrello | null>(null);
   prodottiView = signal<ProdottoCarrelloView[]>([]);
-
-  // il totale non viene piu' tenuto allineato a mano: e' derivato dalle righe,
-  // quindi si ricalcola da solo a ogni modifica di prodottiView
   totale = computed(() =>
-    this.prodottiView().reduce((tot, p) => tot + p.subtotale, 0)
+    this.prodottiView().reduce((tot, p) => tot + (p.subtotale ?? 0), 0)
   );
-
-  constructor() {
-    afterNextRender(() => this.caricaCarrello());
-  }
-
-  caricaCarrello() {
+  // ngOnInit(){
+  //   this.caricaCarrello();
+  // }
+constructor() {
+  afterNextRender(() => this.caricaCarrello());
+}
+  caricaCarrello(){
     const userId = Number(this.auth.grant().userId);
     this.carrelloService
       .getByUser(userId)
@@ -91,8 +89,8 @@ export class Carello {
     return;
   }
 
+modificaQuantita(prodotto:any, nuovaQuantita:number){
   if(nuovaQuantita < 1){
-    this.eliminaProdotto(prodotto);
     return;
   }
 
@@ -102,27 +100,34 @@ export class Carello {
       quantita: nuovaQuantita
     };
 
-    this.prodottiCarrelloService
-      .update(body)
-      .subscribe({
-        next: () => {
-          this.prodottiView.update(
-            prodotti =>
-              prodotti.map(
-                p => p.idRiga === prodotto.idRiga
-                  ? { ...p, quantita: nuovaQuantita, subtotale: p.prezzo * nuovaQuantita }
-                  : p
-              )
-          );
-          this.carrelloService.aggiornaConteggio();
-          console.log("Quantità aggiornata");
-        },
+  this.prodottiCarrelloService
+  .update(body)
+  .subscribe({
+    next:()=>{
+      prodotto.quantita = nuovaQuantita;
+      prodotto.subtotale =
+        prodotto.prezzo * nuovaQuantita;
+      console.log("Quantità aggiornata");
+    },
 
-        error: (err) => {
-          console.error("Errore aggiornamento quantità", err);
-        }
-      });
-  }
+    error:(err)=>{
+      console.error("Errore aggiornamento quantità", err);
+    }
+  });
+}
+
+eliminaProdotto(prodotto:any){
+  this.prodottiCarrelloService
+  .delete(prodotto.idRiga)
+  .subscribe({
+    next:()=>{
+      console.log("Prodotto eliminato");
+      this.prodottiView.update(
+        prodotti => 
+          prodotti.filter(
+            p => p.idRiga !== prodotto.idRiga
+          )
+      );
 
   eliminaProdotto(prodotto: ProdottoCarrelloView) {
     this.prodottiCarrelloService
@@ -144,8 +149,8 @@ export class Carello {
       });
   }
 
-  vaiAllaConferma() {
-    this.router.navigate(['/dash/conferma-ordine']);
-  }
+vaiAlCheckout(){
+  this.router.navigate(['/dash/conferma-ordine']);
+}
 
 }

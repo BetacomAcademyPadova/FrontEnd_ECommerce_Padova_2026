@@ -37,7 +37,16 @@
                 }
                 @if (estraiTipo(n.messaggio).includes('Creare sconto')) {
                   <p style="margin: 0; font-size: 1rem;">
+                    <strong>ID Prodotto:</strong> {{ estraiIdProdotto(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
                     <strong>Percentuale Sconto:</strong> {{ estraiSconto(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Data Inizio:</strong> {{ estraiDataInizio(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Data Fine:</strong> {{ estraiDataFine(n.messaggio) }}
                   </p>
                 }
                 <p style="margin: 0; font-size: 1rem;">
@@ -136,6 +145,20 @@
           <input matInput type="number" formControlName="valoreSconto" placeholder="Es. 20">
           <mat-error>Inserisci un valore valido</mat-error>
         </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Data Inizio</mat-label>
+          <input matInput [matDatepicker]="pickerInizio" [min]="minDate" formControlName="dataInizio" placeholder="gg/mm/aaaa">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerInizio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInizio></mat-datepicker>
+          <mat-error>Inserisci una data valida</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Data Fine</mat-label>
+          <input matInput [matDatepicker]="pickerFine" formControlName="dataFine" placeholder="gg/mm/aaaa">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerFine"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFine></mat-datepicker>
+          <mat-error>Inserisci una data valida</mat-error>
+        </mat-form-field>
       }
       <mat-form-field appearance="outline" style="width: 100%;">
         <mat-label>Messaggio di richiesta</mat-label>
@@ -184,6 +207,12 @@
                   </p>
                   <p style="margin: 0; font-size: 1rem;">
                     <strong>Percentuale Sconto:</strong> {{ estraiSconto(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Data Inizio:</strong> {{ estraiDataInizio(n.messaggio) }}
+                  </p>
+                  <p style="margin: 0; font-size: 1rem;">
+                    <strong>Data Fine:</strong> {{ estraiDataFine(n.messaggio) }}
                   </p>
                 }
                 <p style="margin: 0; font-size: 1rem;">

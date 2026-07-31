@@ -18,7 +18,6 @@
 }
 
 .row-fields {
-
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
@@ -26,29 +25,42 @@
   gap: 16px;
 
   width: 100%;
-
 }
-
 
 .row-fields mat-form-field {
-
   width: 100%;
-
 }
-
 
 .small-field {
-
   width: 100%;
-
 }
+
+/* ---------- TITOLI SEZIONI ---------- */
+
+.section-title {
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: #3e2723;
+
+  margin-top: 20px;
+
+  margin-bottom: 10px;
+
+  padding-bottom: 6px;
+
+  border-bottom: 2px solid #c19a6b;
+}
+
+/* ---------- MESSAGGI ---------- */
 
 .msg-error {
   min-height: 24px;
 
-  color: #c62828;
+  color: #b22222;
 
-  font-weight: 500;
+  font-weight: 600;
 
   text-align: center;
 }
@@ -74,13 +86,13 @@
 
   height: 300px;
 
-  border-radius: 12px;
+  border-radius: 16px;
 
   overflow: hidden;
 
-  border: 1px solid #ddd;
+  border: 2px solid #c19a6b;
 
-  background: #fafafa;
+  background: #faf7f2;
 }
 
 .main-image img {
@@ -88,7 +100,7 @@
 
   height: 100%;
 
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* miniature */
@@ -110,18 +122,26 @@
 
   height: 90px;
 
-  object-fit: cover;
+  object-fit: contain;
 
-  border-radius: 8px;
+  border-radius: 10px;
 
-  border: 1px solid #ddd;
+  border: 1px solid #d7ccc8;
+
+  background-color: white;
 
   cursor: pointer;
 
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
 }
 
 .thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.thumbnail.selected {
+  border: 3px solid #8b4513;
+
   transform: scale(1.05);
 }
 
@@ -132,11 +152,11 @@
 
   height: 260px;
 
-  border: 2px dashed #c5c5c5;
+  border: 2px dashed #c19a6b;
 
-  border-radius: 12px;
+  border-radius: 16px;
 
-  background: #fafafa;
+  background: #faf7f2;
 
   display: flex;
 
@@ -145,16 +165,6 @@
   justify-content: center;
 
   align-items: center;
-
-  overflow: hidden;
-}
-
-.image-preview img {
-  width: 100%;
-
-  height: 100%;
-
-  object-fit: cover;
 }
 
 .placeholder-icon {
@@ -164,18 +174,22 @@
 
   font-size: 70px;
 
-  color: #9e9e9e;
+  color: #8d6e63;
 }
 
 .image-preview p {
   margin-top: 12px;
 
-  color: #757575;
-
-  font-size: 15px;
+  color: #8d6e63;
 }
 
-/* ---------- CONTENUTO DIALOG ---------- */
+/* ---------- MATERIAL INPUT ---------- */
+
+mat-form-field {
+  --mdc-filled-text-field-container-color: #faf7f2;
+}
+
+/* ---------- DIALOG ---------- */
 
 mat-dialog-content {
   overflow-y: auto;
@@ -195,7 +209,17 @@ mat-dialog-content {
   margin-top: 12px;
 }
 
-/* ---------- CHIUSURA DIALOG ---------- */
+button.mat-mdc-raised-button {
+  background-color: #5d4037;
+
+  color: white;
+}
+
+button.mat-mdc-raised-button:hover {
+  background-color: #3e2723;
+}
+
+/* bottone chiusura */
 
 .dialog-close-btn {
   position: absolute;
@@ -206,34 +230,40 @@ mat-dialog-content {
 
   z-index: 100;
 
-  color: #555;
+  color: #5d4037;
 }
 
 .dialog-close-btn:hover {
-  color: black;
+  color: #3e2723;
+}
+
+/* ---------- SCONTO ---------- */
+
+.sconto-container {
+  margin-top: 20px;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  background-color: #faf7f2;
+
+  border: 1px solid #d7ccc8;
 }
 
 /* ---------- RESPONSIVE ---------- */
 
 @media (max-width: 900px) {
   .row-fields {
-    flex-wrap: wrap;
-  }
-
-  .small-field {
-    flex: 1 1 45%;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .row-fields {
-    flex-direction: column;
+    grid-template-columns: 1fr;
 
-    gap: 4px;
-  }
-
-  .small-field {
-    width: 100%;
+    gap: 8px;
   }
 
   .button-group {
@@ -258,29 +288,5 @@ mat-dialog-content {
     width: 65px;
 
     height: 65px;
-  }
-
-  .thumbnail.selected {
-
-    border: 3px solid #1976d2;
-  
-    transform: scale(1.05);
-  
-  }
-
-  .section-title {
-
-    font-size: 18px;
-  
-    font-weight: 600;
-  
-    margin-top: 15px;
-  
-    margin-bottom: 5px;
-  
-    padding-bottom: 5px;
-  
-    border-bottom: 1px solid #ddd;
-  
   }
 }

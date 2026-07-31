@@ -42,7 +42,6 @@ export class ConfermaOrdine {
   private indirizzoS = inject(IndirizzoServices);
   private router = inject(Router);
   private carrelloS = inject(CarelloServices);
-  private prodottoS = inject(ProdottoServices);
 
   indirizzi = signal<IndirizzoDTO[]>([]);
   statoId = signal<number | null>(null);
@@ -50,7 +49,10 @@ export class ConfermaOrdine {
   spedizioneId = signal<number | null>(null);
   fatturazioneUguale = signal(true);
   fatturazioneScelta = signal<number | null>(null);
-  prodottiView = signal<ProdottoCarrelloView[]>([]);
+
+  // TODO: sostituire quando esisterà Carrello/getByUser/{userId}
+  //private readonly ID_CARRELLO_TEST = 4;
+
 
   fatturazioneId = computed(() =>
     this.fatturazioneUguale() ? this.spedizioneId() : this.fatturazioneScelta()
@@ -94,8 +96,7 @@ export class ConfermaOrdine {
     forkJoin({
       indirizzi: this.indirizzoS.getAllByUser(this.userId()),
       stati: this.ordineS.getStati(),
-      carrello: this.carrelloS.getByUser(this.userId()),
-      prodotti: this.prodottoS.getAll(),
+      carrello: this.carrelloS.getById(this.userId()),
     }).subscribe({
       next: ({ indirizzi, stati, carrello, prodotti }) => {
         this.indirizzi.set(indirizzi);

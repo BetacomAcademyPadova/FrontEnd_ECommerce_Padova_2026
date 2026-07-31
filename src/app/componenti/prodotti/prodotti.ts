@@ -218,6 +218,8 @@ export class Prodotti implements OnInit {
 
     this.carrelloService.getByUser(userId).subscribe({
       next: (carrello: any) => {
+
+        const quantita = prodotto.quantitaCarrello ?? 1;
         const divisione = prodotto.divisioni?.[0];
 
         if (!divisione) {
@@ -225,10 +227,12 @@ export class Prodotti implements OnInit {
           return;
         }
 
+        
+
         const body = {
           idCarrello: carrello.idCarrello,
           idDivisioneProdotto: divisione.idDivisione,
-          quantita: 1,
+          quantita: prodotto.quantitaCarrello ?? 1,
         };
 
         console.log("Invio:", body);

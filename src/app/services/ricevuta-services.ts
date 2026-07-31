@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APP_SETTING } from '../settings/token/token';
 import { AppSettings } from '../settings/token/config-model';
