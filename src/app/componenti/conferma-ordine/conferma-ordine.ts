@@ -51,7 +51,7 @@ export class ConfermaOrdine {
   fatturazioneScelta = signal<number | null>(null);
 
   // TODO: sostituire quando esisterà Carrello/getByUser/{userId}
-  private readonly ID_CARRELLO_TEST = 4;
+  //private readonly ID_CARRELLO_TEST = 4;
 
 
   fatturazioneId = computed(() =>
@@ -100,7 +100,7 @@ export class ConfermaOrdine {
     forkJoin({
       indirizzi: this.indirizzoS.getAllByUser(this.userId()),
       stati: this.ordineS.getStati(),
-      carrello: this.carrelloS.getById(this.ID_CARRELLO_TEST),
+      carrello: this.carrelloS.getById(this.userId()),
     }).subscribe({
       next: ({ indirizzi, stati, carrello }) => {
         this.indirizzi.set(indirizzi);
