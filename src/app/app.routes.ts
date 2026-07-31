@@ -31,6 +31,7 @@ export const routes: Routes = [
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult, /*canActivate:[autentificateGuard]*/},
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
+            { path: 'carello', component: Carello, /*canActivate: [autentificateGuard]*/}
         ]
     },
 ];
