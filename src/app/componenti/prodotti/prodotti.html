@@ -151,34 +151,49 @@
             {{ prodotto.sottoCategoria?.sottoCategoria ?? 'Senza sottocategoria'
             }}
           </span>
-         
+
           <h5 class="card-title">{{ prodotto.descrizione }}</h5>
 
           <p>
-            Categoria: {{ prodotto.sottoCategoria?.categoria ?? 'Non disponibile' }}
+            Categoria: {{ prodotto.sottoCategoria?.categoria ?? 'Non
+            disponibile' }}
           </p>
 
-          @if(prodotto.sconto != null){
+          <div class="prezzo-container">
+            @if(prodotto.sconto != null){
 
-          <div class="sconto-prezzo">
-            <span class="prezzo-originale">
-              {{ prodotto.prezzoOriginale }} €
-            </span>
+            <div class="sconto-prezzo">
+              <span class="prezzo-originale">
+                {{ prodotto.prezzoOriginale }} €
+              </span>
 
-            <h4 class="prezzo-scontato">{{ prodotto.prezzo }} €</h4>
-          </div>
+              <h4 class="prezzo-scontato">{{ prodotto.prezzo }} €</h4>
+
+              <p class="text-success fw-bold mb-0">
+                Sconto: -{{ prodotto.sconto.valore }}%
+              </p>
+            </div>
 
           } @else {
 
-          <h4 class="text-primary">{{ prodotto.prezzo }} €</h4>
-
-          } @if(prodotto.sconto != null){
-
-            <p class="text-success fw-bold">
-              Sconto: -{{ prodotto.sconto.valore }}%
-            </p>
-
-          }
+            <div class="sconto-prezzo">
+            
+              <span class="prezzo-originale invisible">
+                0 €
+              </span>
+            
+              <h4 class="prezzo-scontato">
+                {{ prodotto.prezzo }} €
+              </h4>
+            
+              <p class="text-success fw-bold invisible mb-0">
+                Sconto: -0%
+              </p>
+            
+            </div>
+            
+            }
+          </div>
 
           <p class="fw-bold">Varianti disponibili</p>
 
@@ -213,11 +228,8 @@
           </div>
 
           <div class="mt-2">
+            <label class="form-label"> Quantità </label>
 
-            <label class="form-label">
-              Quantità
-            </label>
-          
             <input
               type="number"
               class="form-control quantita-input"
@@ -226,7 +238,6 @@
               [(ngModel)]="prodotto.quantitaCarrello"
               (click)="$event.stopPropagation()"
             />
-          
           </div>
 
           } @empty {

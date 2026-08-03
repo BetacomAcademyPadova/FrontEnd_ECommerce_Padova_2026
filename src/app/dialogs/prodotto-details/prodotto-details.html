@@ -25,11 +25,13 @@
     <!-- IMMAGINI PRODOTTO -->
 
     <div class="image-section">
-      @if(immagini().length > 0){
+      @if(imagePreview){
 
       <div class="main-image">
         <img [src]="imagePreview" alt="Immagine principale" />
       </div>
+
+      @if(immagini().length > 0){
 
       <div class="thumbnail-container">
         @for(img of immagini(); track img.id){
@@ -45,7 +47,7 @@
         }
       </div>
 
-      } @else {
+      } } @else {
 
       <div class="image-preview">
         <mat-icon class="placeholder-icon"> image </mat-icon>
@@ -60,6 +62,7 @@
         hidden
         type="file"
         accept="image/*"
+        multiple
         (change)="onFileSelected($event)"
       />
 
@@ -69,7 +72,7 @@
         type="button"
         (click)="fileInput.click()"
       >
-        <mat-icon>photo_camera</mat-icon>
+        <mat-icon> photo_camera </mat-icon>
 
         Seleziona immagine
       </button>
@@ -224,19 +227,36 @@
         <mat-form-field appearance="outline">
           <mat-label>Sconto %</mat-label>
 
-          <input matInput type="number" [(ngModel)]="valoreSconto" [ngModelOptions]="{standalone:true}" />
+          <input
+            matInput
+            type="number"
+            min="0"
+            max="100"
+            [(ngModel)]="valoreSconto"
+            [ngModelOptions]="{standalone:true}"
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Data inizio</mat-label>
 
-          <input matInput type="date" [(ngModel)]="dataInizio" [ngModelOptions]="{standalone:true}" />
+          <input
+            matInput
+            type="date"
+            [(ngModel)]="dataInizio"
+            [ngModelOptions]="{standalone:true}"
+          />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Data fine</mat-label>
 
-          <input matInput type="date" [(ngModel)]="dataFine" [ngModelOptions]="{standalone:true}" />
+          <input
+            matInput
+            type="date"
+            [(ngModel)]="dataFine"
+            [ngModelOptions]="{standalone:true}"
+          />
         </mat-form-field>
       </div>
 
@@ -270,7 +290,6 @@
         (click)="abilitaModifica()"
       >
         <mat-icon>edit</mat-icon>
-
         Modifica
       </button>
 
