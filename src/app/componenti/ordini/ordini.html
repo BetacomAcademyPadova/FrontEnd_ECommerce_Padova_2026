@@ -1,0 +1,111 @@
+<div class="container">
+  <mat-card class="ordine-card">
+    <mat-card-header>
+      <mat-card-title>Ordini</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    @if(isVenditore){
+
+    <div class="menu">
+      <button class="btn-ordine" (click)="cambiaVista('acquisti')">
+        <mat-icon>shopping_cart</mat-icon>
+        I miei ordini
+      </button>
+
+      <button class="btn-ordine" (click)="cambiaVista('vendite')">
+        <mat-icon>store</mat-icon>
+        Ordini clienti
+      </button>
+    </div>
+
+    } @if(vista === "acquisti"){
+
+    <h3>I miei ordini</h3>
+
+    @if(ordiniCliente.length > 0){
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Totale</th>
+          <th>Stato</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(ordine of ordiniCliente; track ordine.idOrdine){
+
+        <tr>
+          <td>{{ ordine.data }}</td>
+
+          <td>{{ ordine.totale | number:'1.2-2' }} €</td>
+
+          <td>{{ ordine.statoOrdine }}</td>
+
+          <td>
+            <button class="btn-ordine" (click)="apriOrdine(ordine.idOrdine)">
+              <mat-icon>receipt_long</mat-icon>
+
+              Visualizza prodotti
+            </button>
+          </td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    } @else {
+
+    <p>Nessun ordine trovato</p>
+
+    } } @if(vista === "vendite"){
+
+    <h3>Ordini clienti</h3>
+
+    @if(ordiniVenditore.length > 0){
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Totale</th>
+          <th>Stato</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(ordine of ordiniVenditore; track ordine.idOrdine){
+
+        <tr>
+          <td>{{ ordine.data }}</td>
+
+          <td>{{ ordine.totale | number:'1.2-2' }} €</td>
+
+          <td>{{ ordine.statoOrdine }}</td>
+
+          <td>
+            <button class="btn-ordine" (click)="apriOrdine(ordine.idOrdine)">
+              <mat-icon>receipt_long</mat-icon>
+
+              Visualizza prodotti
+            </button>
+          </td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    } @else {
+
+    <p>Nessun ordine trovato</p>
+
+    } }
+  </mat-card>
+</div>

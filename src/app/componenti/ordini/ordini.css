@@ -1,4 +1,4 @@
-.ricevuta-card {
+.ordine-card {
   padding: 30px;
   border-radius: 20px;
   background: white;
@@ -12,7 +12,7 @@
   margin: 25px 0;
 }
 
-.btn-ricevuta {
+.btn-ordine {
   background: #5d4037;
   color: white;
   border: none;
@@ -25,11 +25,11 @@
   font-weight: 700;
 }
 
-.btn-ricevuta:hover {
+.btn-ordine:hover {
   background: #3e2723;
 }
 
-.btn-ricevuta mat-icon {
+.btn-ordine mat-icon {
   font-size: 20px;
   width: 20px;
   height: 20px;
@@ -37,7 +37,7 @@
 
 table {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 25px;
   border-collapse: collapse;
 }
 
@@ -62,5 +62,5 @@ h3 {
 p {
   text-align: center;
   color: #5d4037;
-  margin-top: 20px;
+  margin-top: 25px;
 }

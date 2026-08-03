@@ -16,6 +16,7 @@ import { Notifiche } from './componenti/notifiche/notifiche';
 import { ResetPassword } from './componenti/reset-password/reset-password';
 import { Ricevuta } from './componenti/ricevuta/ricevuta';
 import { ProdottiOrdine } from './componenti/prodotti-ordine/prodotti-ordine';
+import { Ordini } from './componenti/ordini/ordini';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -35,7 +36,7 @@ export const routes: Routes = [
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
             { path: 'carello', component: Carello, /*canActivate: [autentificateGuard]*/},
             { path: 'ricevuta', component: Ricevuta, /*canActivate: [autentificateGuard]*/},
-            { path: 'prodotti-ordine', component: ProdottiOrdine, /*canActivate: [autentificateGuard]*/ },
+            { path: 'ordini', component: Ordini, /*canActivate: [autentificateGuard]*/},
         ]
     },
 ];

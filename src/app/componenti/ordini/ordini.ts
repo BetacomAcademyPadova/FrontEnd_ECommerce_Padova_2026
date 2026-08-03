@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, OnInit, inject } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, inject } from "@angular/core";
 import { DecimalPipe } from "@angular/common";
 
 import { MatCardModule } from "@angular/material/card";
@@ -8,6 +8,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDialog } from "@angular/material/dialog";
 
 import { AuthServices } from "../../auth/auth-services";
+
 import { OrdineServices } from "../../services/ordine-services";
 import { ProdottiOrdineServices } from "../../services/prodotti-ordine-services";
 
@@ -16,7 +17,7 @@ import { OrdineDTO } from "../../services/ordine-types";
 import { ProdottiOrdineDialog } from "../../dialogs/prodotti-ordine-dialog/prodotti-ordine-dialog";
 
 @Component({
-  selector: "app-prodotti-ordine",
+  selector: "app-ordini",
   standalone: true,
   imports: [
     MatCardModule,
@@ -25,21 +26,23 @@ import { ProdottiOrdineDialog } from "../../dialogs/prodotti-ordine-dialog/prodo
     MatButtonModule,
     DecimalPipe,
   ],
-  templateUrl: "./prodotti-ordine.html",
-  styleUrl: "./prodotti-ordine.css",
+  templateUrl: "./ordini.html",
+  styleUrl: "./ordini.css",
 })
-export class ProdottiOrdine implements OnInit {
+export class Ordini implements OnInit {
+  private readonly auth = inject(AuthServices);
+
   private readonly ordineS = inject(OrdineServices);
 
   private readonly prodottiOrdineS = inject(ProdottiOrdineServices);
-
-  private readonly auth = inject(AuthServices);
 
   private readonly dialog = inject(MatDialog);
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  ordini: OrdineDTO[] = [];
+  ordiniCliente: OrdineDTO[] = [];
+
+  ordiniVenditore: OrdineDTO[] = [];
 
   isVenditore = false;
 
@@ -59,48 +62,66 @@ export class ProdottiOrdine implements OnInit {
     this.isVenditore = grant.isVenditore === true;
 
     this.caricaAcquisti();
+
+    if (this.isVenditore) {
+      this.caricaVendite();
+    }
   }
 
   caricaAcquisti() {
-    this.vista = "acquisti";
-
     this.ordineS.getAllByUserId(this.userId).subscribe({
       next: (res) => {
-        this.ordini = res;
+        this.ordiniCliente = res;
 
         this.cdr.detectChanges();
       },
 
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+      },
     });
   }
 
   caricaVendite() {
-    this.vista = "vendite";
-
     this.ordineS.getAllByVenditore(this.userId).subscribe({
       next: (res) => {
-        this.ordini = res;
+        this.ordiniVenditore = res;
 
         this.cdr.detectChanges();
       },
 
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+      },
     });
+  }
+
+  cambiaVista(vista: "acquisti" | "vendite") {
+    this.vista = vista;
+
+    if (vista === "acquisti") {
+      this.caricaAcquisti();
+    }
+
+    if (vista === "vendite") {
+      this.caricaVendite();
+    }
   }
 
   apriOrdine(idOrdine: number) {
     this.prodottiOrdineS
       .getByOrdine(idOrdine, this.userId, this.vista === "vendite")
       .subscribe({
-        next: (res) => {
+        next: (prodotti) => {
           this.dialog.open(ProdottiOrdineDialog, {
             width: "850px",
-            data: res,
+            data: prodotti,
           });
         },
 
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+        },
       });
   }
 }
