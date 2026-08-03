@@ -1,17 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from "@angular/material/dialog";
-
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
+import {MAT_DIALOG_DATA,MatDialogModule,MatDialogRef,} from "@angular/material/dialog";
+import {FormControl,FormGroup,ReactiveFormsModule,Validators,} from "@angular/forms";
 
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,16 +21,7 @@ import { ScontoServices } from "../../services/sconto-services";
 @Component({
   selector: "app-prodotto-details",
   standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    FormsModule,
-    MatInputModule,
-    MatSelectModule,
-  ],
+  imports: [MatButtonModule,MatIconModule,MatDialogModule,ReactiveFormsModule,MatFormFieldModule,FormsModule,MatInputModule,MatSelectModule,],
   templateUrl: "./prodotto-details.html",
   styleUrl: "./prodotto-details.css",
 })
@@ -59,81 +39,54 @@ export class ProdottoDetails implements OnInit {
   private readonly scontoService = inject(ScontoServices);
 
   mod = signal("");
-
   prodotto = signal<any>(null);
-
   categorie = signal<any[]>([]);
-
   tutteSottocategorie = signal<any[]>([]);
-
   sottocategorie = signal<any[]>([]);
-
   msg = signal("");
-
   immagini = signal<any[]>([]);
-
   selectedFiles: File[] = [];
-
   imagePreview: string | null = null;
-
   valoreSconto: number | null = null;
-
   dataInizio = "";
-
   dataFine = "";
-
   scontoEsistente = signal<any>(null);
 
   prodottoForm: FormGroup = new FormGroup({
     descrizione: new FormControl(null, Validators.required),
-
     prezzo: new FormControl(null, [Validators.required, Validators.min(0)]),
-
     categoria: new FormControl(null, Validators.required),
-
     sottoCategoria: new FormControl(null, Validators.required),
-
     colore: new FormControl(null, Validators.required),
-
     materiale: new FormControl(null, Validators.required),
-
     altezza: new FormControl(null, [Validators.required, Validators.min(0)]),
-
     lunghezza: new FormControl(null, [Validators.required, Validators.min(0)]),
-
     larghezza: new FormControl(null, [Validators.required, Validators.min(0)]),
 
     quantitaDisponibile: new FormControl(null, [
       Validators.required,
       Validators.min(0),
     ]),
-
     stockAlert: new FormControl(null, [Validators.required, Validators.min(0)]),
   });
 
   constructor() {
     if (this.data) {
       this.mod.set(this.data.mod);
-
       this.prodotto.set(this.data.prodotto);
     }
   }
 
   ngOnInit(): void {
     this.caricaCategorie();
-
     this.caricaSottocategorie();
-
     this.ascoltaCambioCategoria();
 
     if (this.prodotto()) {
       if (this.prodotto().sconto) {
         this.scontoEsistente.set(this.prodotto().sconto);
-
         this.valoreSconto = this.prodotto().sconto.valore;
-
         this.dataInizio = this.prodotto().sconto.dataInizio;
-
         this.dataFine = this.prodotto().sconto.dataFine;
       }
       this.caricaImmagini();
@@ -142,15 +95,10 @@ export class ProdottoDetails implements OnInit {
     if (this.mod() === "V") {
       this.prodottoForm.disable();
     }
-
-    console.log("Modalità dialog:", this.mod());
-
-    console.log("Prodotto ricevuto:", this.prodotto());
   }
 
   private precompilaForm(): void {
     const prodotto = this.prodotto();
-
     if (!prodotto) {
       return;
     }
@@ -165,25 +113,15 @@ export class ProdottoDetails implements OnInit {
     this.prodottoForm.patchValue(
       {
         descrizione: prodotto.descrizione ?? null,
-
-        prezzo: prodotto.prezzo ?? null,
-
+        prezzo: prodotto.prezzoOriginale ?? prodotto.prezzo ?? null,
         categoria: categoria ?? null,
-
         sottoCategoria: prodotto.sottoCategoria?.idSottoCategoria ?? null,
-
         colore: divisione?.colore ?? null,
-
         materiale: divisione?.materiale ?? null,
-
         altezza: divisione?.altezza ?? null,
-
         lunghezza: divisione?.lunghezza ?? null,
-
         larghezza: divisione?.larghezza ?? null,
-
         quantitaDisponibile: divisione?.quantitaDisponibile ?? null,
-
         stockAlert: divisione?.stockAlert ?? null,
       },
       {
@@ -202,13 +140,10 @@ export class ProdottoDetails implements OnInit {
 
   caricaImmagini(): void {
     const idProdotto = this.prodotto().idProdotto;
-
     this.immaginiService.getByProdotto(idProdotto).subscribe({
       next: (response) => {
         console.log("Immagini ricevute:", response);
-
         this.immagini.set(response);
-
         if (response.length > 0) {
           this.imagePreview = response[0].url;
         }
@@ -224,13 +159,10 @@ export class ProdottoDetails implements OnInit {
     this.categoriaService.getAll().subscribe({
       next: (response: any[]) => {
         this.categorie.set(response ?? []);
-
-        console.log("Categorie ricevute:", response);
       },
 
       error: (errore) => {
         console.error("Errore caricamento categorie:", errore);
-
         this.msg.set(errore?.error?.msg ?? "Errore caricamento categorie");
       },
     });
@@ -240,19 +172,15 @@ export class ProdottoDetails implements OnInit {
     this.sottoCategoriaService.getAll().subscribe({
       next: (response: any[]) => {
         this.tutteSottocategorie.set(response ?? []);
-
         console.log("Sottocategorie ricevute:", response);
-
         if (this.mod() === "V" || this.mod() === "U") {
           this.precompilaForm();
-
           this.filtraSottocategorieIniziali();
         }
       },
 
       error: (errore) => {
         console.error("Errore caricamento sottocategorie:", errore);
-
         this.msg.set(errore?.error?.msg ?? "Errore caricamento sottocategorie");
       },
     });
@@ -263,7 +191,6 @@ export class ProdottoDetails implements OnInit {
 
     if (!categoriaSelezionata) {
       this.sottocategorie.set([]);
-
       return;
     }
 
@@ -272,7 +199,6 @@ export class ProdottoDetails implements OnInit {
         this.leggiNomeCategoria(sottoCategoria.categoria) ===
         categoriaSelezionata
     );
-
     this.sottocategorie.set(risultato);
   }
 
@@ -280,11 +206,9 @@ export class ProdottoDetails implements OnInit {
     if (!categoria) {
       return null;
     }
-
     if (typeof categoria === "string") {
       return categoria;
     }
-
     return categoria.categoria ?? null;
   }
 
@@ -295,7 +219,6 @@ export class ProdottoDetails implements OnInit {
 
         if (categoriaSelezionata === null) {
           this.sottocategorie.set([]);
-
           return;
         }
 
@@ -306,7 +229,6 @@ export class ProdottoDetails implements OnInit {
         );
 
         this.sottocategorie.set(risultato);
-
         console.log("Sottocategorie filtrate:", risultato);
       }
     );
@@ -318,25 +240,18 @@ export class ProdottoDetails implements OnInit {
     if (this.mod() === "V") {
       return;
     }
-
     if (this.prodottoForm.invalid) {
       this.prodottoForm.markAllAsTouched();
-
       this.msg.set("Compila tutti i campi obbligatori");
-
       return;
     }
 
     if (this.mod() === "U") {
       const formValue = this.prodottoForm.getRawValue();
-
       const prodottoReq = {
         idProdotto: this.prodotto().idProdotto,
-
         descrizione: formValue.descrizione,
-
         prezzo: Number(formValue.prezzo),
-
         idSottoCategoria: Number(formValue.sottoCategoria),
       };
 
@@ -345,32 +260,21 @@ export class ProdottoDetails implements OnInit {
       this.prodottoService.update(prodottoReq).subscribe({
         next: () => {
           console.log("Prodotto aggiornato");
-
           const divisione = this.prodotto().divisioni?.[0];
-
           if (!divisione) {
             console.error("Nessuna divisione trovata");
-
             this.dialogRef.close(true);
-
             return;
           }
 
           const divisioneReq = {
             idDivisione: divisione.idDivisione,
-
             colore: formValue.colore,
-
             materiale: formValue.materiale,
-
             altezza: Number(formValue.altezza),
-
             lunghezza: Number(formValue.lunghezza),
-
             larghezza: Number(formValue.larghezza),
-
             quantitaDisponibile: Number(formValue.quantitaDisponibile),
-
             stockAlert: Number(formValue.stockAlert),
           };
 
@@ -380,12 +284,27 @@ export class ProdottoDetails implements OnInit {
             next: () => {
               console.log("Divisione aggiornata");
 
-              this.dialogRef.close(true);
+              if (this.selectedFiles.length > 0) {
+                this.immaginiService
+                  .upload(this.selectedFiles, this.prodotto().idProdotto)
+                  .subscribe({
+                    next: (response) => {
+                      console.log("Nuova immagine caricata:", response);
+
+                      this.dialogRef.close(true);
+                    },
+                    error: (errore) => {
+                      console.error("Errore caricamento immagine:", errore);
+                      this.dialogRef.close(true);
+                    },
+                  });
+              } else {
+                this.dialogRef.close(true);
+              }
             },
 
             error: (errore) => {
               console.error("Errore aggiornamento divisione:", errore);
-
               this.msg.set(
                 errore?.error?.msg ?? "Errore aggiornamento divisione"
               );
@@ -395,33 +314,25 @@ export class ProdottoDetails implements OnInit {
 
         error: (errore) => {
           console.error("Errore aggiornamento prodotto:", errore);
-
           this.msg.set(errore?.error?.msg ?? "Errore aggiornamento prodotto");
         },
       });
-
       return;
     }
 
     const formValue = this.prodottoForm.getRawValue();
-
     const userId = this.authService.grant().userId;
 
     if (!userId) {
       this.msg.set("Utente non autenticato");
-
       console.error("User ID non presente");
-
       return;
     }
 
     const prodottoReq = {
       descrizione: formValue.descrizione,
-
       prezzo: Number(formValue.prezzo),
-
       idSottoCategoria: Number(formValue.sottoCategoria),
-
       idUser: Number(userId),
     };
 
@@ -433,30 +344,21 @@ export class ProdottoDetails implements OnInit {
 
         const divisioneReq = {
           colore: formValue.colore,
-
           materiale: formValue.materiale,
-
           altezza: Number(formValue.altezza),
-
           lunghezza: Number(formValue.lunghezza),
-
           larghezza: Number(formValue.larghezza),
-
           quantitaDisponibile: Number(formValue.quantitaDisponibile),
-
           stockAlert: Number(formValue.stockAlert),
-
           idProdotto: Number(idProdotto),
         };
 
         console.log("Divisione da creare:", divisioneReq);
-
         this.creaDivisione(divisioneReq, idProdotto);
       },
 
       error: (errore) => {
         console.error("Errore creazione prodotto:", errore);
-
         this.msg.set(
           errore?.error?.msg ?? "Errore durante la creazione del prodotto"
         );
@@ -507,71 +409,53 @@ export class ProdottoDetails implements OnInit {
     if (!input.files || input.files.length === 0) {
       return;
     }
-
-    this.selectedFiles = [input.files[0]];
-
+    this.selectedFiles = Array.from(input.files);
+    const file = this.selectedFiles[0];
     const reader = new FileReader();
-
     reader.onload = () => {
       this.imagePreview = reader.result as string;
     };
-
-    reader.readAsDataURL(this.selectedFiles[0]);
+    reader.readAsDataURL(file);
+    // permette di riselezionare anche lo stesso file
+    input.value = "";
   }
 
   abilitaModifica(): void {
     this.mod.set("U");
-
     this.prodottoForm.enable();
-
     this.precompilaForm();
-
     this.filtraSottocategorieIniziali();
-
     this.msg.set("");
-
     console.log("Modalità aggiornamento attivata");
-    console.log("Stato form:", this.prodottoForm.status);
   }
 
   annullaModifica(): void {
     this.mod.set("V");
-
     this.precompilaForm();
-
     this.prodottoForm.disable();
-
     this.msg.set("");
-
     this.filtraSottocategorieIniziali();
-
     console.log("Modifica annullata");
   }
 
   aggiungiAlCarrello(): void {
     const userId = Number(this.authService.grant().userId);
-
     if (!userId) {
       console.error("Utente non autenticato");
-
       return;
     }
 
     this.carrelloService.getByUser(userId).subscribe({
       next: (carrello) => {
         const divisione = this.prodotto().divisioni?.[0];
-
         if (!divisione) {
           console.error("Nessuna divisione disponibile");
-
           return;
         }
 
         const body = {
           idCarrello: carrello.idCarrello,
-
           idDivisioneProdotto: divisione.idDivisione,
-
           quantita: 1,
         };
 
@@ -580,9 +464,7 @@ export class ProdottoDetails implements OnInit {
         this.prodottiCarrelloService.create(body).subscribe({
           next: (response) => {
             console.log("Prodotto aggiunto al carrello:", response);
-
             this.msg.set("Prodotto aggiunto al carrello");
-
             this.carrelloService.aggiornaConteggio();
           },
 
@@ -599,6 +481,10 @@ export class ProdottoDetails implements OnInit {
   }
 
   creaSconto() {
+    if (this.valoreSconto <= 0 || this.valoreSconto > 100) {
+      alert("Lo sconto deve essere compreso tra 1 e 100%");
+      return;
+    }
     const formattaData = (data: string) => {
       const [anno, mese, giorno] = data.split("-");
       return `${giorno}/${mese}/${anno}`;
@@ -633,12 +519,9 @@ export class ProdottoDetails implements OnInit {
     this.scontoService.delete(idSconto).subscribe({
       next: () => {
         console.log("Sconto eliminato");
-
         this.scontoEsistente.set(null);
-
         this.msg.set("Sconto eliminato");
       },
-
       error: (errore) => {
         console.error("Errore eliminazione sconto", errore);
       },
@@ -647,24 +530,19 @@ export class ProdottoDetails implements OnInit {
 
   remove(): void {
     const conferma = confirm("Sei sicuro di voler eliminare questo prodotto?");
-
     if (!conferma) {
       console.log("Eliminazione annullata");
       return;
     }
 
     const idProdotto = this.prodotto().idProdotto;
-
     this.prodottoService.delete(idProdotto).subscribe({
       next: () => {
         console.log("Prodotto eliminato");
-
         this.dialogRef.close(true);
       },
-
       error: (errore) => {
         console.error("Errore eliminazione prodotto:", errore);
-
         this.msg.set(errore?.error?.msg ?? "Errore eliminazione prodotto");
       },
     });
