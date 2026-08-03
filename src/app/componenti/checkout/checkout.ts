@@ -45,7 +45,7 @@ export class Checkout {
       this.stripe = await loadStripe(cfg.publishableKey);
 
       const intent = await firstValueFrom(
-        this.pagS.createIntent({ idOrdine: this.idOrdine, salvaMetodo: false })
+        this.pagS.createIntent({ idOrdine: this.idOrdine})
       );
 
       this.elements = this.stripe!.elements({ clientSecret: intent.clientSecret });

@@ -1,6 +1,5 @@
 export interface PaymentIntentReq {
   idOrdine: number;
-  salvaMetodo: boolean;
 }
 
 export interface PaymentIntentDTO {
@@ -8,8 +7,6 @@ export interface PaymentIntentDTO {
   idPagamento: number;
 }
 
-export interface MetodoPagamentoDTO {
-  idMetodo: number;
-  tipo: string;
-  dettagli: string;
+export interface StripeConfigDTO {
+  publishableKey: string;
 }
