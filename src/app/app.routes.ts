@@ -14,6 +14,8 @@ import { ConfermaOrdine } from './componenti/conferma-ordine/conferma-ordine';
 import { CheckoutResult } from './componenti/checkout-result/checkout-result';
 import { Notifiche } from './componenti/notifiche/notifiche';
 import { ResetPassword } from './componenti/reset-password/reset-password';
+import { Ricevuta } from './componenti/ricevuta/ricevuta';
+import { ProdottiOrdine } from './componenti/prodotti-ordine/prodotti-ordine';
 
 export const routes: Routes = [
     { path:'', redirectTo:'dash', pathMatch:'full'},
@@ -31,7 +33,9 @@ export const routes: Routes = [
             { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
             { path: 'checkout-result', component: CheckoutResult, /*canActivate:[autentificateGuard]*/},
             { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'carello', component: Carello, /*canActivate: [autentificateGuard]*/}
+            { path: 'carello', component: Carello, /*canActivate: [autentificateGuard]*/},
+            { path: 'ricevuta', component: Ricevuta, /*canActivate: [autentificateGuard]*/},
+            { path: 'prodotti-ordine', component: ProdottiOrdine, /*canActivate: [autentificateGuard]*/ },
         ]
     },
 ];

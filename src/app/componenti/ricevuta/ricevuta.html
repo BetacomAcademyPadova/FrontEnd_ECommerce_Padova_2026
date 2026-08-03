@@ -1,57 +1,161 @@
 <div class="container">
-    <mat-card class="example-card" appearance="outlined">
-        <mat-card-header class="header-row">
-            <mat-card-title>
-                Elenco Ricevute
-            </mat-card-title>
-        </mat-card-header>
-        <mat-divider style="margin-top:20px;"></mat-divider>
-        <mat-card-content>
-            @if (caricamento()) {
-                <p class="stato-msg">Caricamento delle ricevute...</p>
-            } @else if (errore()) {
-                <p class="stato-msg errore">{{ errore() }}</p>
-            } @else if (ricevute().length === 0) {
-                <p class="stato-msg">Non hai ancora nessuna ricevuta.</p>
-            } @else {
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Numero fattura</th>
-                        <th>Data emissione</th>
-                        <th>Prodotti</th>
-                        <th>Imponibile</th>
-                        <th>IVA (22%)</th>
-                        <th>Totale</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for (ric of ricevute(); track ric.idFattura) {
-                    <tr class="clickable-row" (click)="selezionaRicevuta(ric)">
-                        <td>{{ric.numeroFattura}}</td>
-                        <td>{{ric.dataEmissione}}</td>
-                        <td class="lista-prodotti">
-                            @for (p of ric.prodotti; track p.idItem) {
-                                <div class="prodotto-item">
-                                    <b>{{p.prodotto}}</b>
-                                    <br>Quantità:{{p.quantita}}
-                                    <br>Prezzo:{{p.prezzo | number:'1.2-2'}} €
-                                </div>
-                                <hr>
-                            }
-                        </td>
-                        <td>{{ric.imponibile | number:'1.2-2'}} €</td>
-                        <td>{{ric.iva | number:'1.2-2'}} €<br>
-                            <small>Aliquota IVA: 22%</small>
-                        </td>
-                        <td>
-                            <b>{{ric.totale | number:'1.2-2'}} €</b>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-            }
-        </mat-card-content>
-    </mat-card>
+  <mat-card class="ricevuta-card">
+    <mat-card-header>
+      <mat-card-title> Ricevute </mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    @if(isVenditore){
+
+    <div class="menu">
+      <button class="btn-ricevuta" (click)="cambiaVista('acquisti')">
+        <mat-icon>shopping_cart</mat-icon>
+
+        I miei acquisti
+      </button>
+
+      <button class="btn-ricevuta" (click)="cambiaVista('vendite')">
+        <mat-icon>store</mat-icon>
+
+        Vendite clienti
+      </button>
+    </div>
+
+    }
+
+    <div class="filtri">
+      <input type="date" [(ngModel)]="dataInizio" />
+
+      <input type="date" [(ngModel)]="dataFine" />
+
+      @if(vista === 'acquisti') {
+
+      <button class="btn-ricevuta" (click)="cercaCliente()">
+        <mat-icon>search</mat-icon>
+
+        Cerca
+      </button>
+
+      } @if(vista === 'vendite') {
+
+      <button class="btn-ricevuta" (click)="cercaVenditore()">
+        <mat-icon>search</mat-icon>
+
+        Cerca
+      </button>
+
+      }
+    </div>
+
+    @if(vista === 'acquisti') {
+
+    <h3>I miei acquisti</h3>
+
+    @if(ricevuteCliente.length > 0) {
+
+    <table>
+      <thead>
+        <tr>
+          <th>Numero</th>
+
+          <th>Data</th>
+
+          <th>Imponibile</th>
+
+          <th>IVA</th>
+
+          <th>Totale</th>
+
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(ric of ricevuteCliente; track ric.idFattura) {
+
+        <tr>
+          <td>{{ric.numeroFattura}}</td>
+
+          <td>{{ric.dataEmissione}}</td>
+
+          <td>{{ric.imponibile | number:'1.2-2'}} €</td>
+
+          <td>{{ric.iva | number:'1.2-2'}} €</td>
+
+          <td>{{ric.totale | number:'1.2-2'}} €</td>
+
+          <td>
+            <button class="btn-ricevuta" (click)="apriRicevuta(ric)">
+              <mat-icon> receipt_long </mat-icon>
+
+              Visualizza
+            </button>
+          </td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    } @else {
+
+    <p>Nessuna ricevuta disponibile</p>
+
+    } } @if(vista === 'vendite') {
+
+    <h3>Vendite clienti</h3>
+
+    @if(ricevuteVenditore.length > 0) {
+
+    <table>
+      <thead>
+        <tr>
+          <th>Numero</th>
+
+          <th>Data</th>
+
+          <th>Imponibile</th>
+
+          <th>IVA</th>
+
+          <th>Totale</th>
+
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(ric of ricevuteVenditore; track ric.idFattura) {
+
+        <tr>
+          <td>{{ric.numeroFattura}}</td>
+
+          <td>{{ric.dataEmissione}}</td>
+
+          <td>{{ric.imponibile | number:'1.2-2'}} €</td>
+
+          <td>{{ric.iva | number:'1.2-2'}} €</td>
+
+          <td>{{ric.totale | number:'1.2-2'}} €</td>
+
+          <td>
+            <button class="btn-ricevuta" (click)="apriRicevuta(ric)">
+              <mat-icon> receipt_long </mat-icon>
+
+              Visualizza
+            </button>
+          </td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    } @else {
+
+    <p>Nessuna vendita disponibile</p>
+
+    } }
+  </mat-card>
 </div>

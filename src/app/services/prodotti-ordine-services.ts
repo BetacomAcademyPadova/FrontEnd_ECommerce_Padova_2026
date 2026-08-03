@@ -1,51 +1,70 @@
-import { inject, Service, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { inject, Service, signal } from "@angular/core";
+import { tap } from "rxjs";
 
 @Service()
 export class ProdottiOrdineServices {
-    private readonly http = inject(HttpClient);
-    private readonly baseUrl = 'http://localhost:9090/rest/ProdottiOrdine/';
-    prodottiOrdine = signal<any[]>([]);
+  private readonly http = inject(HttpClient);
 
-    list() {
-        return this.http.get<any[]>(
-            this.baseUrl + 'getAll'
-        )
-        .subscribe({
-            next: (r) => {
-                this.prodottiOrdine.set(r);
-            },
-            error: (err) => {
-                console.error('Errore caricamento prodotti ordine', err);
-            }
-        });
-    }
+  private readonly baseUrl = "http://localhost:9090/rest/ProdottiOrdine/";
 
-    getById(idItem:number) {
-        return this.http.get<any>(this.baseUrl + 'getById/' + idItem);
-    }
+  prodottiOrdine = signal<any[]>([]);
 
-    create(body:any) {
-        return this.http.post(this.baseUrl + 'create', body)
+  getAll() {
+    return this.http.get<any[]>(this.baseUrl + "getAll").pipe(
+      tap((res) => {
+        this.prodottiOrdine.set(res);
+      }),
+    );
+  }
 
-        .pipe(
-            tap(() => this.list())
-        );
-    }
+  getByCliente(userId: number) {
+    return this.http.get<any[]>(this.baseUrl + "cliente/" + userId).pipe(
+      tap((res) => {
+        this.prodottiOrdine.set(res);
+      }),
+    );
+  }
 
-    update(body:any) {
-        return this.http.put( this.baseUrl + 'update', body)
+  getByClienteDate(userId: number, dataInizio: string, dataFine: string) {
+    return this.http
+      .get<any[]>(
+        this.baseUrl + "cliente/" + userId + "/" + dataInizio + "/" + dataFine,
+      )
+      .pipe(
+        tap((res) => {
+          this.prodottiOrdine.set(res);
+        }),
+      );
+  }
 
-        .pipe(
-            tap(() => this.list())
-        );
-    }
-    delete(idItem:number) {
+  getByVenditore(userId: number) {
+    return this.http.get<any[]>(this.baseUrl + "venditore/" + userId).pipe(
+      tap((res) => {
+        this.prodottiOrdine.set(res);
+      }),
+    );
+  }
 
-        return this.http.delete(this.baseUrl + 'delete/' + idItem)
-        .pipe(
-            tap(() => this.list())
-        );
-    }
+  getByVenditoreDate(userId: number, dataInizio: string, dataFine: string) {
+    return this.http
+      .get<any[]>(
+        this.baseUrl +
+          "venditore/" +
+          userId +
+          "/" +
+          dataInizio +
+          "/" +
+          dataFine,
+      )
+      .pipe(
+        tap((res) => {
+          this.prodottiOrdine.set(res);
+        }),
+      );
+  }
+
+  getById(idItem: number) {
+    return this.http.get<any>(this.baseUrl + "getById/" + idItem);
+  }
 }
