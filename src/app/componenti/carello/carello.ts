@@ -4,7 +4,7 @@ import { AuthServices } from '../../auth/auth-services';
 import { Carrello } from '../../models/carrello';
 import { ProdottoCarrelloView } from '../../models/prodotto-carrello-view';
 import { CurrencyPipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProdottoServices } from '../../services/prodotto-services';
 import { ProdottiCarrelloServices } from '../../services/prodotti-carrello-services'; 
 import { MatDivider } from "@angular/material/divider";
@@ -12,7 +12,7 @@ import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-carello',
-  imports:[CurrencyPipe, MatDivider, MatIcon],
+  imports:[CurrencyPipe, MatDivider, MatIcon, RouterLink],
   templateUrl: './carello.html',
   styleUrl: './carello.css'
 })
