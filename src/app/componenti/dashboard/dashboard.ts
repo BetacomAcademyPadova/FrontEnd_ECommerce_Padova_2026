@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, effect, OnInit } from "@angular/core";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import {
@@ -51,13 +51,19 @@ export class Dashboard implements OnInit {
     private autentificazioneServices: AutentificazioneServices,
   ) {}
 
+  private authEffect = effect(() => {
+    const grant = this.auth.grant();
+    if (grant.isLogged) {
+      this.carrelloService.aggiornaConteggio();
+    } else {
+      this.carrelloService.badgeCount.set(0);
+    }
+  });
+
   ngOnInit(): void {
     const grant = this.auth.grant();
     if (grant.isLogged && grant.isAdmin) {
       this.notificheService.aggiornaConteggio(grant.isAdmin);
-    }
-    if (grant.isLogged) {
-      this.carrelloService.aggiornaConteggio();
     }
   }
 
