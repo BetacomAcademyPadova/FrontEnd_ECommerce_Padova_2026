@@ -1,34 +1,46 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { RouterLink, RouterOutlet, RouterLinkActive, Router } from "@angular/router";
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { AuthServices } from '../../auth/auth-services';
-import { UtilitiesServices } from '../../services/utilities-services';
-import { Login } from '../../dialogs/login/login';
-import { MatMenuModule } from '@angular/material/menu';
-import { Registrazione } from '../../dialogs/registrazione/registrazione';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { UtenteServices } from '../../services/user-services';
-import { AutentificazioneServices } from '../../security/autentificazione-services';
-import { ChangePassword } from '../../dialogs/change-password/change-password';
-import { NotificheServices } from '../../services/notifiche-services';
-import { CarelloServices } from '../../services/carello-services';
+import { Component, inject, OnInit } from "@angular/core";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatListModule } from "@angular/material/list";
+import {
+  RouterLink,
+  RouterOutlet,
+  RouterLinkActive,
+  Router,
+} from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { AuthServices } from "../../auth/auth-services";
+import { UtilitiesServices } from "../../services/utilities-services";
+import { Login } from "../../dialogs/login/login";
+import { MatMenuModule } from "@angular/material/menu";
+import { Registrazione } from "../../dialogs/registrazione/registrazione";
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { UtenteServices } from "../../services/user-services";
+import { AutentificazioneServices } from "../../security/autentificazione-services";
+import { ChangePassword } from "../../dialogs/change-password/change-password";
+import { NotificheServices } from "../../services/notifiche-services";
+import { CarelloServices } from "../../services/carello-services";
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [MatSidenavModule, MatListModule, RouterLink, RouterOutlet, //RouterLinkActive, 
-    MatIconModule, MatButtonModule, MatToolbarModule, MatMenuModule, MatBadgeModule, MatTooltipModule
+  selector: "app-dashboard",
+  imports: [
+    MatSidenavModule,
+    MatListModule,
+    RouterLink,
+    RouterOutlet, //RouterLinkActive,
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTooltipModule,
   ],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  templateUrl: "./dashboard.html",
+  styleUrl: "./dashboard.css",
 })
 export class Dashboard implements OnInit {
-
-
   constructor(
     public auth: AuthServices,
     private rounting: Router,
@@ -36,7 +48,7 @@ export class Dashboard implements OnInit {
     private utenteServices: UtenteServices,
     public notificheService: NotificheServices,
     public carrelloService: CarelloServices,
-    private autentificazioneServices: AutentificazioneServices
+    private autentificazioneServices: AutentificazioneServices,
   ) {}
 
   ngOnInit(): void {
@@ -44,36 +56,45 @@ export class Dashboard implements OnInit {
     if (grant.isLogged && grant.isAdmin) {
       this.notificheService.aggiornaConteggio(grant.isAdmin);
     }
-     if (grant.isLogged) {
+    if (grant.isLogged) {
       this.carrelloService.aggiornaConteggio();
     }
   }
 
   login() {
-    this.util.openDialog(Login,
+    this.util.openDialog(
+      Login,
       {},
       {
-        width: '500px',
-        disableClose: false
-      }
-    )
+        width: "500px",
+        disableClose: false,
+      },
+    );
   }
 
   profile() {
-    this.rounting.navigate(['/dash/profilo']);
+    this.rounting.navigate(["/dash/profilo"]);
   }
 
   ordini() {
-    this.rounting.navigate(['/dash/ordini']);
+    this.rounting.navigate(["/dash/ordini"]);
   }
+
+  prodottiOrdine() {
+  this.rounting.navigate(["/dash/prodotti-ordine"]);
+}
+
+  ricevute() {
+    this.rounting.navigate(["/dash/ricevuta"]);
+  }
+
   logout() {
     console.log("logout");
     this.auth.resetAll();
-    this.autentificazioneServices.logout()
-      .subscribe({
-        next: () => {
-          this.rounting.navigate(['/dash'])
-        }
-      })
+    this.autentificazioneServices.logout().subscribe({
+      next: () => {
+        this.rounting.navigate(["/dash"]);
+      },
+    });
   }
 }

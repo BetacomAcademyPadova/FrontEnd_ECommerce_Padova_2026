@@ -1,74 +1,123 @@
 <div class="container">
-    <mat-card class="example-card" appearance="outlined">
-        <mat-card-header class="header-row">
-            <mat-card-title>
-                Prodotti negli ordini
-            </mat-card-title>
-        </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-            <table class="table table-striped tabella-prodotti">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Prodotto</th>
-                        <th>Quantità</th>
-                        <th>Prezzo</th>
-                        <th>Indirizzo spedizione</th>
-                        <th>Dettagli prodotto</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @for (po of prodottiOrdine; track po.idItem) {
-                    <tr class="clickable-row"
-                        (click)="selezionaProdottoOrdine(po)">
-                        <td>{{po.idItem}}</td>
-                        <td>{{po.prodotto}}</td>
-                        <td>{{po.quantita}}</td>
-                        <td>{{po.prezzo | number:'1.2-2'}} €</td>
-                        <td>
-                            @if(po.indirizzoSpedizione) {
-                                <div>
-                                    {{po.indirizzoSpedizione.via}}
-                                    <br>
-                                    {{po.indirizzoSpedizione.citta}}
-                                    <br>
-                                    {{po.indirizzoSpedizione.cap}}
-                                </div>
-                            } @else {
-                                <span>Nessun indirizzo</span>
-                            }
-                        </td>
-                        <td>
-                            @if(po.divisioneOrdine) {
-                                <div>
-                                    @if(po.divisioneOrdine.colore) {
-                                        Colore:
-                                        {{po.divisioneOrdine.colore}}
-                                        <br>
-                                   }
-                                    @if(po.divisioneOrdine.materiale) {
-                                        Materiale:
-                                        {{po.divisioneOrdine.materiale}}
-                                    }
-                                </div>
-                            } @else {
-                                <span>Nessun dettaglio</span>
-                            }
-                        </td>
-                        <td>
-                            <button mat-icon-button color="primary" (click)="aggiorna(po); $event.stopPropagation()">
-                                <mat-icon> edit </mat-icon>
-                            </button>
-                            <button mat-icon-button color="warn" (click)="elimina(po); $event.stopPropagation()">
-                                <mat-icon> delete </mat-icon>
-                            </button>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </mat-card-content>
-    </mat-card>
+  <mat-card class="ricevuta-card">
+    <mat-card-header>
+      <mat-card-title> Prodotti ordine </mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    @if(isVenditore) {
+
+    <div class="menu">
+      <button class="btn-ricevuta" (click)="caricaCliente()">
+        <mat-icon> shopping_cart </mat-icon>
+
+        I miei acquisti
+      </button>
+
+      <button class="btn-ricevuta" (click)="caricaVenditore()">
+        <mat-icon> store </mat-icon>
+
+        Vendite clienti
+      </button>
+    </div>
+
+    }
+
+    <div class="filtri">
+      <input type="date" [(ngModel)]="dataInizio" />
+
+      <input type="date" [(ngModel)]="dataFine" />
+
+      @if(vista === "cliente") {
+
+      <button class="btn-ricevuta" (click)="cercaCliente()">
+        <mat-icon> search </mat-icon>
+
+        Cerca
+      </button>
+
+      } @if(vista === "venditore") {
+
+      <button class="btn-ricevuta" (click)="cercaVenditore()">
+        <mat-icon> search </mat-icon>
+
+        Cerca
+      </button>
+
+      }
+    </div>
+
+    @if(vista === "cliente") {
+
+    <h3>I miei acquisti</h3>
+
+    } @if(vista === "venditore") {
+
+    <h3>Vendite clienti</h3>
+
+    } @if(prodottiOrdine.length > 0) {
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+
+          <th>Prodotto</th>
+
+          <th>Quantità</th>
+
+          <th>Prezzo</th>
+
+          <th>Indirizzo spedizione</th>
+
+          <th>Dettagli</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(po of prodottiOrdine; track po.idItem) {
+
+        <tr>
+          <td>{{po.idItem}}</td>
+
+          <td>{{po.prodotto}}</td>
+
+          <td>{{po.quantita}}</td>
+
+          <td>{{po.prezzo | number:'1.2-2'}} €</td>
+
+          <td>
+            @if(po.indirizzoSpedizione) { {{po.indirizzoSpedizione.via}}
+
+            <br />
+
+            {{po.indirizzoSpedizione.citta}}
+
+            <br />
+
+            {{po.indirizzoSpedizione.cap}} } @else { Nessun indirizzo }
+          </td>
+
+          <td>
+            @if(po.divisioneOrdine) { @if(po.divisioneOrdine.colore) { Colore:
+            {{po.divisioneOrdine.colore}}
+
+            <br />
+
+            } @if(po.divisioneOrdine.materiale) { Materiale:
+            {{po.divisioneOrdine.materiale}} } } @else { Nessun dettaglio }
+          </td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    } @else {
+
+    <p>Nessun prodotto trovato</p>
+
+    }
+  </mat-card>
 </div>

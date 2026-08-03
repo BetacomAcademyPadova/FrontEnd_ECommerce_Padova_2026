@@ -1,67 +1,162 @@
-import { Component, afterNextRender, inject, signal } from '@angular/core';
-import { AuthServices } from '../../auth/auth-services';
+import { Component, ChangeDetectorRef, inject, OnInit } from "@angular/core";
+import { DecimalPipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from "@angular/material/card";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialog } from "@angular/material/dialog";
 
-import { DecimalPipe } from '@angular/common';
-
-import { RicevutaServices } from '../../services/ricevuta-services';
+import { RicevutaServices } from "../../services/ricevuta-services";
+import { AuthServices } from "../../auth/auth-services";
+import { RicevutaDialog } from "../../dialogs/ricevuta-dialog/ricevuta-dialog";
 
 @Component({
-
-  selector: 'app-ricevuta',
-
-  imports: [ MatCardModule, MatButtonModule, MatIconModule, MatDividerModule, DecimalPipe ],
-  templateUrl: './ricevuta.html',
-  styleUrl: './ricevuta.css',
-
+  selector: "app-ricevuta",
+  standalone: true,
+  imports: [
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatButtonModule,
+    DecimalPipe,
+    FormsModule,
+  ],
+  templateUrl: "./ricevuta.html",
+  styleUrl: "./ricevuta.css",
 })
-export class Ricevuta {
+export class Ricevuta implements OnInit {
   private readonly ricevutaS = inject(RicevutaServices);
   private readonly auth = inject(AuthServices);
+  private readonly dialog = inject(MatDialog);
+  private readonly cd = inject(ChangeDetectorRef);
 
-  ricevute = signal<any[]>([]);
-  caricamento = signal(true);
-  errore = signal('');
+  ricevuteCliente: any[] = [];
+  ricevuteVenditore: any[] = [];
 
-  // afterNextRender e non ngOnInit: in SSR non c'e' sessione, l'userId
-  // sarebbe 0 e la chiamata partirebbe due volte.
-  constructor() {
-    afterNextRender(() => this.carica());
-  }
+  isVenditore = false;
 
-  private carica() {
-    const userId = Number(this.auth.grant().userId);
-    if (!userId) {
-      this.caricamento.set(false);
-      this.errore.set('Accedi per vedere le tue ricevute.');
+  vista: "acquisti" | "vendite" = "acquisti";
+
+  dataInizio = "";
+  dataFine = "";
+
+  ngOnInit(): void {
+    const grant = this.auth.grant();
+
+    if (!grant.isLogged || !grant.userId) {
+      console.error("Utente non autenticato");
       return;
     }
 
-    this.ricevutaS.getByUser(userId).subscribe({
-      next: (r) => {
-        this.ricevute.set(r);
-        this.caricamento.set(false);
+    const userId = Number(grant.userId);
+
+    this.isVenditore = grant.isVenditore;
+
+    this.caricaAcquisti(userId);
+
+    if (this.isVenditore) {
+      this.caricaVendite(userId);
+    }
+  }
+
+  caricaAcquisti(userId: number) {
+    this.ricevutaS.getByUserId(userId).subscribe({
+      next: (res) => {
+        this.ricevuteCliente = res;
+
+        this.cd.detectChanges();
       },
-      error: (e) => {
-        this.caricamento.set(false);
-        this.errore.set(e?.error?.msg ?? 'Non e\' stato possibile caricare le ricevute.');
+
+      error: (err) => {
+        console.error(err);
       },
     });
   }
 
-  creaRicevuta() {
-    console.log("creazione ricevuta");
+  caricaVendite(userId: number) {
+    this.ricevutaS.getRicevuteVenditore(userId).subscribe({
+      next: (res) => {
+        this.ricevuteVenditore = res;
+
+        this.cd.detectChanges();
+      },
+
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
-  selezionaRicevuta(row:any) {
-    console.log("ricevuta selezionata:", row);
+  cambiaVista(vista: "acquisti" | "vendite") {
+    this.vista = vista;
+
+    const userId = Number(this.auth.grant().userId);
+
+    if (vista === "acquisti") {
+      this.caricaAcquisti(userId);
+    }
+
+    if (vista === "vendite") {
+      this.caricaVendite(userId);
+    }
   }
 
-  dettaglio(row:any) {
-    console.log("dettaglio ricevuta:", row);
+  cercaCliente() {
+    const userId = Number(this.auth.grant().userId);
+
+    if (!this.dataInizio || !this.dataFine) {
+      this.caricaAcquisti(userId);
+      return;
+    }
+
+    this.ricevutaS
+      .getByUserIdAndDateRange(userId, this.dataInizio, this.dataFine)
+      .subscribe({
+        next: (res) => {
+          this.ricevuteCliente = res;
+        },
+
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+
+  cercaVenditore() {
+    const userId = Number(this.auth.grant().userId);
+
+    if (!this.dataInizio || !this.dataFine) {
+      this.caricaVendite(userId);
+      return;
+    }
+
+    this.ricevutaS
+      .getRicevuteVenditoreByDateRange(userId, this.dataInizio, this.dataFine)
+      .subscribe({
+        next: (res) => {
+          this.ricevuteVenditore = res;
+        },
+
+        error: (err) => {
+          console.error(err);
+        },
+      });
+  }
+
+  apriRicevuta(r: any) {
+    this.ricevutaS.getById(r.idFattura).subscribe({
+      next: (res) => {
+        this.dialog.open(RicevutaDialog, {
+          width: "850px",
+          data: res,
+        });
+      },
+
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 }

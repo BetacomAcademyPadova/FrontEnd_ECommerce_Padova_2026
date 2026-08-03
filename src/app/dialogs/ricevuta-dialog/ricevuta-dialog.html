@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Ricevuta {{ricevuta.numeroFattura}}</h2>
+
+<mat-dialog-content>
+  <div id="stampa-ricevuta">
+    <p>
+      <b>Data emissione:</b>
+
+      {{ricevuta.dataEmissione}}
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Prodotto</th>
+
+          <th>Quantità</th>
+
+          <th>Prezzo</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for(p of ricevuta.prodotti; track p.idItem){
+
+        <tr>
+          <td>{{p.prodotto}}</td>
+
+          <td>{{p.quantita}}</td>
+
+          <td>{{p.prezzo | number:'1.2-2'}} €</td>
+        </tr>
+
+        }
+      </tbody>
+    </table>
+
+    <br />
+
+    <p>Imponibile: {{ricevuta.imponibile | number:'1.2-2'}} €</p>
+
+    <p>IVA: {{ricevuta.iva | number:'1.2-2'}} €</p>
+
+    <h3 class="totale">Totale: {{ricevuta.totale | number:'1.2-2'}} €</h3>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="stampa()">Stampa</button>
+
+  <button mat-raised-button color="primary" mat-dialog-close>Chiudi</button>
+</mat-dialog-actions>
