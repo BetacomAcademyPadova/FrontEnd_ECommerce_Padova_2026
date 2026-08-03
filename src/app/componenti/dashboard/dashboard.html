@@ -32,6 +32,7 @@
     E-COMMERCE PADOVA
   </span>
   <span class="example-spacer"></span>
+  @if (!auth.grant().isLogged) {
   <button
     mat-icon-button
     class="nav-button"
@@ -40,6 +41,8 @@
   >
     <mat-icon>login</mat-icon>
   </button>
+  }
+  @if (auth.grant().isLogged) {
   <button
     mat-icon-button
     class="nav-button"
@@ -48,6 +51,7 @@
   >
     <mat-icon>logout</mat-icon>
   </button>
+  }
 </mat-toolbar>
 
 <mat-toolbar class="sub-nav-bar">
