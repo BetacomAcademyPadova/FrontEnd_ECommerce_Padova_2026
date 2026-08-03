@@ -12,7 +12,7 @@ import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-carello',
-  imports: [CurrencyPipe, MatDivider, MatIcon],
+  imports:[CurrencyPipe, MatDivider, MatIcon],
   templateUrl: './carello.html',
   styleUrl: './carello.css'
 })
@@ -27,7 +27,7 @@ export class Carello {
   prodottiView = signal<ProdottoCarrelloView[]>([]);
   
   totale = computed(() =>
-    this.prodottiView().reduce((tot, p) => tot + (p.subtotale || 0), 0)
+    this.prodottiView().reduce((tot, p) => tot + p.subtotale , 0)
   );
 
   constructor() {
@@ -52,41 +52,34 @@ export class Carello {
       .subscribe({
         next: (prodotti) => {
           const lista = carrello.prodotti.map(pc => {
-            // Trova direttamente il prodotto che contiene la divisione corretta
-            const prodottoTrovato = prodotti.find((p: any) =>
-              p.divisioni?.some((d: any) => d.idDivisione === pc.idDivisioneProdotto)
-            );
-
-            if (!prodottoTrovato) return null;
-
-            const divisione = prodottoTrovato.divisioni.find(
-              (d: any) => d.idDivisione === pc.idDivisioneProdotto
-            );
-
-            // Calcola il prezzo basandoti sulla struttura dati del tuo backend
-            const prezzoProdotto = divisione.prezzo || prodottoTrovato.prezzo || 0;
-
-            return {
-              ...pc,
-              descrizione: prodottoTrovato.descrizione,
-              colore: divisione.colore,
-              materiale: divisione.materiale,
-              altezza: divisione.altezza,
-              lunghezza: divisione.lunghezza,
-              larghezza: divisione.larghezza,
-              prezzo: prezzoProdotto,
-              subtotale: prezzoProdotto * pc.quantita // <--- FISSA IL NAN INIZIALE
-            } as ProdottoCarrelloView;
-          }).filter(p => p !== null) as ProdottoCarrelloView[]; // Rimuove eventuali prodotti non trovati
-
+            let prodottoFinale: any = {};
+            prodotti.forEach((p: any) => {
+              const divisione = p.divisioni?.find(
+                (d: any) =>
+                  d.idDivisione === pc.idDivisioneProdotto
+              );
+              if (divisione) {
+                prodottoFinale = {
+                  ...pc,
+                  descrizione: p.descrizione,
+                  colore: divisione.colore,
+                  materiale: divisione.materiale,
+                  altezza: divisione.altezza,
+                  lunghezza: divisione.lunghezza,
+                  larghezza: divisione.larghezza
+                };
+              }
+            });
+            return prodottoFinale;
+          });
           this.prodottiView.set(lista);
-        },
-        error: (err) => console.error("Errore caricamento dettagli", err)
+        }
       });
   }
 
   modificaQuantita(prodotto: ProdottoCarrelloView, nuovaQuantita: number) {
-    if (!Number.isFinite(nuovaQuantita)) return;
+    if (!Number.isFinite(nuovaQuantita)) 
+      return;
 
     if (nuovaQuantita < 1) {
       this.eliminaProdotto(prodotto);
@@ -106,7 +99,7 @@ export class Carello {
           this.prodottiView.update(prodotti =>
             prodotti.map(p => 
               p.idRiga === prodotto.idRiga
-                ? { ...p, quantita: nuovaQuantita, subtotale: (p.prezzo || 0) * nuovaQuantita }
+                ? { ...p, quantita: nuovaQuantita, subtotale: p.prezzo * nuovaQuantita }
                 : p
             )
           );
@@ -121,8 +114,9 @@ export class Carello {
       .delete(prodotto.idRiga)
       .subscribe({
         next: () => {
-          this.prodottiView.update(prodotti =>
-            prodotti.filter(p => p.idRiga !== prodotto.idRiga)
+          this.prodottiView.update(
+            prodotti =>
+              prodotti.filter(p => p.idRiga !== prodotto.idRiga)
           );
           this.carrelloService.aggiornaConteggio();
         },
