@@ -1,24 +1,24 @@
 import { inject, Service } from "@angular/core";
-import { PaymentIntentReq, PaymentIntentDTO, MetodoPagamentoDTO } from './pagamenti-types';
+import { AppSettings } from "../settings/token/config-model";
+import { APP_SETTING } from "../settings/token/token";
 import { HttpClient } from "@angular/common/http";
+import { PaymentIntentReq, PaymentIntentDTO, StripeConfigDTO } from './pagamenti-types';
 
 
 @Service()
 export class PagamentiServices {
-    private url = "http://localhost:9090/rest/Pagamenti/";
-    private configUrl = "http://localhost:9090/rest/test/config";
+    private readonly settings: AppSettings = inject(APP_SETTING);
+    private readonly http = inject(HttpClient);
 
-    private http = inject(HttpClient);
-
-    createIntent(req: PaymentIntentReq) {
-        return this.http.post<PaymentIntentDTO>(this.url + "create-intent", req);
+    private getBaseUrl(): string {
+        return this.settings.apiUrl + 'Pagamenti/';
     }
 
-    getMetodiSalvati(idOrdine: number) {
-        return this.http.get<MetodoPagamentoDTO[]>(this.url + "metodi-salvati/" + idOrdine);
+    createIntent(req: PaymentIntentReq) {
+        return this.http.post<PaymentIntentDTO>(this.getBaseUrl() + 'create-intent', req);
     }
 
     getConfig() {
-        return this.http.get<{ publishableKey: string }>(this.configUrl);
+        return this.http.get<StripeConfigDTO>(this.getBaseUrl() + 'config');
     }
 }
