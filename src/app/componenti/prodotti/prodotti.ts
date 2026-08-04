@@ -64,6 +64,11 @@ export class Prodotti implements OnInit {
   caricaProdotti(): void {
     this.prodottoService.getAll().subscribe({
       next: (response: any[]) => {
+        response = response.map((prodotto) => ({
+          ...prodotto,
+          divisioneVisualizzata: prodotto.divisioni?.[0]
+        }));
+
         let richieste = response.map((prodotto) => {
           return this.immaginiService
             .getByProdotto(prodotto.idProdotto)
@@ -96,7 +101,7 @@ export class Prodotti implements OnInit {
         ).then(() => {
           this.prodotti.set(response);
 
-          console.log("Prodotti completi con immagini:", response);
+          console.log("Prodotti completi con prima divisione:", response);
         });
       },
 
@@ -137,6 +142,12 @@ export class Prodotti implements OnInit {
       )
       .subscribe({
         next: (response: any[]) => {
+          response.forEach((prodotto) => {
+            prodotto.divisioni = prodotto.divisioni?.length
+              ? [prodotto.divisioni[0]]
+              : [];
+          });
+
           let richieste = response.map((prodotto) => {
             return this.immaginiService
               .getByProdotto(prodotto.idProdotto)
@@ -161,7 +172,7 @@ export class Prodotti implements OnInit {
           ).then(() => {
             this.prodotti.set(response);
 
-            console.log("Ricerca con immagini:", response);
+            console.log("Ricerca prodotti con prima divisione:", response);
           });
         },
 
