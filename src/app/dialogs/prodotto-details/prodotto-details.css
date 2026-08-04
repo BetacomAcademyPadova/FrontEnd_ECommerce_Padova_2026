@@ -290,3 +290,14 @@ button.mat-mdc-raised-button:hover {
     height: 65px;
   }
 }
+
+.thumbnail-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-image-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

@@ -1,6 +1,15 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-import {MAT_DIALOG_DATA,MatDialogModule,MatDialogRef,} from "@angular/material/dialog";
-import {FormControl,FormGroup,ReactiveFormsModule,Validators,} from "@angular/forms";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from "@angular/material/dialog";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -21,7 +30,16 @@ import { ScontoServices } from "../../services/sconto-services";
 @Component({
   selector: "app-prodotto-details",
   standalone: true,
-  imports: [MatButtonModule,MatIconModule,MatDialogModule,ReactiveFormsModule,MatFormFieldModule,FormsModule,MatInputModule,MatSelectModule,],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: "./prodotto-details.html",
   styleUrl: "./prodotto-details.css",
 })
@@ -151,6 +169,36 @@ export class ProdottoDetails implements OnInit {
 
       error: (errore) => {
         console.error("Errore caricamento immagini:", errore);
+      },
+    });
+  }
+
+  rimuoviImmagine(idImmagine: number): void {
+    const conferma = confirm("Sei sicuro di voler eliminare questa immagine?");
+
+    if (!conferma) {
+      return;
+    }
+
+    this.immaginiService.delete(idImmagine).subscribe({
+      next: () => {
+        console.log("Immagine eliminata");
+
+        // aggiorna la lista senza chiudere il dialog
+        this.immagini.update((lista) =>
+          lista.filter((img) => img.id !== idImmagine)
+        );
+
+        // aggiorna anteprima principale
+        if (this.immagini().length > 0) {
+          this.imagePreview = this.immagini()[0].url;
+        } else {
+          this.imagePreview = null;
+        }
+      },
+
+      error: (errore) => {
+        console.error("Errore eliminazione immagine:", errore);
       },
     });
   }

@@ -36,13 +36,29 @@
       <div class="thumbnail-container">
         @for(img of immagini(); track img.id){
 
-        <img
-          [src]="img.url"
-          class="thumbnail"
-          alt="Immagine prodotto"
-          (click)="cambiaImmagine(img.url)"
-          [class.selected]="imagePreview === img.url"
-        />
+        <div class="thumbnail-wrapper">
+          <img
+            [src]="img.url"
+            class="thumbnail"
+            alt="Immagine prodotto"
+            (click)="cambiaImmagine(img.url)"
+            [class.selected]="imagePreview === img.url"
+          />
+
+          @if(puoGestireProdotto()){
+
+          <button
+            mat-icon-button
+            color="warn"
+            type="button"
+            class="delete-image-btn"
+            (click)="rimuoviImmagine(img.id); $event.stopPropagation()"
+          >
+            <mat-icon> delete </mat-icon>
+          </button>
+
+          }
+        </div>
 
         }
       </div>
