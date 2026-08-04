@@ -28,6 +28,7 @@ export class Checkout {
 
   caricamento = signal(true);
   elaborazione = signal(false);
+  pronto = signal(false);
   messaggio = signal('');
 
   constructor() {
@@ -48,10 +49,14 @@ export class Checkout {
         this.pagS.createIntent({ idOrdine: this.idOrdine})
       );
 
-      this.elements = this.stripe!.elements({ clientSecret: intent.clientSecret });
+      this.elements = this.stripe!.elements({ 
+        clientSecret: intent.clientSecret,
+        customerSessionClientSecret : intent.customerSessionClientSecret
+      });
       this.elements.create('payment').mount(this.paymentElementRef.nativeElement);
 
       this.caricamento.set(false);
+      this.pronto.set(true);
 
     } catch (e: any) {
       this.caricamento.set(false);

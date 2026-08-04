@@ -27,7 +27,7 @@
 
     <button mat-flat-button
             class="btn-paga"
-            [disabled]="caricamento() || elaborazione()"
+            [disabled]="elaborazione() || !pronto()"
             (click)="paga()">
       @if (elaborazione()) {
         <mat-spinner diameter="20"></mat-spinner>
