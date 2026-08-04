@@ -143,9 +143,7 @@ export class Prodotti implements OnInit {
       .subscribe({
         next: (response: any[]) => {
           response.forEach((prodotto) => {
-            prodotto.divisioni = prodotto.divisioni?.length
-              ? [prodotto.divisioni[0]]
-              : [];
+            prodotto.divisioni = prodotto.divisioni ?? [];
           });
 
           let richieste = response.map((prodotto) => {

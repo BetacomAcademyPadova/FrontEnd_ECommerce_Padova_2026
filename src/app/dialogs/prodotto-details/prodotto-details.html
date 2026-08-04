@@ -213,7 +213,10 @@
          in U visibile solo se è selezionata una variante o se si sta aggiungendo una nuova variante;
          in V visibile in sola lettura per mostrare i dati della variante selezionata -->
 
-    @if (mod() === 'C' || divisioneSelezionata() || modalitaNuovaVariante()) {
+         @if (
+          mod() !== 'V' &&
+          (mod() === 'C' || divisioneSelezionata() || modalitaNuovaVariante())
+        ) {
 
     <div [formGroup]="divisioneForm" class="variante-form">
       <div class="row-fields">

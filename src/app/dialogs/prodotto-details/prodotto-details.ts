@@ -141,9 +141,15 @@ export class ProdottoDetails implements OnInit {
   private caricaDivisioni(): void {
     const divisioni = this.prodotto()?.divisioni ?? [];
     this.divisioni.set(divisioni);
-
+  
     if (divisioni.length > 0) {
-      this.selezionaDivisione(divisioni[0]);
+  
+      if (this.mod() === "V") {
+        this.selezionaVarianteUtente(divisioni[0]);
+      } else {
+        this.selezionaDivisione(divisioni[0]);
+      }
+  
     }
   }
 
@@ -169,6 +175,12 @@ export class ProdottoDetails implements OnInit {
     } else {
       this.divisioneForm.enable();
     }
+  }
+
+  selezionaVarianteUtente(divisione: any): void {
+
+    this.divisioneSelezionata.set(divisione);
+  
   }
 
   private precompilaForm(): void {
