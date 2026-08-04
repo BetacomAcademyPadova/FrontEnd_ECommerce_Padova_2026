@@ -9,6 +9,7 @@ import { ProdottoDetails } from "../../dialogs/prodotto-details/prodotto-details
 import { AuthServices } from "../../auth/auth-services";
 import { CarelloServices } from "../../services/carello-services";
 import { ProdottiCarrelloServices } from "../../services/prodotti-carrello-services";
+import { ProdottoClienteDetails } from "../prodotto-details-cliente/prodotto-details-cliente";
 
 @Component({
   selector: "app-prodotti",
@@ -77,7 +78,7 @@ export class Prodotti implements OnInit {
                 console.error(
                   "Errore caricamento immagini prodotto",
                   prodotto.idProdotto,
-                  errore
+                  errore,
                 );
 
                 prodotto.immagini = [];
@@ -90,8 +91,8 @@ export class Prodotti implements OnInit {
             (req) =>
               new Promise((resolve) => {
                 req.add(() => resolve(true));
-              })
-          )
+              }),
+          ),
         ).then(() => {
           this.prodotti.set(response);
 
@@ -132,7 +133,7 @@ export class Prodotti implements OnInit {
         this.altezza,
         this.lunghezza,
         this.larghezza,
-        this.sconti
+        this.sconti,
       )
       .subscribe({
         next: (response: any[]) => {
@@ -155,8 +156,8 @@ export class Prodotti implements OnInit {
               (req) =>
                 new Promise((resolve) => {
                   req.add(() => resolve(true));
-                })
-            )
+                }),
+            ),
           ).then(() => {
             this.prodotti.set(response);
 
@@ -190,22 +191,34 @@ export class Prodotti implements OnInit {
   }
 
   openDetails(prodotto: any): void {
-    const dialogRef = this.dialog.open(ProdottoDetails, {
-      width: "1100px",
-      maxWidth: "95vw",
-      maxHeight: "90vh",
+    if (this.puoGestireProdotto()) {
+      const dialogRef = this.dialog.open(ProdottoDetails, {
+        width: "1100px",
+        maxWidth: "95vw",
+        maxHeight: "90vh",
+        data: {
+          mod: "V",
+          prodotto: prodotto,
+        },
+      });
 
-      data: {
-        mod: "V",
-        prodotto: prodotto,
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((risultato: boolean) => {
-      if (risultato) {
+      dialogRef.afterClosed().subscribe(() => {
         this.caricaProdotti();
-      }
-    });
+      });
+    } else {
+      const dialogRef = this.dialog.open(ProdottoClienteDetails, {
+        width: "900px",
+        maxWidth: "95vw",
+        maxHeight: "90vh",
+        data: {
+          prodotto: prodotto,
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(() => {
+        this.caricaProdotti();
+      });
+    }
   }
 
   aggiungiAlCarrello(prodotto: any): void {
@@ -218,7 +231,6 @@ export class Prodotti implements OnInit {
 
     this.carrelloService.getByUser(userId).subscribe({
       next: (carrello: any) => {
-
         const quantita = prodotto.quantitaCarrello ?? 1;
         const divisione = prodotto.divisioni?.[0];
 
@@ -226,8 +238,6 @@ export class Prodotti implements OnInit {
           console.error("Nessuna variante disponibile");
           return;
         }
-
-        
 
         const body = {
           idCarrello: carrello.idCarrello,

@@ -1,5 +1,5 @@
 import { inject, Service } from "@angular/core";
-import { PaymentIntentReq, PaymentIntentDTO, MetodoPagamentoDTO } from './pagamenti-types';
+import { PaymentIntentReq, PaymentIntentDTO, MetodoPagamentoDTO } from '../componenti/models/pagamenti-types';
 import { HttpClient } from "@angular/common/http";
 
 

@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
-import { ForgotPasswordReq } from "../models/user-dto/user-dto"; 
+import { ForgotPasswordReq } from "../models/user-dto"; 
 
 
 @Component({

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { IndirizzoServices } from '../../services/indirizzo-services';
 import { AuthServices } from '../../auth/auth-services';
-import { IndirizzoDTO } from '../../services/ordine-types';
+import { IndirizzoDTO } from '../../componenti/models/ordine-types';
 
 export interface IndirizzoDialogData {
   indirizzo: IndirizzoDTO | null;

@@ -5,7 +5,7 @@ import { catchError, finalize, map, Observable, of, shareReplay, switchMap, tap,
 import { AuthServices } from '../auth/auth-services';
 import { APP_SETTING } from '../settings/token/token';
 import { AppSettings } from '../settings/token/config-model';
-import { LoginDTO, LoginReq, ResetPasswordReq, UserDTO } from '../componenti/models/user-dto/user-dto';
+import { LoginDTO, LoginReq, ResetPasswordReq, UserDTO } from '../componenti/models/user-dto';
 
 @Service()
 export class AutentificazioneServices {

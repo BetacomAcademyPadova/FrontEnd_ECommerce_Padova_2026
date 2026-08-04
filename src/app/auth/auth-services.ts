@@ -1,6 +1,6 @@
 import { Service, signal, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { UserDTO } from '../componenti/models/user-dto/user-dto';
+import { UserDTO } from '../componenti/models/user-dto';
 
 @Service()
 export class AuthServices {

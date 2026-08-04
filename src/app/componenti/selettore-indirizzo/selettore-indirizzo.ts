@@ -10,7 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { switchMap } from 'rxjs';
 
 import { IndirizzoServices } from '../../services/indirizzo-services';
-import { IndirizzoDTO, IndirizzoReq } from '../../services/ordine-types';
+import { IndirizzoDTO, IndirizzoReq } from '../models/ordine-types';
 
 /**
  * Address picker: choose one of the user's saved addresses, or add a new one.

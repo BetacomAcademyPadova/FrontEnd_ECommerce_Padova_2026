@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { Registrazione } from '../registrazione/registrazione';
 import { AutentificazioneServices } from '../../security/autentificazione-services';
-import { UserDTO } from '../../componenti/models/user-dto/user-dto';
+import { UserDTO } from '../../componenti/models/user-dto';
 import { ForgotPassword } from '../../componenti/forgot-password/forgot-password';
 import { NotificheServices } from '../../services/notifiche-services';
 

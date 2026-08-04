@@ -1,0 +1,224 @@
+<h2 mat-dialog-title>Dettaglio {{ prodotto()?.descrizione }}</h2>
+
+<button mat-icon-button mat-dialog-close type="button" class="dialog-close-btn">
+  <mat-icon>close</mat-icon>
+</button>
+
+<mat-dialog-content>
+  <div class="form-container">
+    <!-- ================= IMMAGINI ================= -->
+
+    <div class="image-section">
+      @if(imagePreview()){
+
+      <div class="main-image">
+        <img [src]="imagePreview()" alt="Immagine prodotto" />
+      </div>
+
+      @if(immagini().length > 0){
+
+      <div class="thumbnail-container">
+        @for(img of immagini(); track img.idImmagine){
+
+        <img
+          [src]="img.url"
+          class="thumbnail"
+          (click)="cambiaImmagine(img.url)"
+          [class.selected]="imagePreview() === img.url"
+        />
+
+        }
+      </div>
+
+      } } @else{
+
+      <div class="image-preview">
+        <mat-icon class="placeholder-icon"> image </mat-icon>
+
+        <p>Nessuna immagine</p>
+      </div>
+
+      }
+    </div>
+
+    <!-- ================= DATI PRODOTTO ================= -->
+
+    <h3 class="section-title">Informazioni prodotto</h3>
+
+    <div class="product-info">
+      <h2>{{ prodotto()?.descrizione }}</h2>
+
+      <h1 class="price">{{ prezzo() | currency:'EUR' }}</h1>
+
+      @if(divisioneSelezionata()){
+
+      <p class="stock">
+        Disponibili: {{ divisioneSelezionata()?.quantitaDisponibile }} pezzi
+      </p>
+
+      }
+    </div>
+
+    <!-- ================= VARIANTI ================= -->
+
+    <h3 class="section-title">Personalizza prodotto</h3>
+
+    <div class="row-fields">
+      <mat-form-field appearance="outline">
+        <mat-label> Materiale </mat-label>
+
+        <mat-select
+          [value]="materiale()"
+          (selectionChange)="onMaterialeChange($event.value)"
+        >
+          <mat-option [value]="null"> Tutti </mat-option>
+
+          @for(mat of materialiDisponibili(); track mat){
+
+          <mat-option [value]="mat"> {{mat}} </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label> Colore </mat-label>
+
+        <mat-select
+          [value]="colore()"
+          (selectionChange)="onColoreChange($event.value)"
+        >
+          <mat-option [value]="null"> Tutti </mat-option>
+
+          @for(col of coloriDisponibili(); track col){
+
+          <mat-option [value]="col"> {{col}} </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <!-- ================= DIMENSIONI ================= -->
+
+    <div class="row-fields">
+      <mat-form-field appearance="outline">
+        <mat-label> Altezza </mat-label>
+
+        <mat-select
+          [value]="altezza()"
+          (selectionChange)="onAltezzaChange($event.value)"
+        >
+          <mat-option [value]="null"> Tutte </mat-option>
+
+          @for(a of altezzeDisponibili(); track a){
+
+          <mat-option [value]="a"> {{a}} cm </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label> Lunghezza </mat-label>
+
+        <mat-select
+          [value]="lunghezza()"
+          (selectionChange)="onLunghezzaChange($event.value)"
+        >
+          <mat-option [value]="null"> Tutte </mat-option>
+
+          @for(l of lunghezzeDisponibili(); track l){
+
+          <mat-option [value]="l"> {{l}} cm </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label> Larghezza </mat-label>
+
+        <mat-select
+          [value]="larghezza()"
+          (selectionChange)="onLarghezzaChange($event.value)"
+        >
+          <mat-option [value]="null"> Tutte </mat-option>
+
+          @for(l of larghezzeDisponibili(); track l){
+
+          <mat-option [value]="l"> {{l}} cm </mat-option>
+
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- ================= VARIANTE SELEZIONATA ================= -->
+
+    @if(divisioneSelezionata()){
+
+    <h3 class="section-title">Variante selezionata</h3>
+
+    <div class="variante-card">
+      <div>
+        <strong> Materiale: </strong>
+
+        {{divisioneSelezionata()?.materiale}}
+      </div>
+
+      <div>
+        <strong> Colore: </strong>
+
+        {{divisioneSelezionata()?.colore}}
+      </div>
+
+      <div>
+        <strong> Dimensioni: </strong>
+
+        {{divisioneSelezionata()?.altezza}} x
+        {{divisioneSelezionata()?.lunghezza}} x
+        {{divisioneSelezionata()?.larghezza}} cm
+      </div>
+    </div>
+
+    }
+
+    <!-- ================= QUANTITA ================= -->
+
+    <h3 class="section-title">Quantità</h3>
+
+    <div class="quantity-container">
+      <button mat-mini-fab type="button" (click)="diminuisciQuantita()">
+        <mat-icon> remove </mat-icon>
+      </button>
+
+      <span> {{quantita()}} </span>
+
+      <button mat-mini-fab type="button" (click)="aumentaQuantita()">
+        <mat-icon> add </mat-icon>
+      </button>
+    </div>
+
+    <!-- ================= AZIONI ================= -->
+
+    <div class="button-group">
+      <button mat-raised-button type="button" (click)="resetVarianti()">
+        <mat-icon> restart_alt </mat-icon>
+
+        Reset
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [disabled]="!divisioneSelezionata()"
+        (click)="aggiungiAlCarrello()"
+      >
+        <mat-icon> shopping_cart </mat-icon>
+
+        Aggiungi al carrello
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>

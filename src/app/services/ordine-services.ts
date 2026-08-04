@@ -2,7 +2,7 @@ import { inject, Service } from "@angular/core";
 import { AppSettings } from "../settings/token/config-model";
 import { APP_SETTING } from "../settings/token/token";
 import { HttpClient } from "@angular/common/http";
-import { OrdineDTO, OrdineReq, StatoOrdineDTO } from "./ordine-types";
+import { OrdineDTO, OrdineReq, StatoOrdineDTO } from "../componenti/models/ordine-types";
 
 
 @Service()
