@@ -61,98 +61,48 @@
 
     <!-- ================= VARIANTI ================= -->
 
-    <h3 class="section-title">Personalizza prodotto</h3>
+    <!-- ================= VARIANTI ================= -->
 
-    <div class="row-fields">
-      <mat-form-field appearance="outline">
-        <mat-label> Materiale </mat-label>
+<h3 class="section-title">Varianti prodotto</h3>
 
-        <mat-select
-          [value]="materiale()"
-          (selectionChange)="onMaterialeChange($event.value)"
-        >
-          <mat-option [value]="null"> Tutti </mat-option>
+@if (divisioni().length > 0) {
 
-          @for(mat of materialiDisponibili(); track mat){
+<div class="varianti-list">
 
-          <mat-option [value]="mat"> {{mat}} </mat-option>
+  @for (div of divisioni(); track div.idDivisione) {
 
-          }
-        </mat-select>
-      </mat-form-field>
+  <div
+    class="variante-chip"
+    [class.selected]="divisioneSelezionata()?.idDivisione === div.idDivisione"
+    (click)="selezionaDivisione(div)"
+  >
 
-      <mat-form-field appearance="outline">
-        <mat-label> Colore </mat-label>
+    <span class="variante-chip-label">
+      {{ div.colore }} · {{ div.materiale }}
+    </span>
 
-        <mat-select
-          [value]="colore()"
-          (selectionChange)="onColoreChange($event.value)"
-        >
-          <mat-option [value]="null"> Tutti </mat-option>
+    <span class="variante-chip-sub">
+      {{ div.altezza }}x{{ div.lunghezza }}x{{ div.larghezza }} cm
+    </span>
 
-          @for(col of coloriDisponibili(); track col){
+    <span>
+      Disponibili: {{ div.quantitaDisponibile }}
+    </span>
 
-          <mat-option [value]="col"> {{col}} </mat-option>
+  </div>
 
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <!-- ================= DIMENSIONI ================= -->
+  }
 
-    <div class="row-fields">
-      <mat-form-field appearance="outline">
-        <mat-label> Altezza </mat-label>
+</div>
 
-        <mat-select
-          [value]="altezza()"
-          (selectionChange)="onAltezzaChange($event.value)"
-        >
-          <mat-option [value]="null"> Tutte </mat-option>
+}
+@else {
 
-          @for(a of altezzeDisponibili(); track a){
+<p class="no-varianti-msg">
+  Nessuna variante disponibile
+</p>
 
-          <mat-option [value]="a"> {{a}} cm </mat-option>
-
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label> Lunghezza </mat-label>
-
-        <mat-select
-          [value]="lunghezza()"
-          (selectionChange)="onLunghezzaChange($event.value)"
-        >
-          <mat-option [value]="null"> Tutte </mat-option>
-
-          @for(l of lunghezzeDisponibili(); track l){
-
-          <mat-option [value]="l"> {{l}} cm </mat-option>
-
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label> Larghezza </mat-label>
-
-        <mat-select
-          [value]="larghezza()"
-          (selectionChange)="onLarghezzaChange($event.value)"
-        >
-          <mat-option [value]="null"> Tutte </mat-option>
-
-          @for(l of larghezzeDisponibili(); track l){
-
-          <mat-option [value]="l"> {{l}} cm </mat-option>
-
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-
+}
     <!-- ================= VARIANTE SELEZIONATA ================= -->
 
     @if(divisioneSelezionata()){
