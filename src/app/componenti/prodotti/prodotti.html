@@ -197,8 +197,9 @@
 
           <p class="fw-bold">Varianti disponibili</p>
 
-          @for(divisione of prodotto.divisioni ?? []; track
-          divisione.idDivisione){
+          @if(prodotto.divisioni && prodotto.divisioni.length > 0) {
+
+          @let divisione = prodotto.divisioni[0];
 
           <div class="border rounded p-2 mb-2">
             <p class="mb-1">
@@ -240,7 +241,7 @@
             />
           </div>
 
-          } @empty {
+          } @else {
 
           <p class="text-muted">Nessuna variante disponibile.</p>
 
