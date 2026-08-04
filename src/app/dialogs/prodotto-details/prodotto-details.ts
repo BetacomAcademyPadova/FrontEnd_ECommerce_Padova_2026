@@ -70,17 +70,36 @@ export class ProdottoDetails implements OnInit {
   dataFine = "";
   scontoEsistente = signal<any>(null);
 
+  // --- GESTIONE VARIANTI (DIVISIONI PRODOTTO) ---
+
+  // Varianti già esistenti sul prodotto (mod V/U) oppure bozze in creazione (mod C)
+  divisioni = signal<any[]>([]);
+
+  // Variante attualmente mostrata / in modifica (mod V/U)
+  divisioneSelezionata = signal<any>(null);
+
+  // Bozze di varianti da creare insieme al nuovo prodotto (solo mod C)
+  private divisioniDaCreare: any[] = [];
+
+  // true quando si sta compilando il form per aggiungere una NUOVA variante
+  // a un prodotto già esistente (mod U)
+  modalitaNuovaVariante = signal(false);
+
+  // Dati generali del prodotto (condivisi da tutte le varianti)
   prodottoForm: FormGroup = new FormGroup({
     descrizione: new FormControl(null, Validators.required),
     prezzo: new FormControl(null, [Validators.required, Validators.min(0)]),
     categoria: new FormControl(null, Validators.required),
     sottoCategoria: new FormControl(null, Validators.required),
+  });
+
+  // Dati specifici della singola variante (divisione prodotto)
+  divisioneForm: FormGroup = new FormGroup({
     colore: new FormControl(null, Validators.required),
     materiale: new FormControl(null, Validators.required),
     altezza: new FormControl(null, [Validators.required, Validators.min(0)]),
     lunghezza: new FormControl(null, [Validators.required, Validators.min(0)]),
     larghezza: new FormControl(null, [Validators.required, Validators.min(0)]),
-
     quantitaDisponibile: new FormControl(null, [
       Validators.required,
       Validators.min(0),
@@ -108,10 +127,47 @@ export class ProdottoDetails implements OnInit {
         this.dataFine = this.prodotto().sconto.dataFine;
       }
       this.caricaImmagini();
+      this.caricaDivisioni();
     }
 
     if (this.mod() === "V") {
       this.prodottoForm.disable();
+      this.divisioneForm.disable();
+    }
+  }
+
+  // --- CARICAMENTO E SELEZIONE VARIANTI ESISTENTI ---
+
+  private caricaDivisioni(): void {
+    const divisioni = this.prodotto()?.divisioni ?? [];
+    this.divisioni.set(divisioni);
+
+    if (divisioni.length > 0) {
+      this.selezionaDivisione(divisioni[0]);
+    }
+  }
+
+  selezionaDivisione(divisione: any): void {
+    this.divisioneSelezionata.set(divisione);
+    this.modalitaNuovaVariante.set(false);
+
+    this.divisioneForm.patchValue(
+      {
+        colore: divisione.colore ?? null,
+        materiale: divisione.materiale ?? null,
+        altezza: divisione.altezza ?? null,
+        lunghezza: divisione.lunghezza ?? null,
+        larghezza: divisione.larghezza ?? null,
+        quantitaDisponibile: divisione.quantitaDisponibile ?? null,
+        stockAlert: divisione.stockAlert ?? null,
+      },
+      { emitEvent: false },
+    );
+
+    if (this.mod() === "V") {
+      this.divisioneForm.disable();
+    } else {
+      this.divisioneForm.enable();
     }
   }
 
@@ -120,8 +176,6 @@ export class ProdottoDetails implements OnInit {
     if (!prodotto) {
       return;
     }
-
-    const divisione = prodotto.divisioni?.[0] ?? null;
 
     const categoria =
       typeof prodotto.sottoCategoria?.categoria === "object"
@@ -134,17 +188,10 @@ export class ProdottoDetails implements OnInit {
         prezzo: prodotto.prezzoOriginale ?? prodotto.prezzo ?? null,
         categoria: categoria ?? null,
         sottoCategoria: prodotto.sottoCategoria?.idSottoCategoria ?? null,
-        colore: divisione?.colore ?? null,
-        materiale: divisione?.materiale ?? null,
-        altezza: divisione?.altezza ?? null,
-        lunghezza: divisione?.lunghezza ?? null,
-        larghezza: divisione?.larghezza ?? null,
-        quantitaDisponibile: divisione?.quantitaDisponibile ?? null,
-        stockAlert: divisione?.stockAlert ?? null,
       },
       {
         emitEvent: false,
-      }
+      },
     );
   }
 
@@ -245,7 +292,7 @@ export class ProdottoDetails implements OnInit {
     const risultato = this.tutteSottocategorie().filter(
       (sottoCategoria: any) =>
         this.leggiNomeCategoria(sottoCategoria.categoria) ===
-        categoriaSelezionata
+        categoriaSelezionata,
     );
     this.sottocategorie.set(risultato);
   }
@@ -273,14 +320,141 @@ export class ProdottoDetails implements OnInit {
         const risultato = this.tutteSottocategorie().filter(
           (sottoCategoria: any) =>
             this.leggiNomeCategoria(sottoCategoria.categoria) ===
-            categoriaSelezionata
+            categoriaSelezionata,
         );
 
         this.sottocategorie.set(risultato);
         console.log("Sottocategorie filtrate:", risultato);
-      }
+      },
     );
   }
+
+  // --- GESTIONE VARIANTI DURANTE LA CREAZIONE DI UN NUOVO PRODOTTO (mod C) ---
+
+  aggiungiVarianteACreazione(): void {
+    if (this.divisioneForm.invalid) {
+      this.divisioneForm.markAllAsTouched();
+      this.msg.set("Compila tutti i campi della variante prima di aggiungerla");
+      return;
+    }
+
+    const formValue = this.divisioneForm.getRawValue();
+    const nuovaVariante = {
+      colore: formValue.colore,
+      materiale: formValue.materiale,
+      altezza: Number(formValue.altezza),
+      lunghezza: Number(formValue.lunghezza),
+      larghezza: Number(formValue.larghezza),
+      quantitaDisponibile: Number(formValue.quantitaDisponibile),
+      stockAlert: Number(formValue.stockAlert),
+    };
+
+    this.divisioniDaCreare.push(nuovaVariante);
+    this.divisioni.set([...this.divisioniDaCreare]);
+    this.divisioneForm.reset();
+    this.msg.set("");
+  }
+
+  rimuoviVarianteDaCreazione(index: number): void {
+    this.divisioniDaCreare.splice(index, 1);
+    this.divisioni.set([...this.divisioniDaCreare]);
+  }
+
+  // --- GESTIONE NUOVA VARIANTE SU PRODOTTO GIA' ESISTENTE (mod U) ---
+
+  apriFormNuovaVariante(): void {
+    this.modalitaNuovaVariante.set(true);
+    this.divisioneSelezionata.set(null);
+    this.divisioneForm.reset();
+    this.divisioneForm.enable();
+  }
+
+  annullaNuovaVariante(): void {
+    this.modalitaNuovaVariante.set(false);
+    const divisioni = this.divisioni();
+    if (divisioni.length > 0) {
+      this.selezionaDivisione(divisioni[0]);
+    }
+  }
+
+  salvaNuovaVariante(): void {
+    if (this.divisioneForm.invalid) {
+      this.divisioneForm.markAllAsTouched();
+      this.msg.set("Compila tutti i campi obbligatori della variante");
+      return;
+    }
+
+    const formValue = this.divisioneForm.getRawValue();
+    const divisioneReq = {
+      colore: formValue.colore,
+      materiale: formValue.materiale,
+      altezza: Number(formValue.altezza),
+      lunghezza: Number(formValue.lunghezza),
+      larghezza: Number(formValue.larghezza),
+      quantitaDisponibile: Number(formValue.quantitaDisponibile),
+      stockAlert: Number(formValue.stockAlert),
+      idProdotto: this.prodotto().idProdotto,
+    };
+
+    console.log("Nuova variante da creare:", divisioneReq);
+
+    this.divisioneProdottoService.create(divisioneReq).subscribe({
+      next: (response: any) => {
+        console.log("Nuova variante creata:", response);
+
+        const nuovaDivisione = {
+          ...divisioneReq,
+          idDivisione: response?.idDivisione ?? response,
+        };
+
+        this.divisioni.set([...this.divisioni(), nuovaDivisione]);
+        this.modalitaNuovaVariante.set(false);
+        this.selezionaDivisione(nuovaDivisione);
+        this.msg.set("Variante aggiunta con successo");
+      },
+
+      error: (errore) => {
+        console.error("Errore creazione variante:", errore);
+        this.msg.set(errore?.error?.msg ?? "Errore creazione variante");
+      },
+    });
+  }
+
+  eliminaVariante(divisione: any, event?: Event): void {
+    event?.stopPropagation();
+
+    if (this.divisioni().length <= 1) {
+      alert("Il prodotto deve avere almeno una variante");
+      return;
+    }
+
+    const conferma = confirm("Sei sicuro di voler eliminare questa variante?");
+    if (!conferma) {
+      return;
+    }
+
+    this.divisioneProdottoService.delete(divisione.idDivisione).subscribe({
+      next: () => {
+        const restanti = this.divisioni().filter(
+          (d: any) => d.idDivisione !== divisione.idDivisione,
+        );
+        this.divisioni.set(restanti);
+
+        if (restanti.length > 0) {
+          this.selezionaDivisione(restanti[0]);
+        }
+
+        this.msg.set("Variante eliminata");
+      },
+
+      error: (errore) => {
+        console.error("Errore eliminazione variante:", errore);
+        this.msg.set(errore?.error?.msg ?? "Errore eliminazione variante");
+      },
+    });
+  }
+
+  // --- SUBMIT PRINCIPALE ---
 
   onSubmit(): void {
     this.msg.set("");
@@ -288,83 +462,111 @@ export class ProdottoDetails implements OnInit {
     if (this.mod() === "V") {
       return;
     }
+
     if (this.prodottoForm.invalid) {
       this.prodottoForm.markAllAsTouched();
-      this.msg.set("Compila tutti i campi obbligatori");
+      this.msg.set("Compila tutti i campi obbligatori del prodotto");
       return;
     }
 
     if (this.mod() === "U") {
-      const formValue = this.prodottoForm.getRawValue();
-      const prodottoReq = {
-        idProdotto: this.prodotto().idProdotto,
-        descrizione: formValue.descrizione,
-        prezzo: Number(formValue.prezzo),
-        idSottoCategoria: Number(formValue.sottoCategoria),
-      };
+      this.salvaModificaProdotto();
+      return;
+    }
 
-      console.log("Aggiornamento prodotto:", prodottoReq);
+    this.creaProdottoConVarianti();
+  }
 
-      this.prodottoService.update(prodottoReq).subscribe({
-        next: () => {
-          console.log("Prodotto aggiornato");
-          const divisione = this.prodotto().divisioni?.[0];
-          if (!divisione) {
-            console.error("Nessuna divisione trovata");
+  // --- AGGIORNAMENTO PRODOTTO ESISTENTE + VARIANTE SELEZIONATA ---
+
+  private salvaModificaProdotto(): void {
+    const formValue = this.prodottoForm.getRawValue();
+    const prodottoReq = {
+      idProdotto: this.prodotto().idProdotto,
+      descrizione: formValue.descrizione,
+      prezzo: Number(formValue.prezzo),
+      idSottoCategoria: Number(formValue.sottoCategoria),
+    };
+
+    console.log("Aggiornamento prodotto:", prodottoReq);
+
+    this.prodottoService.update(prodottoReq).subscribe({
+      next: () => {
+        console.log("Prodotto aggiornato");
+
+        const divisione = this.divisioneSelezionata();
+        if (!divisione) {
+          console.warn("Nessuna variante selezionata da aggiornare");
+          this.finalizzaSalvataggio();
+          return;
+        }
+
+        if (this.divisioneForm.invalid) {
+          this.divisioneForm.markAllAsTouched();
+          this.msg.set("Compila tutti i campi obbligatori della variante");
+          return;
+        }
+
+        const formDivisione = this.divisioneForm.getRawValue();
+        const divisioneReq = {
+          idDivisione: divisione.idDivisione,
+          colore: formDivisione.colore,
+          materiale: formDivisione.materiale,
+          altezza: Number(formDivisione.altezza),
+          lunghezza: Number(formDivisione.lunghezza),
+          larghezza: Number(formDivisione.larghezza),
+          quantitaDisponibile: Number(formDivisione.quantitaDisponibile),
+          stockAlert: Number(formDivisione.stockAlert),
+        };
+
+        console.log("Aggiornamento variante:", divisioneReq);
+
+        this.divisioneProdottoService.update(divisioneReq).subscribe({
+          next: () => {
+            console.log("Variante aggiornata");
+            this.finalizzaSalvataggio();
+          },
+
+          error: (errore) => {
+            console.error("Errore aggiornamento variante:", errore);
+            this.msg.set(errore?.error?.msg ?? "Errore aggiornamento variante");
+          },
+        });
+      },
+
+      error: (errore) => {
+        console.error("Errore aggiornamento prodotto:", errore);
+        this.msg.set(errore?.error?.msg ?? "Errore aggiornamento prodotto");
+      },
+    });
+  }
+
+  private finalizzaSalvataggio(): void {
+    if (this.selectedFiles.length > 0) {
+      this.immaginiService
+        .upload(this.selectedFiles, this.prodotto().idProdotto)
+        .subscribe({
+          next: (response) => {
+            console.log("Nuova immagine caricata:", response);
             this.dialogRef.close(true);
-            return;
-          }
+          },
+          error: (errore) => {
+            console.error("Errore caricamento immagine:", errore);
+            this.dialogRef.close(true);
+          },
+        });
+    } else {
+      this.dialogRef.close(true);
+    }
+  }
 
-          const divisioneReq = {
-            idDivisione: divisione.idDivisione,
-            colore: formValue.colore,
-            materiale: formValue.materiale,
-            altezza: Number(formValue.altezza),
-            lunghezza: Number(formValue.lunghezza),
-            larghezza: Number(formValue.larghezza),
-            quantitaDisponibile: Number(formValue.quantitaDisponibile),
-            stockAlert: Number(formValue.stockAlert),
-          };
+  // --- CREAZIONE NUOVO PRODOTTO CON UNA O PIU' VARIANTI ---
 
-          console.log("Aggiornamento divisione:", divisioneReq);
-
-          this.divisioneProdottoService.update(divisioneReq).subscribe({
-            next: () => {
-              console.log("Divisione aggiornata");
-
-              if (this.selectedFiles.length > 0) {
-                this.immaginiService
-                  .upload(this.selectedFiles, this.prodotto().idProdotto)
-                  .subscribe({
-                    next: (response) => {
-                      console.log("Nuova immagine caricata:", response);
-
-                      this.dialogRef.close(true);
-                    },
-                    error: (errore) => {
-                      console.error("Errore caricamento immagine:", errore);
-                      this.dialogRef.close(true);
-                    },
-                  });
-              } else {
-                this.dialogRef.close(true);
-              }
-            },
-
-            error: (errore) => {
-              console.error("Errore aggiornamento divisione:", errore);
-              this.msg.set(
-                errore?.error?.msg ?? "Errore aggiornamento divisione"
-              );
-            },
-          });
-        },
-
-        error: (errore) => {
-          console.error("Errore aggiornamento prodotto:", errore);
-          this.msg.set(errore?.error?.msg ?? "Errore aggiornamento prodotto");
-        },
-      });
+  private creaProdottoConVarianti(): void {
+    if (this.divisioniDaCreare.length === 0) {
+      this.msg.set(
+        "Aggiungi almeno una variante prima di registrare il prodotto",
+      );
       return;
     }
 
@@ -389,64 +591,56 @@ export class ProdottoDetails implements OnInit {
     this.prodottoService.create(prodottoReq).subscribe({
       next: (idProdotto: number) => {
         console.log("Prodotto creato con ID:", idProdotto);
-
-        const divisioneReq = {
-          colore: formValue.colore,
-          materiale: formValue.materiale,
-          altezza: Number(formValue.altezza),
-          lunghezza: Number(formValue.lunghezza),
-          larghezza: Number(formValue.larghezza),
-          quantitaDisponibile: Number(formValue.quantitaDisponibile),
-          stockAlert: Number(formValue.stockAlert),
-          idProdotto: Number(idProdotto),
-        };
-
-        console.log("Divisione da creare:", divisioneReq);
-        this.creaDivisione(divisioneReq, idProdotto);
+        this.creaDivisioniInSequenza(
+          idProdotto,
+          [...this.divisioniDaCreare],
+          0,
+        );
       },
 
       error: (errore) => {
         console.error("Errore creazione prodotto:", errore);
         this.msg.set(
-          errore?.error?.msg ?? "Errore durante la creazione del prodotto"
+          errore?.error?.msg ?? "Errore durante la creazione del prodotto",
         );
       },
     });
   }
 
-  private creaDivisione(divisioneReq: any, idProdotto: number): void {
+  private creaDivisioniInSequenza(
+    idProdotto: number,
+    varianti: any[],
+    indice: number,
+  ): void {
+    if (indice >= varianti.length) {
+      this.finalizzaSalvataggio();
+      return;
+    }
+
+    const divisioneReq = {
+      ...varianti[indice],
+      idProdotto: Number(idProdotto),
+    };
+
+    console.log(
+      `Creazione variante ${indice + 1}/${varianti.length}:`,
+      divisioneReq,
+    );
+
     this.divisioneProdottoService.create(divisioneReq).subscribe({
       next: (response) => {
-        console.log("Divisione creata correttamente:", response);
-
-        if (this.selectedFiles.length > 0) {
-          this.immaginiService
-            .upload(this.selectedFiles, idProdotto)
-            .subscribe({
-              next: (response) => {
-                console.log("Immagine caricata:", response);
-
-                this.dialogRef.close(true);
-              },
-
-              error: (errore) => {
-                console.error("Errore caricamento immagine:", errore);
-
-                this.dialogRef.close(true);
-              },
-            });
-        } else {
-          this.dialogRef.close(true);
-        }
+        console.log(`Variante ${indice + 1} creata correttamente:`, response);
+        this.creaDivisioniInSequenza(idProdotto, varianti, indice + 1);
       },
 
       error: (errore) => {
-        console.error("Errore creazione divisione:", errore);
-
+        console.error(`Errore creazione variante ${indice + 1}:`, errore);
         this.msg.set(
           errore?.error?.msg ??
-            "Prodotto creato, ma errore nella creazione della divisione"
+            `Prodotto creato, ma errore nella creazione della variante ${indice + 1}`,
         );
+        // Prosegue comunque con le varianti successive
+        this.creaDivisioniInSequenza(idProdotto, varianti, indice + 1);
       },
     });
   }
@@ -471,6 +665,7 @@ export class ProdottoDetails implements OnInit {
   abilitaModifica(): void {
     this.mod.set("U");
     this.prodottoForm.enable();
+    this.divisioneForm.enable();
     this.precompilaForm();
     this.filtraSottocategorieIniziali();
     this.msg.set("");
@@ -481,6 +676,8 @@ export class ProdottoDetails implements OnInit {
     this.mod.set("V");
     this.precompilaForm();
     this.prodottoForm.disable();
+    this.divisioneForm.disable();
+    this.modalitaNuovaVariante.set(false);
     this.msg.set("");
     this.filtraSottocategorieIniziali();
     console.log("Modifica annullata");
@@ -493,14 +690,14 @@ export class ProdottoDetails implements OnInit {
       return;
     }
 
+    const divisione = this.divisioneSelezionata();
+    if (!divisione) {
+      this.msg.set("Seleziona una variante prima di aggiungerla al carrello");
+      return;
+    }
+
     this.carrelloService.getByUser(userId).subscribe({
       next: (carrello) => {
-        const divisione = this.prodotto().divisioni?.[0];
-        if (!divisione) {
-          console.error("Nessuna divisione disponibile");
-          return;
-        }
-
         const body = {
           idCarrello: carrello.idCarrello,
           idDivisioneProdotto: divisione.idDivisione,
@@ -529,7 +726,11 @@ export class ProdottoDetails implements OnInit {
   }
 
   creaSconto() {
-    if (this.valoreSconto <= 0 || this.valoreSconto > 100) {
+    if (
+      !this.valoreSconto ||
+      this.valoreSconto <= 0 ||
+      this.valoreSconto > 100
+    ) {
       alert("Lo sconto deve essere compreso tra 1 e 100%");
       return;
     }

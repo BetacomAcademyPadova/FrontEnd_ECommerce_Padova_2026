@@ -147,61 +147,174 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <h3 class="section-title">Variante prodotto</h3>
-    <!-- DIVISIONE PRODOTTO -->
 
-    <div class="row-fields">
-      <mat-form-field appearance="fill">
-        <mat-label>Colore</mat-label>
+    <!-- ===================== VARIANTI (DIVISIONI PRODOTTO) ===================== -->
 
-        <input matInput type="text" formControlName="colore" />
-      </mat-form-field>
+    <h3 class="section-title">Varianti prodotto</h3>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Materiale</mat-label>
+    <!-- Selettore varianti: visibile solo se esistono varianti già create/aggiunte -->
+    @if (divisioni().length > 0) {
 
-        <input matInput type="text" formControlName="materiale" />
-      </mat-form-field>
+    <div class="varianti-list">
+      @for (div of divisioni(); track div.idDivisione ?? $index) {
 
-      <mat-form-field appearance="fill">
-        <mat-label>Quantità disponibile</mat-label>
+      <div
+        class="variante-chip"
+        [class.selected]="
+          mod() === 'C'
+            ? divisioni()[$index] === div
+            : divisioneSelezionata()?.idDivisione === div.idDivisione
+        "
+        (click)="mod() !== 'C' ? selezionaDivisione(div) : null"
+      >
+        <span class="variante-chip-label">
+          {{ div.colore }} · {{ div.materiale }}
+        </span>
+        <span class="variante-chip-sub">
+          {{ div.lunghezza }}x{{ div.larghezza }}x{{ div.altezza }} · {{
+          div.quantitaDisponibile }} pz
+        </span>
 
-        <input
-          matInput
-          type="number"
-          min="0"
-          formControlName="quantitaDisponibile"
-        />
-      </mat-form-field>
+        @if (mod() === 'C') {
+        <button
+          mat-icon-button
+          type="button"
+          class="variante-chip-remove"
+          (click)="rimuoviVarianteDaCreazione($index); $event.stopPropagation()"
+          aria-label="Rimuovi variante"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        } @else if (mod() === 'U' && puoGestireProdotto()) {
+        <button
+          mat-icon-button
+          type="button"
+          class="variante-chip-remove"
+          (click)="eliminaVariante(div, $event)"
+          aria-label="Elimina variante"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        }
+      </div>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Stock alert</mat-label>
-
-        <input matInput type="number" min="0" formControlName="stockAlert" />
-      </mat-form-field>
+      }
     </div>
-    <h3 class="section-title">Dimensioni</h3>
-    <!-- MISURE -->
 
-    <div class="row-fields">
-      <mat-form-field appearance="fill">
-        <mat-label>Altezza</mat-label>
+    } @else if (mod() !== 'C') {
 
-        <input matInput type="number" min="0" formControlName="altezza" />
-      </mat-form-field>
+    <p class="no-varianti-msg">
+      Nessuna variante disponibile per questo prodotto.
+    </p>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Lunghezza</mat-label>
+    }
 
-        <input matInput type="number" min="0" formControlName="lunghezza" />
-      </mat-form-field>
+    <!-- Form campi variante: sempre visibile in creazione;
+         in U visibile solo se è selezionata una variante o se si sta aggiungendo una nuova variante;
+         in V visibile in sola lettura per mostrare i dati della variante selezionata -->
 
-      <mat-form-field appearance="fill">
-        <mat-label>Larghezza</mat-label>
+    @if (mod() === 'C' || divisioneSelezionata() || modalitaNuovaVariante()) {
 
-        <input matInput type="number" min="0" formControlName="larghezza" />
-      </mat-form-field>
+    <div [formGroup]="divisioneForm" class="variante-form">
+      <div class="row-fields">
+        <mat-form-field appearance="fill">
+          <mat-label>Colore</mat-label>
+          <input matInput type="text" formControlName="colore" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Materiale</mat-label>
+          <input matInput type="text" formControlName="materiale" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Quantità disponibile</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            formControlName="quantitaDisponibile"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Stock alert</mat-label>
+          <input matInput type="number" min="0" formControlName="stockAlert" />
+        </mat-form-field>
+      </div>
+
+      <div class="row-fields">
+        <mat-form-field appearance="fill">
+          <mat-label>Altezza</mat-label>
+          <input matInput type="number" min="0" formControlName="altezza" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Lunghezza</mat-label>
+          <input matInput type="number" min="0" formControlName="lunghezza" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Larghezza</mat-label>
+          <input matInput type="number" min="0" formControlName="larghezza" />
+        </mat-form-field>
+      </div>
+
+      <!-- Bottone "Aggiungi variante" solo in fase di creazione prodotto -->
+      @if (mod() === 'C') {
+      <button
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="aggiungiVarianteACreazione()"
+      >
+        <mat-icon>add</mat-icon>
+        Aggiungi questa variante alla lista
+      </button>
+      }
+
+      <!-- Bottoni salva/annulla per la nuova variante su prodotto già esistente -->
+      @if (mod() === 'U' && modalitaNuovaVariante()) {
+      <div class="button-group">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="salvaNuovaVariante()"
+        >
+          <mat-icon>save</mat-icon>
+          Salva variante
+        </button>
+
+        <button
+          mat-raised-button
+          type="button"
+          (click)="annullaNuovaVariante()"
+        >
+          Annulla
+        </button>
+      </div>
+      }
     </div>
+
+    }
+
+    <!-- Bottone per aggiungere una nuova variante a un prodotto già esistente -->
+    @if (mod() === 'U' && !modalitaNuovaVariante() && puoGestireProdotto()) {
+
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      (click)="apriFormNuovaVariante()"
+    >
+      <mat-icon>add</mat-icon>
+      Aggiungi nuova variante
+    </button>
+
+    }
+
+    <!-- ===================== FINE VARIANTI ===================== -->
 
     @if(mod() != "C" && puoGestireProdotto()) {
 
@@ -281,7 +394,9 @@
       </button>
     </div>
 
-    } }
+    } } @if (msg()) {
+    <p class="form-msg">{{ msg() }}</p>
+    }
 
     <!-- BOTTONI -->
 

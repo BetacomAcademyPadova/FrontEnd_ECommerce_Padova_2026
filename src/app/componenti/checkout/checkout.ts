@@ -67,10 +67,15 @@ export class Checkout {
 
     const { error } = await this.stripe.confirmPayment({
       elements: this.elements,
-      confirmParams: {
-        return_url: window.location.origin + '/dash/checkout-result?idOrdine=' + this.idOrdine
-      }
-    });
+  confirmParams: {
+    return_url:
+      window.location.origin +
+      '/dash/checkout-result?idOrdine=' +
+      this.idOrdine
+  },
+});
+
+console.log("RISULTATO STRIPE", error);
 
     if (error) {
       this.messaggio.set(error.message ?? 'Errore durante il pagamento');
