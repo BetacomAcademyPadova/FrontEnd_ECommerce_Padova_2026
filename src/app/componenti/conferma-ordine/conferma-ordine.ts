@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthServices } from '../../auth/auth-services';
 import { OrdineServices } from '../../services/ordine-services';
 import { IndirizzoServices } from '../../services/indirizzo-services';
-import { OrdineReq, IndirizzoDTO } from '../models/ordine-types';
+import { OrdineReq, IndirizzoDTO } from '../../services/ordine-types';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { CarelloServices } from '../../services/carello-services';

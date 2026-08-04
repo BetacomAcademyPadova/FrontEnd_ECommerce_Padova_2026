@@ -9,7 +9,7 @@ import { AuthServices } from '../../auth/auth-services';
 import { UtenteServices } from '../../services/user-services';
 import { UtilitiesServices } from '../../services/utilities-services';
 import { IndirizzoServices } from '../../services/indirizzo-services';
-import { IndirizzoDTO } from '../models/ordine-types';
+import { IndirizzoDTO } from '../../services/ordine-types';
 import { Registrazione } from '../../dialogs/registrazione/registrazione';
 import { ChangePassword } from '../../dialogs/change-password/change-password';
 import { IndirizzoDialog } from '../../dialogs/indirizzo-dialog/indirizzo-dialog';

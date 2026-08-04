@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { APP_SETTING } from '../settings/token/token';
 import { AppSettings } from '../settings/token/config-model';
-import { IndirizzoDTO, IndirizzoReq } from '../componenti/models/ordine-types';
+import { IndirizzoDTO, IndirizzoReq } from './ordine-types';
 
 @Service()
 export class IndirizzoServices {
