@@ -301,3 +301,147 @@ button.mat-mdc-raised-button:hover {
   top: 5px;
   right: 5px;
 }
+
+.thumbnail-wrapper .delete-image-btn {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: 0.2s;
+}
+
+.thumbnail-wrapper:hover .delete-image-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ===================== VARIANTI ===================== */
+
+/* contenitore varianti */
+
+.varianti-list {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 14px;
+
+  margin: 18px 0;
+}
+
+/* singola variante */
+
+.variante-chip {
+  position: relative;
+
+  width: 240px;
+
+  min-height: 110px;
+
+  padding: 18px;
+
+  border: 1px solid #d7ccc8;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+}
+
+/* effetto hover */
+
+.variante-chip:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+  border-color: #8b4513;
+}
+
+/* variante selezionata */
+
+.variante-chip.selected {
+  background: #fdf8f2;
+
+  border: 2px solid #8b4513;
+
+  box-shadow: 0 10px 25px rgba(139, 69, 19, 0.18);
+}
+
+/* nome variante */
+
+.variante-chip-label {
+  font-size: 17px;
+
+  font-weight: 700;
+
+  color: #3e2723;
+}
+
+/* dettagli */
+
+.variante-chip-sub {
+  margin-top: 8px;
+
+  font-size: 14px;
+
+  color: #777;
+}
+
+/* quantità disponibile */
+
+.variante-stock {
+  margin-top: 8px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #2e7d32;
+}
+
+/* variante selezionata vecchia card */
+
+.variante-card {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 15px;
+
+  padding: 18px;
+
+  background: #faf7f2;
+
+  border-radius: 14px;
+
+  border: 1px solid #d7ccc8;
+
+  color: #5d4037;
+}
+
+.variante-card div {
+  padding: 8px;
+}
+
+/* responsive */
+
+@media (max-width: 900px) {
+  .variante-chip {
+    width: 100%;
+  }
+
+  .variante-card {
+    grid-template-columns: 1fr;
+  }
+}

@@ -258,3 +258,77 @@ mat-dialog-content {
     width: 100%;
   }
 }
+
+/* CONTENITORE LISTA VARIANTI */
+
+.varianti-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+
+/* SINGOLA VARIANTE */
+
+.variante-chip {
+  width: 220px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 2px solid #ddd;
+  background: white;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+}
+
+
+/* EFFETTO HOVER */
+
+.variante-chip:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+
+/* VARIANTE SELEZIONATA */
+
+.variante-chip.selected {
+  border-color: #1976d2;
+  background: #e3f2fd;
+  box-shadow: 0 5px 15px rgba(25,118,210,0.25);
+}
+
+
+/* TITOLO */
+
+.variante-chip-label {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+
+/* DETTAGLI */
+
+.variante-chip-sub {
+  font-size: 14px;
+  color: #666;
+}
+
+
+/* DISPONIBILITA */
+
+.variante-chip span:last-child {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 500;
+}
