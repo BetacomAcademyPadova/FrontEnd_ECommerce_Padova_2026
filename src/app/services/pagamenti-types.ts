@@ -5,6 +5,7 @@ export interface PaymentIntentReq {
 export interface PaymentIntentDTO {
   clientSecret: string;
   idPagamento: number;
+  customerSessionClientSecret: string;
 }
 
 export interface StripeConfigDTO {
