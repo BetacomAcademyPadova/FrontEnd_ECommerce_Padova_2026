@@ -5,17 +5,14 @@ import { GestioneUtente } from './componenti/gestione-utente/gestione-utente';
 import { autentificateGuard } from './auth/autentificate-guard';
 import { adminGuard } from './auth/admin-guard';
 import { Carello } from './componenti/carello/carello';
-import { GestioneProdotti } from './componenti/gestione-prodotti/gestione-prodotti';
 import { Prodotti } from './componenti/prodotti/prodotti';
 import { Profilo } from './componenti/profilo/profilo';
-import { Login } from './dialogs/login/login';
 import { Checkout } from './componenti/checkout/checkout';
 import { ConfermaOrdine } from './componenti/conferma-ordine/conferma-ordine';
 import { CheckoutResult } from './componenti/checkout-result/checkout-result';
 import { Notifiche } from './componenti/notifiche/notifiche';
 import { ResetPassword } from './componenti/reset-password/reset-password';
 import { Ricevuta } from './componenti/ricevuta/ricevuta';
-import { ProdottiOrdine } from './componenti/prodotti-ordine/prodotti-ordine';
 import { Ordini } from './componenti/ordini/ordini';
 
 export const routes: Routes = [
@@ -23,20 +20,18 @@ export const routes: Routes = [
     { path: 'dash', component: Dashboard, children: [
             { path:'', redirectTo:'home', pathMatch:'full'},
             { path: 'home', component: Home },
-            { path: 'login', component: Login},
             { path: 'reset-password', component: ResetPassword},
             { path: 'prodotti', component: Prodotti }, 
-            { path: 'carello', component: Carello, /*canActivate:[autentificateGuard]*/},
-            { path: 'profilo', component: Profilo, /*canActivate:[autentificateGuard]*/},  
-            { path: 'utente', component: GestioneUtente , /*canActivate:[autentificateGuard, adminGuard]*/},
-            { path: 'notifiche', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
+            { path: 'carello', component: Carello, canActivate:[autentificateGuard]},
+            { path: 'profilo', component: Profilo, canActivate:[autentificateGuard]},  
+            { path: 'utente', component: GestioneUtente , canActivate:[autentificateGuard, adminGuard]},
+            { path: 'notifiche', component: Notifiche , canActivate:[autentificateGuard, adminGuard]},
             { path: 'notifica', component: Notifiche , /*canActivate:[autentificateGuard, adminGuard]*/},
-            { path: 'checkout', component: Checkout, /*canActivate: [autentificateGuard]*/ }, 
-            { path: 'checkout-result', component: CheckoutResult, /*canActivate:[autentificateGuard]*/},
-            { path: 'conferma-ordine', component: ConfermaOrdine, /*canActivate: [autentificateGuard]*/ },
-            { path: 'carello', component: Carello, /*canActivate: [autentificateGuard]*/},
-            { path: 'ricevuta', component: Ricevuta, /*canActivate: [autentificateGuard]*/},
-            { path: 'ordini', component: Ordini, /*canActivate: [autentificateGuard]*/},
+            { path: 'checkout', component: Checkout, canActivate: [autentificateGuard] }, 
+            { path: 'checkout-result', component: CheckoutResult, canActivate:[autentificateGuard]},
+            { path: 'conferma-ordine', component: ConfermaOrdine, canActivate: [autentificateGuard] },
+            { path: 'ricevuta', component: Ricevuta, canActivate: [autentificateGuard]},
+            { path: 'ordini', component: Ordini, canActivate: [autentificateGuard]},
         ]
     },
 ];
