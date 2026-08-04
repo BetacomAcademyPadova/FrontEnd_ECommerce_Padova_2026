@@ -65,6 +65,10 @@ export class Dashboard implements OnInit {
     if (grant.isLogged && grant.isAdmin) {
       this.notificheService.aggiornaConteggio(grant.isAdmin);
     }
+
+    if (grant.isLogged) {
+      this.carrelloService.aggiornaConteggio();
+    }
   }
 
   login() {

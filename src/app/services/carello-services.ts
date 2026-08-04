@@ -33,6 +33,7 @@ export class CarelloServices {
   // Ricalcola il numero di pezzi nel carrello e lo scrive in badgeCount,
   // il signal letto dal badge del carrello in navbar.
   aggiornaConteggio(): void {
+
     const grant = this.auth.grant();
 
     if (!grant?.isLogged || !grant.userId) {
