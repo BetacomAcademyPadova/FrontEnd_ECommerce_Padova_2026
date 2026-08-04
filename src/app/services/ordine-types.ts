@@ -10,6 +10,12 @@ export interface OrdineDTO {
   idOrdine: number;
   data: string;
   totale: number;
+  statoOrdine: string;
+}
+
+export interface StatoOrdineDTO {
+  idStatoOrdine: number;
+  statoOrdine: string;
 }
 
 export interface IndirizzoDTO {
@@ -19,10 +25,6 @@ export interface IndirizzoDTO {
   cap: string;
   predefinito: boolean;
 }
-export interface StatoOrdineDTO {
-    idStatoOrdine: number;
-    statoOrdine: string;
-}
 
 export interface IndirizzoReq {
   idIndirizzo?: number;
@@ -31,4 +33,13 @@ export interface IndirizzoReq {
   cap: string;
   predefinito?: boolean;
   idUser?: number;
+}
+
+export interface ProdottiOrdineDTO {
+  idOrdine: number;
+  idItem: number;
+  prodotto: string;
+  quantita: number;
+  prezzo: number;
+  divisioneOrdine?: any;
 }

@@ -86,10 +86,6 @@ export class Dashboard implements OnInit {
     this.rounting.navigate(["/dash/ordini"]);
   }
 
-  prodottiOrdine() {
-  this.rounting.navigate(["/dash/prodotti-ordine"]);
-}
-
   ricevute() {
     this.rounting.navigate(["/dash/ricevuta"]);
   }

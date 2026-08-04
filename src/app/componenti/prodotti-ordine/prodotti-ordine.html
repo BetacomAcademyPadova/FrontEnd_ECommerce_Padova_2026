@@ -1,112 +1,56 @@
 <div class="container">
   <mat-card class="ricevuta-card">
     <mat-card-header>
-      <mat-card-title> Prodotti ordine </mat-card-title>
+      <mat-card-title>Ordini</mat-card-title>
     </mat-card-header>
 
     <mat-divider></mat-divider>
 
-    @if(isVenditore) {
+    @if (isVenditore) {
 
     <div class="menu">
-      <button class="btn-ricevuta" (click)="caricaCliente()">
-        <mat-icon> shopping_cart </mat-icon>
-
+      <button class="btn-ricevuta" (click)="caricaAcquisti()">
+        <mat-icon>shopping_cart</mat-icon>
         I miei acquisti
       </button>
 
-      <button class="btn-ricevuta" (click)="caricaVenditore()">
-        <mat-icon> store </mat-icon>
-
+      <button class="btn-ricevuta" (click)="caricaVendite()">
+        <mat-icon>store</mat-icon>
         Vendite clienti
       </button>
     </div>
 
-    }
-
-    <div class="filtri">
-      <input type="date" [(ngModel)]="dataInizio" />
-
-      <input type="date" [(ngModel)]="dataFine" />
-
-      @if(vista === "cliente") {
-
-      <button class="btn-ricevuta" (click)="cercaCliente()">
-        <mat-icon> search </mat-icon>
-
-        Cerca
-      </button>
-
-      } @if(vista === "venditore") {
-
-      <button class="btn-ricevuta" (click)="cercaVenditore()">
-        <mat-icon> search </mat-icon>
-
-        Cerca
-      </button>
-
-      }
-    </div>
-
-    @if(vista === "cliente") {
-
-    <h3>I miei acquisti</h3>
-
-    } @if(vista === "venditore") {
-
-    <h3>Vendite clienti</h3>
-
-    } @if(prodottiOrdine.length > 0) {
+    } @if (vista === "acquisti") {
+    <h3>I miei ordini</h3>
+    } @if (vista === "vendite") {
+    <h3>Ordini clienti</h3>
+    } @if (ordini.length > 0) {
 
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-
-          <th>Prodotto</th>
-
-          <th>Quantità</th>
-
-          <th>Prezzo</th>
-
-          <th>Indirizzo spedizione</th>
-
-          <th>Dettagli</th>
+          <th>Data</th>
+          <th>Totale</th>
+          <th>Stato</th>
+          <th></th>
         </tr>
       </thead>
 
       <tbody>
-        @for(po of prodottiOrdine; track po.idItem) {
+        @for (ordine of ordini; track ordine.idOrdine) {
 
         <tr>
-          <td>{{po.idItem}}</td>
+          <td>{{ ordine.data }}</td>
 
-          <td>{{po.prodotto}}</td>
+          <td>{{ ordine.totale | number:'1.2-2' }} €</td>
 
-          <td>{{po.quantita}}</td>
-
-          <td>{{po.prezzo | number:'1.2-2'}} €</td>
+          <td>{{ ordine.statoOrdine }}</td>
 
           <td>
-            @if(po.indirizzoSpedizione) { {{po.indirizzoSpedizione.via}}
-
-            <br />
-
-            {{po.indirizzoSpedizione.citta}}
-
-            <br />
-
-            {{po.indirizzoSpedizione.cap}} } @else { Nessun indirizzo }
-          </td>
-
-          <td>
-            @if(po.divisioneOrdine) { @if(po.divisioneOrdine.colore) { Colore:
-            {{po.divisioneOrdine.colore}}
-
-            <br />
-
-            } @if(po.divisioneOrdine.materiale) { Materiale:
-            {{po.divisioneOrdine.materiale}} } } @else { Nessun dettaglio }
+            <button class="btn-ricevuta" (click)="apriOrdine(ordine.idOrdine)">
+              <mat-icon>visibility</mat-icon>
+              Visualizza prodotti
+            </button>
           </td>
         </tr>
 
@@ -116,7 +60,7 @@
 
     } @else {
 
-    <p>Nessun prodotto trovato</p>
+    <p>Nessun ordine trovato</p>
 
     }
   </mat-card>

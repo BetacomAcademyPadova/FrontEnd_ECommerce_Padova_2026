@@ -14,12 +14,8 @@
       <span>Profilo</span>
     </button>
     <button mat-menu-item (click)="ordini()">
-      <mat-icon>ordini</mat-icon>
-      <span>Odini</span>
-    </button>
-    <button mat-menu-item (click)="prodottiOrdine()">
-      <mat-icon>inventory_2</mat-icon>
-      <span>Prodotti Ordine</span>
+      <mat-icon>shopping_bag</mat-icon>
+      <span>Ordini</span>
     </button>
     <button mat-menu-item (click)="ricevute()">
       <mat-icon>receipt_long</mat-icon>
@@ -41,8 +37,7 @@
   >
     <mat-icon>login</mat-icon>
   </button>
-  }
-  @if (auth.grant().isLogged) {
+  } @if (auth.grant().isLogged) {
   <button
     mat-icon-button
     class="nav-button"

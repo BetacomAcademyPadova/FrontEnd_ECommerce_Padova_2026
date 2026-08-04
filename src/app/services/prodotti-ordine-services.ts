@@ -1,70 +1,32 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Service, signal } from "@angular/core";
-import { tap } from "rxjs";
+import { inject, Injectable } from "@angular/core";
 
-@Service()
+import { APP_SETTING } from "../settings/token/token";
+import { AppSettings } from "../settings/token/config-model";
+
+import { ProdottiOrdineDTO } from "./ordine-types";
+
+@Injectable({
+  providedIn: "root",
+})
 export class ProdottiOrdineServices {
   private readonly http = inject(HttpClient);
 
-  private readonly baseUrl = "http://localhost:9090/rest/ProdottiOrdine/";
+  private readonly settings: AppSettings = inject(APP_SETTING);
 
-  prodottiOrdine = signal<any[]>([]);
-
-  getAll() {
-    return this.http.get<any[]>(this.baseUrl + "getAll").pipe(
-      tap((res) => {
-        this.prodottiOrdine.set(res);
-      }),
-    );
+  private getBaseUrl() {
+    return this.settings.apiUrl + "ProdottiOrdine/";
   }
 
-  getByCliente(userId: number) {
-    return this.http.get<any[]>(this.baseUrl + "cliente/" + userId).pipe(
-      tap((res) => {
-        this.prodottiOrdine.set(res);
-      }),
-    );
-  }
-
-  getByClienteDate(userId: number, dataInizio: string, dataFine: string) {
-    return this.http
-      .get<any[]>(
-        this.baseUrl + "cliente/" + userId + "/" + dataInizio + "/" + dataFine,
-      )
-      .pipe(
-        tap((res) => {
-          this.prodottiOrdine.set(res);
-        }),
+  getByOrdine(idOrdine: number, userId: number, venditore: boolean = false) {
+    if (venditore) {
+      return this.http.get<ProdottiOrdineDTO[]>(
+        this.getBaseUrl() + "ordine/venditore/" + idOrdine + "/" + userId,
       );
-  }
+    }
 
-  getByVenditore(userId: number) {
-    return this.http.get<any[]>(this.baseUrl + "venditore/" + userId).pipe(
-      tap((res) => {
-        this.prodottiOrdine.set(res);
-      }),
+    return this.http.get<ProdottiOrdineDTO[]>(
+      this.getBaseUrl() + "ordine/" + idOrdine + "/" + userId,
     );
-  }
-
-  getByVenditoreDate(userId: number, dataInizio: string, dataFine: string) {
-    return this.http
-      .get<any[]>(
-        this.baseUrl +
-          "venditore/" +
-          userId +
-          "/" +
-          dataInizio +
-          "/" +
-          dataFine,
-      )
-      .pipe(
-        tap((res) => {
-          this.prodottiOrdine.set(res);
-        }),
-      );
-  }
-
-  getById(idItem: number) {
-    return this.http.get<any>(this.baseUrl + "getById/" + idItem);
   }
 }
