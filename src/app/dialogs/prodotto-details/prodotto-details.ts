@@ -683,48 +683,6 @@ export class ProdottoDetails implements OnInit {
     console.log("Modifica annullata");
   }
 
-  aggiungiAlCarrello(): void {
-    const userId = Number(this.authService.grant().userId);
-    if (!userId) {
-      console.error("Utente non autenticato");
-      return;
-    }
-
-    const divisione = this.divisioneSelezionata();
-    if (!divisione) {
-      this.msg.set("Seleziona una variante prima di aggiungerla al carrello");
-      return;
-    }
-
-    this.carrelloService.getByUser(userId).subscribe({
-      next: (carrello) => {
-        const body = {
-          idCarrello: carrello.idCarrello,
-          idDivisioneProdotto: divisione.idDivisione,
-          quantita: 1,
-        };
-
-        console.log("Dati invio carrello:", body);
-
-        this.prodottiCarrelloService.create(body).subscribe({
-          next: (response) => {
-            console.log("Prodotto aggiunto al carrello:", response);
-            this.msg.set("Prodotto aggiunto al carrello");
-            this.carrelloService.aggiornaConteggio();
-          },
-
-          error: (errore) => {
-            console.error("Errore aggiunta prodotto:", errore);
-          },
-        });
-      },
-
-      error: (errore) => {
-        console.error("Errore recupero carrello:", errore);
-      },
-    });
-  }
-
   creaSconto() {
     if (
       !this.valoreSconto ||
